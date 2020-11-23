@@ -7,4 +7,4 @@ from loglan_db.model import Word
 if __name__ == "__main__":
 
     with app_lod().app_context():
-        pass
+        print(Word.by_name("prukao").first())
