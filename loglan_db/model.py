@@ -53,3 +53,8 @@ class WordSpell(DictionaryBase, BaseWordSpell):
 
 class WordSource(BaseWordSource):
     pass
+
+
+all_models_pg = sorted(
+    [model for model in DictionaryBase.__subclasses__()],
+    key=lambda model: model.__index_sort_import__)
