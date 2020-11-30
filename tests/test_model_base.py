@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-"""Model unit tests."""
+# pylint: disable=R0201, R0903, C0116, C0103
+"""Base Model unit tests."""
+
 import datetime
-import datetime as dt
 
 import pytest
 
@@ -32,10 +33,10 @@ class TestAuthor:
         author.save()
         author_from_db = Author.get_by_id(item["id"])
 
-        assert type(author) == Author
         assert author == author_from_db
-        assert type(author.id) == int
-        assert type(author.abbreviation) == str
+        assert isinstance(author, Author)
+        assert isinstance(author.id, int)
+        assert isinstance(author.abbreviation, str)
         assert isinstance(author.full_name, (str, type(None)))
         assert isinstance(author.notes, (str, type(None)))
 
@@ -371,7 +372,7 @@ class TestWord:
         assert isinstance(word.origin_x, (str, type(None)))
         assert isinstance(word.match, (str, type(None)))
         assert isinstance(word.rank, (str, type(None)))
-        assert isinstance(word.year, (dt.date, type(None)))
+        assert isinstance(word.year, (datetime.date, type(None)))
         assert isinstance(word.notes, (dict, type(None)))
         assert isinstance(word.TID_old, (int, type(None)))
 
@@ -386,7 +387,8 @@ class TestWord:
 
         type_from_db = Type.get_by_id(word.type_id)
 
-        assert type(type_) == type(type_from_db) == Type
+        assert isinstance(type_, Type)
+        assert isinstance(type_from_db, Type)
         assert type_from_db == type_ == word.type
 
     @pytest.mark.parametrize("item", words)
@@ -396,7 +398,7 @@ class TestWord:
         word.save()
 
         event_start_from_db = Event.get_by_id(word.event_start_id)
-        assert type(event_start_from_db) == Event
+        assert isinstance(event_start_from_db, Event)
         assert event_start_from_db == word.event_start
 
         if word.event_end_id:
@@ -416,6 +418,9 @@ class TestWord:
 
         assert word.authors.count() == 1
         assert word.authors[0] == author
+        assert word.authors.first() == author
+        assert isinstance(word.authors.all(), list)
+        assert len(word.authors.all()) == 1
 
     def test_definitions_relationship(self):
         word = Word(**word_1)

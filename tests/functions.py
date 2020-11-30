@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Functions for test_models"""
 
-from loglan_db import db, app_lod
+from loglan_db import db
 from loglan_db.model import Word, Key, Event, Author, Type, Definition
 from loglan_db.model_base import t_connect_authors, t_connect_keys, t_connect_words
 
@@ -110,8 +110,6 @@ def db_connect_words(pairs: list):
         db.engine.execute(ins)
 
 
-if __name__ == "__main__":
-    from config.postgres import CLIConfig
-
-    with app_lod(CLIConfig).app_context():
-        print_data_by_word("cmeveo")
+def db_add_and_return(obj_class, data):
+    db_add_object(obj_class, data)
+    return obj_class.get_by_id(data["id"])
