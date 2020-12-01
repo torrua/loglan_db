@@ -204,53 +204,6 @@ class BaseDefinition(db.Model, InitBase, DBBase):
         result = self.link_keys_from_list_of_str(source=[word, ], language=language)
         return result[0] if result else None
 
-    def link_keys_from_list_of_obj(self, source: List[BaseKey]) -> List[BaseKey]:
-        """
-        Linking BaseKey objects with BaseDefinition
-        Only new BaseKeys will be linked, skipping those that were previously linked
-
-        :param source: List of BaseKey objects from db
-        :return: List of linked BaseKey objects
-        """
-        new_keys = list(set(source) - set(self.keys))
-        self.keys.extend(new_keys)
-        return new_keys
-
-    def link_key_from_obj(self, key: BaseKey) -> Optional[BaseKey]:
-        """
-        Linking BaseKey object with BaseDefinition object
-        It will be skipped if the BaseKey has already been linked before
-        :param key: BaseKey objects from db
-        :return: linked BaseKey object or None if it were already linked
-        """
-        if key and not self.keys.filter(BaseKey.id == key.id).count() > 0:
-            self.keys.append(key)
-            return key
-        return None
-
-    # TODO
-    '''
-    def link_key_from_obj(self, key: BaseKey, add_new_to_db: bool = True) -> Optional[BaseKey]:
-        """
-        Linking BaseKey object with BaseDefinition object
-        It will be skipped if the BaseKey has already been linked before
-        :param key: BaseKey objects from db
-        :return: linked BaseKey object or None if it were already linked
-        """
-        
-        if not key.id:  # and BaseKey.query.filter(~exists().where(BaseKey.id == self.keys.subquery().c.id)).all():
-            ValueError("A key without an id cannot be added.")
-            # There is no key with id = %s in DB.\n"
-            # "Please add key to DB first or remove ID field from key's data." % key.id)
-        else:
-            key = exist_key
-
-        if key and not self.keys.filter(BaseKey.id == key.id).count() > 0:
-            self.keys.append(key)
-            return key
-        return None
-    '''
-
     def link_keys_from_definition_body(
             self, language: str = None,
             pattern: str = KEY_PATTERN) -> List[BaseKey]:
@@ -265,12 +218,12 @@ class BaseDefinition(db.Model, InitBase, DBBase):
         return self.link_keys_from_list_of_str(source=keys, language=language)
 
     def link_keys(
-            self, source: Union[List[BaseKey], List[str], BaseKey, str, None] = None,
+            self, source: Union[List[str], str, None] = None,
             language: str = None, pattern: str = KEY_PATTERN) -> Union[BaseKey, List[BaseKey]]:
         """
         Universal method for linking all available types of key sources with BaseDefinition
 
-        :param source: Could be a str, BaseKey, List of BaseKeys or str, or None
+        :param source: Could be a str, List of str, or None
         If no source is provided, keys will be extracted from the BaseDefinition's body
         If source is a string or a list of strings, the language of the keys must be specified
         TypeError will be raised if the source contains inappropriate data
@@ -287,19 +240,10 @@ class BaseDefinition(db.Model, InitBase, DBBase):
         if isinstance(source, str):
             return self.link_key_from_str(word=source, language=language)
 
-        if isinstance(source, BaseKey):
-            return self.link_key_from_obj(key=source)
+        if isinstance(source, list) and all(isinstance(item, str) for item in source):
+            return self.link_keys_from_list_of_str(source=source, language=language)
 
-        if isinstance(source, list):
-
-            if all(isinstance(item, BaseKey) for item in source):
-                return self.link_keys_from_list_of_obj(source=source)
-
-            if all(isinstance(item, str) for item in source):
-                return self.link_keys_from_list_of_str(source=source, language=language)
-
-        raise TypeError("Source for keys should have a string, "
-                        "BaseKey or list of strings or BaseKeys type. "
+        raise TypeError("Source for keys should have a string, or list of strings."
                         "You input %s" % type(source))
 
 

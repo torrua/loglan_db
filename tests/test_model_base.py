@@ -10,7 +10,8 @@ from loglan_db.model_base import BaseWord as Word, BaseType as Type, BaseEvent a
     BaseAuthor as Author, BaseDefinition as Definition, BaseKey as Key, BaseSetting as Setting, \
     BaseSyllable as Syllable, BaseWordSource as WordSource
 
-from tests.functions import db_add_objects, db_connect_authors, db_connect_keys, db_connect_words
+from tests.functions import db_connect_authors, db_connect_keys, db_connect_words, \
+    db_add_objects, dar, db_add_object
 
 from tests.data import keys, definitions, words, types, authors, settings, syllables
 from tests.data import changed_words, changed_events, all_events, doubled_words
@@ -29,8 +30,7 @@ class TestAuthor:
     def test_create_from_dict_with_data(self, item):
         """Get Word by ID."""
 
-        author = Author(**item)
-        author.save()
+        author = dar(Author, item)
         author_from_db = Author.get_by_id(item["id"])
 
         assert author == author_from_db
@@ -63,8 +63,7 @@ class TestEvent:
     def test_create_from_dict_with_data(self, item):
         """Get Word by ID."""
 
-        event = Event(**item)
-        event.save()
+        event = dar(Event, item)
         event_from_db = Event.get_by_id(item["id"])
 
         assert event == event_from_db
@@ -108,8 +107,7 @@ class TestKey:
     def test_create_from_dict_with_data(self, item):
         """Get Word by ID."""
 
-        key = Key(**item)
-        key.save()
+        key = dar(Key, item)
         key_from_db = Key.get_by_id(item["id"])
 
         assert key == key_from_db
@@ -137,8 +135,7 @@ class TestSetting:
     def test_create_from_dict_with_data(self, item):
         """Get Word by ID."""
 
-        setting = Setting(**item)
-        setting.save()
+        setting = dar(Setting, item)
         setting_from_db = Setting.get_by_id(item["id"])
 
         assert setting == setting_from_db
@@ -158,8 +155,7 @@ class TestSyllable:
     def test_create_from_dict_with_data(self, item):
         """Get Word by ID."""
 
-        syllable = Syllable(**item)
-        syllable.save()
+        syllable = dar(Syllable, item)
         syllable_from_db = Syllable.get_by_id(item["id"])
 
         assert syllable == syllable_from_db
@@ -176,8 +172,7 @@ class TestType:
 
     @pytest.mark.parametrize("item", types)
     def test_create_from_dict_with_data(self, item):
-        type_ = Type(**item)
-        type_.save()
+        type_ = dar(Type, item)
         type_from_db = Type.get_by_id(item["id"])
 
         assert type_ == type_from_db
@@ -224,8 +219,7 @@ class TestDefinition:
 
     @pytest.mark.parametrize("item", definitions)
     def test_create_from_dict_with_data(self, item):
-        definition = Definition(**item)
-        definition.save()
+        definition = dar(Definition, item)
         definition_from_db = Definition.get_by_id(item["id"])
 
         assert definition == definition_from_db
@@ -268,8 +262,7 @@ class TestDefinition:
 
     def test_link_key_from_str(self):
         db_add_objects(Key, keys)
-        d = Definition(**definition_2)
-        d.save()
+        d = dar(Definition, definition_2)
         assert d.keys.count() == 0
 
         key_to_add = "tester"
@@ -277,36 +270,9 @@ class TestDefinition:
         assert d.keys.count() == 1
         assert d.keys.first().word == key_to_add
 
-    """
-    def test_link_keys_from_list_of_obj(self):
-        # TODO fix bug if keys already exist in db
-        d = Definition(**definition_2)
-        d.save()
-        assert d.keys.count() == 0
-        keys_to_add = [Key(**k) for k in keys[:5]]
-        d.link_keys_from_list_of_obj(keys_to_add)
-        assert d.keys.count() == 5
-
-        d.link_keys_from_list_of_obj(keys_to_add)
-        assert d.keys.count() == 5
-
-    def test_link_key_from_obj(self):
-        # TODO fix bug if key already exists in db
-
-        d = Definition(**definition_2)
-        d.save()
-        assert d.keys.count() == 0
-
-        key_to_add = Key(**keys[1])
-        d.link_key_from_obj(key_to_add)
-        assert d.keys.count() == 1
-    """
-
     def test_link_keys_from_definition_body(self):
         db_add_objects(Key, keys)
-        d = Definition(**definition_1)
-
-        d.save()
+        d = dar(Definition, definition_1)
         assert d.keys.count() == 0
 
         d.link_keys_from_definition_body()
@@ -315,42 +281,36 @@ class TestDefinition:
 
     def test_link_keys(self):
         db_add_objects(Key, keys)
-        keys_to_add_str = ["test", "examine"]
-        key_to_add_str = "tester"
 
-        d0 = Definition(**definitions[0])
-        d0.save()
+        d0 = dar(Definition, definitions[0])
         assert d0.keys.count() == 0
-
+        keys_to_add_str = ["test", "examine"]
         d0.link_keys(keys_to_add_str)
         assert d0.keys.count() == 2
 
-        d1 = Definition(**definitions[1])
-        d1.save()
+        d1 = dar(Definition, definitions[1])
         assert d1.keys.count() == 0
-
+        key_to_add_str = "tester"
         d1.link_keys(key_to_add_str)
         assert d1.keys.count() == 1
 
-        # TODO
-        """
-        keys_to_add = [Key(**k) for k in keys[:5]]
-        key_to_add = Key(**keys[1])
-
-        d2 = Definition(**definitions[2])
-        d2.save()
+        d2 = dar(Definition, definitions[10])
         assert d2.keys.count() == 0
+        d2.link_keys()
+        assert d2.keys.count() == 2
 
-        d2.link_keys(keys_to_add)
-        assert d2.keys.count() == 5
+        d3 = dar(Definition, definitions[3])
+        es_word, es_code = "probar", "es"
+        ru_word, ru_code = "тест", "ru"
+        db_add_object(Key, {"word": es_word, "language": es_code})
+        db_add_object(Key, {"word": ru_word, "language": ru_code})
 
-        d3 = Definition(**definitions[3])
-        d3.save()
-        assert d3.keys.count() == 0
+        d3.link_keys(source=ru_word, language=ru_code)
+        assert d3.keys.first().language == ru_code
 
-        d3.link_keys(key_to_add)
-        assert d3.keys.count() == 1
-        """
+        d3.link_keys(source=es_word, language=es_code)
+        assert d3.keys.count() == 2
+        assert sorted([k.language for k in d3.keys.all()]) == [es_code, ru_code]
 
 
 @pytest.mark.usefixtures("db")
@@ -360,8 +320,7 @@ class TestWord:
     @pytest.mark.parametrize("item", words)
     def test_create_from_dict_with_data(self, item):
         """Get Word by ID."""
-        word = Word(**item)
-        word.save()
+        word = dar(Word, item)
         word_from_db = Word.get_by_id(item["id"])
 
         assert word == word_from_db
@@ -378,12 +337,10 @@ class TestWord:
 
     @pytest.mark.parametrize("item", words)
     def test_type_relationship(self, item):
-        word = Word(**item)
-        word.save()
+        word = dar(Word, item)
 
         type_data = [t for t in types if t["id"] == word.type_id][0]
-        type_ = Type(**type_data)
-        type_.save()
+        type_ = dar(Type, type_data)
 
         type_from_db = Type.get_by_id(word.type_id)
 
@@ -394,8 +351,7 @@ class TestWord:
     @pytest.mark.parametrize("item", words)
     def test_event_relationship(self, item):
         db_add_objects(Event, all_events)
-        word = Word(**item)
-        word.save()
+        word = dar(Word, item)
 
         event_start_from_db = Event.get_by_id(word.event_start_id)
         assert isinstance(event_start_from_db, Event)
@@ -423,8 +379,7 @@ class TestWord:
         assert len(word.authors.all()) == 1
 
     def test_definitions_relationship(self):
-        word = Word(**word_1)
-        word.save()
+        word = dar(Word, word_1)
         definitions_to_add = [d for d in definitions if d["word_id"] == word.id]
         db_add_objects(Definition, definitions_to_add)
 

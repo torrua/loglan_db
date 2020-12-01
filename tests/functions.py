@@ -113,3 +113,6 @@ def db_connect_words(pairs: list):
 def db_add_and_return(obj_class, data):
     db_add_object(obj_class, data)
     return obj_class.get_by_id(data["id"])
+
+
+dar = db_add_and_return
