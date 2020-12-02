@@ -18,6 +18,12 @@ key_10 = {'word': 'end', 'updated': None, 'language': 'en', 'id': 4373, 'created
 key_11 = {'word': 'activity', 'updated': None, 'language': 'en', 'id': 525, 'created': datetime.datetime(2020, 10, 25, 7, 53, 54, 873132)}
 keys = [key_1, key_2, key_3, key_4, key_5, key_6, key_7, key_8, key_9, key_10, key_11]
 
+un_key_1 = {'word': 'examine', 'language': 'en', 'id': 1}
+un_key_2 = {'word': 'examine', 'language': 'es', 'id': 2}
+un_key_3 = {'word': 'examine', 'id': 3}
+un_key_4 = {'word': 'examine', 'language': 'es', 'id': 4}
+un_keys = [un_key_1, un_key_2, un_key_3, ]
+
 # ===== EVENTS =================================================================
 event_1 = {'annotation': 'Initial', 'name': 'Start', 'id': 1, 'updated': None, 'suffix': 'INIT', 'definition': 'The initial vocabulary before updates.', 'date': datetime.date(1975, 1, 1), 'created': datetime.datetime(2020, 10, 25, 7, 53, 54, 873132)}
 events = [event_1]

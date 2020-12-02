@@ -28,6 +28,11 @@ t_name_x_words = "x_words"
 t_name_word_spells = "word_spells"
 t_name_word_sources = "word_sources"
 
+# UNCOMMENT lines above for pdoc documentation generation
+# from flask_sqlalchemy import SQLAlchemy
+# from loglan_db import app_lod
+# db = SQLAlchemy(app_lod())
+
 db.metadata.clear()
 
 t_connect_authors = db.Table(
@@ -82,11 +87,11 @@ class BaseKey(db.Model, InitBase, DBBase):
     BaseKey model
     """
     __tablename__ = t_name_keys
-
+    __table_args__ = (
+        db.UniqueConstraint('word', 'language', name='_word_language_uc'), )
     id = db.Column(db.Integer, primary_key=True)
-    # TODO remove unique from word field but add language checking
-    word = db.Column(db.String(64), unique=True, nullable=False)
-    language = db.Column(db.String(16))
+    word = db.Column(db.String(64), nullable=False)
+    language = db.Column(db.String(16), nullable=False)
 
 
 class BaseSetting(db.Model, InitBase, DBBase):

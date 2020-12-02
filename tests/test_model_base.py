@@ -5,6 +5,7 @@
 import datetime
 
 import pytest
+import sqlalchemy.exc
 
 from loglan_db.model_base import BaseWord as Word, BaseType as Type, BaseEvent as Event, \
     BaseAuthor as Author, BaseDefinition as Definition, BaseKey as Key, BaseSetting as Setting, \
@@ -17,6 +18,7 @@ from tests.data import keys, definitions, words, types, authors, settings, sylla
 from tests.data import changed_words, changed_events, all_events, doubled_words
 from tests.data import littles, little_types
 from tests.data import definition_1, definition_2, word_1, word_2, word_3
+from tests.data import un_key_1, un_key_2, un_key_3, un_key_4
 
 from tests.data import connect_authors
 from tests.data import connect_keys
@@ -125,6 +127,14 @@ class TestKey:
         assert isinstance(key.definitions, list)
         assert len(key.definitions) == 5
         assert [d.id for d in key.definitions] == [13521, 13523, 13524, 13527, 13531]
+
+    def test_uniqueness(self):
+        db_add_objects(Key, [un_key_1, un_key_2,  un_key_3, ])
+        result = [k.word for k in Key.get_all()]
+        assert result == ["examine", "examine", "examine", ]
+
+        with pytest.raises(sqlalchemy.exc.IntegrityError) as _:
+            assert isinstance(dar(Key, un_key_4), Key)
 
 
 @pytest.mark.usefixtures("db")
