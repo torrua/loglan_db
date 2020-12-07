@@ -2,130 +2,314 @@
 # pylint: disable=E1101, C0103
 
 """
-Base Model of LOD database
+This module contains a description of the basic LOD dictionary model for a SQL database.
+Each class is a description of a db table:
+Authors, Events, Keys, Definitions, Words, etc.
 """
 
-from __future__ import annotations
 
+from __future__ import annotations
 import re
+import os
 from typing import List, Union, Optional
 
 from flask_sqlalchemy import BaseQuery
 from sqlalchemy import exists, or_
-
 from loglan_db import db
 from loglan_db.model_init import InitBase, DBBase
 
 t_name_authors = "authors"
+"""`str` : `__tablename__` value for `BaseAuthor` table"""
+
 t_name_events = "events"
+"""`str` : `__tablename__` value for `BaseEvent` table"""
 t_name_keys = "keys"
+"""`str` : `__tablename__` value for `BaseKey` table"""
+
 t_name_settings = "settings"
+"""`str` : `__tablename__` value for `BaseSetting` table"""
+
 t_name_syllables = "syllables"
+"""`str` : `__tablename__` value for `BaseSyllable` table"""
+
 t_name_types = "types"
+"""`str` : `__tablename__` value for `BaseType` table"""
+
 t_name_words = "words"
+"""`str` : `__tablename__` value for `BaseWord` table"""
+
 t_name_definitions = "definitions"
-t_name_x_words = "x_words"
+"""`str` : `__tablename__` value for `BaseDefinition` table"""
+
 t_name_word_spells = "word_spells"
+"""`str` : `__tablename__` value for `BaseWordSpell` table"""
+
 t_name_word_sources = "word_sources"
+"""`str` : `__tablename__` value for `BaseWordSource` table"""
 
-# UNCOMMENT lines above for pdoc documentation generation
-# from flask_sqlalchemy import SQLAlchemy
-# from loglan_db import app_lod
-# db = SQLAlchemy(app_lod())
+t_name_connect_authors = "connect_authors"
+"""`str` : `__tablename__` value for `t_connect_authors` table"""
 
-db.metadata.clear()
+t_name_connect_words = "connect_words"
+"""`str` : `__tablename__` value for `t_connect_words` table"""
+
+t_name_connect_keys = "connect_keys"
+"""`str` : `__tablename__` value for `t_connect_keys` table"""
+
+
+if os.environ.get("IS_PDOC", False):
+    __pdoc__ = {
+        'BaseEvent.appeared_words': """*Relationship query for getting a list of words appeared during this event*
+        
+        **query** : Optional[List[BaseWord]]""",
+
+        'BaseEvent.deprecated_words': """*Relationship query for getting a list of words deprecated during this event*
+
+        **query** : Optional[List[BaseWord]]""",
+
+        'BaseAuthor.contribution': """*Relationship query for getting a list of words coined by this author*
+        
+        **query** : Optional[List[BaseWord]]""",
+
+        'BaseType.words': 'words',
+        'BaseDefinition.source_word': 'source_word',
+        'BaseKey.definitions': """*Relationship query for getting a list of definitions related to this key*
+        
+        **query** : Optional[List[BaseDefinition]]""",
+
+        'BaseAuthor.created': False, 'BaseAuthor.updated': False,
+        'BaseEvent.created': False, 'BaseEvent.updated': False,
+        'BaseKey.created': False, 'BaseKey.updated': False,
+        'BaseSetting.created': False, 'BaseSetting.updated': False,
+        'BaseSyllable.created': False, 'BaseSyllable.updated': False,
+        'BaseType.created': False, 'BaseType.updated': False,
+        'BaseDefinition.created': False, 'BaseDefinition.updated': False,
+        'BaseWord.created': False, 'BaseWord.updated': False,
+    }
+
+    from flask_sqlalchemy import SQLAlchemy
+    from loglan_db import app_lod
+    db = SQLAlchemy(app_lod())
 
 t_connect_authors = db.Table(
-    'connect_authors', db.metadata,
+    t_name_connect_authors, db.metadata,
     db.Column('AID', db.ForeignKey(f'{t_name_authors}.id'), primary_key=True),
     db.Column('WID', db.ForeignKey(f'{t_name_words}.id'), primary_key=True), )
+"""`(sqlalchemy.sql.schema.Table)`: 
+Connecting table for "many-to-many" relationship 
+between `BaseAuthor` and `BaseWord` objects"""
+
 t_connect_words = db.Table(
-    'connect_words', db.metadata,
+    t_name_connect_words, db.metadata,
     db.Column('parent_id', db.ForeignKey(f'{t_name_words}.id'), primary_key=True),
     db.Column('child_id', db.ForeignKey(f'{t_name_words}.id'), primary_key=True), )
+"""`(sqlalchemy.sql.schema.Table)`: 
+Connecting table for "many-to-many" relationship 
+(parent-child) between `BaseWord` objects"""
+
 t_connect_keys = db.Table(
-    'connect_keys', db.metadata,
+    t_name_connect_keys, db.metadata,
     db.Column('KID', db.ForeignKey(f'{t_name_keys}.id'), primary_key=True),
     db.Column('DID', db.ForeignKey(f'{t_name_definitions}.id'), primary_key=True), )
+"""`(sqlalchemy.sql.schema.Table)`: 
+Connecting table for "many-to-many" relationship 
+between `BaseDefinition` and `BaseKey` objects"""
 
 
 class BaseAuthor(db.Model, InitBase, DBBase):
+    """Base Author's DB Model
+
+    Describes a table structure for storing information about words authors.
+
+    Connects with words with "many-to-many" relationship. See `t_connect_authors`.
+
+    <details><summary>Show Examples</summary><p>
+    ```python
+    {'id': 13, 'full_name': 'James Cooke Brown',
+    'abbreviation': 'JCB', 'notes': ''}
+
+    {'id': 29, 'full_name': 'Loglan 4&5',
+    'abbreviation': 'L4',
+    'notes': 'The printed-on-paper book,
+              1975 version of the dictionary.'}
+    ```
+    </p></details>
     """
-    Author model
-    """
+
     __tablename__ = t_name_authors
 
     id = db.Column(db.Integer, primary_key=True)
-    abbreviation = db.Column(db.String(64), unique=True, nullable=False)
-    full_name = db.Column(db.String(64))
-    notes = db.Column(db.String(128))
+    """*Author's internal ID number*  
+        **int** : primary_key=True"""
+
+    abbreviation = db.Column(db.String(64), nullable=False, unique=True)
+    """*Author's abbreviation (used in the LOD dictionary)*  
+        **str** : max_length=64, nullable=False, unique=True
+    Example:
+        > JCB, L4
+    """
+
+    full_name = db.Column(db.String(64), nullable=True, unique=False)
+    """*Author's full name (if exists)*  
+        **str** : max_length=64, nullable=True, unique=False
+    Example:
+        > James Cooke Brown, Loglan 4&5
+    """
+
+    notes = db.Column(db.String(128), nullable=True, unique=False)
+    """*Any additional information about author*  
+        **str** : max_length=128, nullable=True, unique=False
+    """
 
 
 class BaseEvent(db.Model, InitBase, DBBase):
-    """
-    BaseEvent model
+    """Base Event's DB Model
+
+    Describes a table structure for storing information about lexical events.
+
+    <details><summary>Show Examples</summary><p>
+    ```python
+    {'suffix': 'INIT', 'definition': 'The initial vocabulary before updates.',
+     'date': datetime.date(1975, 1, 1), 'annotation': 'Initial', 'name': 'Start', 'id': 1}
+
+    {'suffix': 'RDC', 'definition': 'parsed all the words in the dictionary,
+    identified ones that the parser did not recognize as words',
+    'date': datetime.date(2016, 1, 15), 'annotation': 'Randall Cleanup',
+    'name': 'Randall Dictionary Cleanup', 'id': 5}
+    ```
+    </p></details>
     """
     __tablename__ = t_name_events
 
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.Date, nullable=False)
-    name = db.Column(db.String(64), nullable=False)
-    definition = db.Column(db.Text, nullable=False)
-    annotation = db.Column(db.String(16), nullable=False)
-    suffix = db.Column(db.String(16), nullable=False)
+    """*Event's internal ID number*  
+        **int** : primary_key=True"""
+    date = db.Column(db.Date, nullable=False, unique=False)
+    """*Event's starting day*  
+        **dateime.date** : nullable=False, unique=False"""
+    name = db.Column(db.String(64), nullable=False, unique=False)
+    """*Event's short name*  
+        **str** : max_length=64, nullable=False, unique=False"""
+    definition = db.Column(db.Text, nullable=False, unique=False)
+    """*Event's definition*  
+        **str** : nullable=False, unique=False"""
+    annotation = db.Column(db.String(16), nullable=False, unique=False)
+    """*Event's annotation (displayed in old format dictionary HTML file)*  
+        **str** : max_length=16, nullable=False, unique=False"""
+    suffix = db.Column(db.String(16), nullable=False, unique=False)
+    """*Event's suffix (used to create filename when exporting HTML file)*  
+        **str** : max_length=16, nullable=False, unique=False"""
 
     @classmethod
-    def latest(cls):
+    def latest(cls) -> BaseEvent:
         """
-        :return: the latest (current) event
+        Gets the latest (current) `BaseEvent` from DB
         """
         return cls.query.order_by(-cls.id).first()
 
 
 class BaseKey(db.Model, InitBase, DBBase):
-    """
-    BaseKey model
+    """Base Key's DB Model
+
+    Describes a table structure for storing information about key words of the word's definitions.
+    Some key words could belong to many definitions and some definitions could have many key words.
+    That's why the relationship between Key and Definition should be many-to-many. See `t_connect_keys`.
+
+    There is additional `word_language` UniqueConstraint here.
+
+    <details><summary>Show Examples</summary><p>
+    ```python
+    {'language': 'en', 'word': 'aura', 'id': 1234}
+
+    {'language': 'en', 'word': 'emotionality', 'id': 4321}
+    ```
+    </p></details>
     """
     __tablename__ = t_name_keys
     __table_args__ = (
         db.UniqueConstraint('word', 'language', name='_word_language_uc'), )
+
     id = db.Column(db.Integer, primary_key=True)
-    word = db.Column(db.String(64), nullable=False)
-    language = db.Column(db.String(16), nullable=False)
+    """*Key's internal ID number*  
+        **int** : primary_key=True"""
+    word = db.Column(db.String(64), nullable=False, unique=False)
+    """*Key's vernacular word*  
+        **str** : max_length=64, nullable=False, unique=False  
+    It is non-unique, as words can be the same in spelling in different languages"""
+    language = db.Column(db.String(16), nullable=False, unique=False)
+    """*Key's language*  
+        **str** : max_length=16, nullable=False, unique=False"""
 
 
 class BaseSetting(db.Model, InitBase, DBBase):
-    """
-    BaseSetting model
+    """Base Setting's DB Model
+
+    Describes a table structure for storing dictionary settings.
+
+    <details><summary>Show Examples</summary><p>
+    ```python
+    {'id': 1, 'last_word_id': 10141,
+    'date': datetime.datetime(2020, 10, 25, 5, 10, 20),
+    'db_release': '4.5.9', 'db_version': 2}
+    ```
+    </p></details>
     """
     __tablename__ = t_name_settings
 
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.DateTime, nullable=True)
-    db_version = db.Column(db.Integer, nullable=False)
-    last_word_id = db.Column(db.Integer, nullable=False)
+    """*Setting's internal ID number*  
+        **int** : primary_key=True"""
+    date = db.Column(db.DateTime, nullable=True, unique=False)
+    """*Last modified date*  
+        **dateime.datetime** : nullable=True, unique=False"""
+    db_version = db.Column(db.Integer, nullable=False, unique=False)
+    """*Database version (for old application)*  
+        **int** : nullable=False, unique=False"""
+    last_word_id = db.Column(db.Integer, nullable=False, unique=False)
+    """*ID number of the last word in DB*  
+            **int** : nullable=False, unique=False"""
     db_release = db.Column(db.String(16), nullable=False)
+    """*Database release (for new application)*  
+            **str** : max_length=16, nullable=False, unique=True"""
 
 
 class BaseSyllable(db.Model, InitBase, DBBase):
+    """Base Syllable's DB Model
+
+    Describes a table structure for storing information about loglan syllables.
+
+    <details><summary>Show Examples</summary><p>
+    ```python
+    {'id': 37, 'name': 'zv', 'type': 'InitialCC', 'allowed': True}
+
+    {'id': 38, 'name': 'cdz', 'type': 'UnintelligibleCCC', 'allowed': False}
+    ```
+    </p></details>
     """
-    BaseSyllable model
-    """
+
     __tablename__ = t_name_syllables
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(8), nullable=False)
-    type = db.Column(db.String(32), nullable=False)
-    allowed = db.Column(db.Boolean)
+    """*Syllable's internal ID number*  
+        **int** : primary_key=True"""
+    name = db.Column(db.String(8), nullable=False, unique=False)
+    """*Syllable itself*  
+            **str** : max_length=8, nullable=False, unique=False"""
+    type = db.Column(db.String(32), nullable=False, unique=False)
+    """*Syllable's type*  
+            **str** : max_length=8, nullable=False, unique=False"""
+    allowed = db.Column(db.Boolean, nullable=True, unique=False)
+    """*Is this syllable acceptable in grammar*  
+            **bool** : nullable=True, unique=False"""
 
 
 class BaseType(db.Model, InitBase, DBBase):
-    """
-    BaseType model
-    """
+    """BaseType model"""
     __tablename__ = t_name_types
 
-    id = db.Column(db.Integer, primary_key=True)  # E.g. 4, 8
+    id = db.Column(db.Integer, primary_key=True)
+    """Type's internal ID number: Integer - E.g. 4, 8"""
+
     type = db.Column(db.String(16), nullable=False)  # E.g. 2-Cpx, C-Prim
     type_x = db.Column(db.String(16), nullable=False)  # E.g. Predicate, Predicate
     group = db.Column(db.String(16))  # E.g. Cpx, Prim
@@ -135,8 +319,12 @@ class BaseType(db.Model, InitBase, DBBase):
     @classmethod
     def by(cls, type_filter: Union[str, List[str]]) -> BaseQuery:
         """
-        :param type_filter:
-        :return:
+
+        Args:
+          type_filter: Union[str, List[str]]:
+
+        Returns:
+
         """
         type_filter = [type_filter, ] if isinstance(type_filter, str) else type_filter
 
@@ -145,12 +333,12 @@ class BaseType(db.Model, InitBase, DBBase):
 
 
 class BaseDefinition(db.Model, InitBase, DBBase):
-    """
-    BaseDefinition model
-    """
+    """BaseDefinition model"""
     __tablename__ = t_name_definitions
 
     id = db.Column(db.Integer, primary_key=True)
+    """Definition's internal ID number: Integer"""
+
     word_id = db.Column(db.Integer, db.ForeignKey(f'{t_name_words}.id'), nullable=False)
     position = db.Column(db.Integer, nullable=False)
     usage = db.Column(db.String(64))
@@ -168,21 +356,29 @@ class BaseDefinition(db.Model, InitBase, DBBase):
                            backref="definitions", lazy='dynamic', enable_typechecks=False)
 
     @property
-    def grammar(self):
-        """Return definition's grammar data like (3v) or (2n)"""
+    def grammar(self) -> str:
+        """
+        Combine definition's 'slots' and 'grammar_code' attributes
+
+        Returns:
+            String with grammar data like (3v) or (2n)
+        """
         return f"({self.slots if self.slots else ''}" \
                f"{self.grammar_code if self.grammar_code else ''})"
 
     def link_keys_from_list_of_str(
             self, source: List[str],
             language: str = None) -> List[BaseKey]:
-        """
-        Linking a list of vernacular words with BaseDefinition
+        """Linking a list of vernacular words with BaseDefinition
         Only new words will be linked, skipping those that were previously linked
 
-        :param source: List of words on vernacular language
-        :param language: Language of source words
-        :return: List of linked BaseKey objects
+        Args:
+          source: List[str]: List of words on vernacular language
+          language: str: Language of source words (Default value = None)
+
+        Returns:
+          List of linked BaseKey objects
+
         """
 
         language = language if language else self.language
@@ -197,13 +393,16 @@ class BaseDefinition(db.Model, InitBase, DBBase):
         return new_keys
 
     def link_key_from_str(self, word: str, language: str = None) -> Optional[BaseKey]:
-        """
-        Linking vernacular word with BaseDefinition object
+        """Linking vernacular word with BaseDefinition object
         Only new word will be linked, skipping this that was previously linked
 
-        :param word: BaseWord on vernacular language
-        :param language: BaseWords language
-        :return: Linked BaseKey object or None if it were already linked
+        Args:
+          word: str: name of BaseWord on vernacular language
+          language: str: BaseWord's language (Default value = None)
+
+        Returns:
+          Linked BaseKey object or None if it were already linked
+
         """
         language = language if language else self.language
         result = self.link_keys_from_list_of_str(source=[word, ], language=language)
@@ -212,11 +411,16 @@ class BaseDefinition(db.Model, InitBase, DBBase):
     def link_keys_from_definition_body(
             self, language: str = None,
             pattern: str = KEY_PATTERN) -> List[BaseKey]:
-        """
-        Extract and link keys from BaseDefinition's body
-        :param language: Language of BaseDefinition's keys
-        :param pattern: Regex pattern for extracting keys from the BaseDefinition's body
-        :return: List of linked BaseKey objects
+        """Extract and link keys from BaseDefinition's body
+
+        Args:
+          language: str: Language of BaseDefinition's keys (Default value = None)
+          pattern: str: Regex pattern for extracting keys from the BaseDefinition's body
+            (Default value = KEY_PATTERN)
+
+        Returns:
+          List of linked BaseKey objects
+
         """
         language = language if language else self.language
         keys = re.findall(pattern, self.body)
@@ -224,17 +428,22 @@ class BaseDefinition(db.Model, InitBase, DBBase):
 
     def link_keys(
             self, source: Union[List[str], str, None] = None,
-            language: str = None, pattern: str = KEY_PATTERN) -> Union[BaseKey, List[BaseKey]]:
-        """
-        Universal method for linking all available types of key sources with BaseDefinition
+            language: str = None, pattern: str = KEY_PATTERN) -> Optional[BaseKey, List[BaseKey]]:
+        """Universal method for linking all available types of key sources with BaseDefinition
 
-        :param source: Could be a str, List of str, or None
-        If no source is provided, keys will be extracted from the BaseDefinition's body
-        If source is a string or a list of strings, the language of the keys must be specified
-        TypeError will be raised if the source contains inappropriate data
-        :param language: Language of BaseDefinition's keys
-        :param pattern: Regex pattern for extracting keys from the BaseDefinition's body
-        :return: None, BaseKey, or List of BaseKeys
+        Args:
+          source: Union[List[str], str, None]:
+            If no source is provided, keys will be extracted from the BaseDefinition's body
+            If source is a string or a list of strings, the language of the keys must be specified
+            TypeError will be raised if the source contains inappropriate data
+            (Default value = None)
+          language: str: Language of BaseDefinition's keys (Default value = None)
+          pattern: str: Regex pattern for extracting keys from the BaseDefinition's body
+            (Default value = KEY_PATTERN)
+
+        Returns:
+          None, BaseKey, or List of BaseKeys
+
         """
 
         language = language if language else self.language
@@ -253,12 +462,12 @@ class BaseDefinition(db.Model, InitBase, DBBase):
 
 
 class BaseWord(db.Model, InitBase, DBBase):
-    """
-    BaseWord model
-    """
+    """BaseWord model"""
     __tablename__ = t_name_words
 
     id = db.Column(db.Integer, primary_key=True)
+    """Word's internal ID number: Integer"""
+
     id_old = db.Column(db.Integer, nullable=False)  # Compatibility with the previous database
     name = db.Column(db.String(64), nullable=False)
     origin = db.Column(db.String(128))
@@ -270,25 +479,25 @@ class BaseWord(db.Model, InitBase, DBBase):
     TID_old = db.Column(db.Integer)  # references
 
     type_id = db.Column("type", db.ForeignKey(f'{t_name_types}.id'), nullable=False)
-    type = db.relationship(
+    type: BaseType = db.relationship(
         BaseType.__name__, backref="words", enable_typechecks=False)
 
     event_start_id = db.Column(
         "event_start", db.ForeignKey(f'{t_name_events}.id'), nullable=False)
-    event_start = db.relationship(
+    event_start: BaseEvent = db.relationship(
         BaseEvent.__name__, foreign_keys=[event_start_id],
         backref="appeared_words", enable_typechecks=False)
 
     event_end_id = db.Column("event_end", db.ForeignKey(f'{t_name_events}.id'))
-    event_end = db.relationship(
+    event_end: BaseEvent = db.relationship(
         BaseEvent.__name__, foreign_keys=[event_end_id],
         backref="deprecated_words", enable_typechecks=False)
 
-    authors = db.relationship(
+    authors: BaseQuery = db.relationship(
         BaseAuthor.__name__, secondary=t_connect_authors,
         backref="contribution", lazy='dynamic', enable_typechecks=False)
 
-    definitions = db.relationship(
+    definitions: BaseQuery = db.relationship(
         BaseDefinition.__name__, backref="source_word",
         lazy='dynamic', enable_typechecks=False)
 
@@ -303,17 +512,25 @@ class BaseWord(db.Model, InitBase, DBBase):
     def __is_parented(self, child: BaseWord) -> bool:
         """
         Check, if this word is already added as a parent for this 'child'
-        :param child: BaseWord object
-        :return: bool
+
+        Args:
+            child: BaseWord: BaseWord object to check
+
+        Returns: bool:
+
         """
         return self.__derivatives.filter(t_connect_words.c.child_id == child.id).count() > 0
 
     def add_child(self, child: BaseWord) -> str:
-        """
-        Add derivative for the source word
+        """Add derivative for the source word
         Get words from Used In and add relationship in database
-        :param child: BaseWord object
-        :return: None
+
+        Args:
+          child: BaseWord: Object to add
+
+        Returns:
+            String with the name of the added child (BaseWord.name)
+
         """
         # TODO add check if type of child is allowed to add to this word
         if not self.__is_parented(child):
@@ -321,45 +538,56 @@ class BaseWord(db.Model, InitBase, DBBase):
         return child.name
 
     def add_children(self, children: List[BaseWord]):
-        """
-        Add derivatives for the source word
+        """Add derivatives for the source word
         Get words from Used In and add relationship in database
-        :param children: List of BaseWord objects
-        :return: None
+
+        Args:
+          children: List[BaseWord]:
+
+        Returns:
+          None
+
         """
         # TODO add check if type of child is allowed to add to this word
         new_children = list(set(children) - set(self.__derivatives))
         _ = self.__derivatives.extend(new_children) if new_children else None
 
     def add_author(self, author: BaseAuthor) -> str:
-        """
-        Connect Author object with BaseWord object
-        :param author: Author object
-        :return:
+        """Connect Author object with BaseWord object
+
+        Args:
+          author: BaseAuthor:
+
+        Returns:
+
         """
         if not self.authors.filter(BaseAuthor.abbreviation == author.abbreviation).count() > 0:
             self.authors.append(author)
         return author.abbreviation
 
     def add_authors(self, authors: List[BaseAuthor]):
-        """
-        Connect Author objects with BaseWord object
-        :param authors: List of Author object
-        :return:
+        """Connect Author objects with BaseWord object
+
+        Args:
+          authors: List[BaseAuthor]:
+
+        Returns:
+
         """
         new_authors = list(set(authors) - set(self.authors))
         _ = self.authors.extend(new_authors) if new_authors else None
 
-    def query_derivatives(self,
-                          word_type: str = None,
-                          word_type_x: str = None,
-                          word_group: str = None) -> BaseQuery:
-        """
-        Query to get all derivatives of the word, depending on its parameters
-        :param word_type:
-        :param word_type_x:
-        :param word_group:
-        :return:
+    def query_derivatives(self, word_type: str = None,
+                          word_type_x: str = None, word_group: str = None) -> BaseQuery:
+        """Query to get all derivatives of the word, depending on its parameters
+
+        Args:
+          word_type: str:  (Default value = None)
+          word_type_x: str:  (Default value = None)
+          word_group: str:  (Default value = None)
+
+        Returns:
+
         """
         result = self.__derivatives.filter(self.id == t_connect_words.c.parent_id)
 
@@ -376,73 +604,100 @@ class BaseWord(db.Model, InitBase, DBBase):
         return result.order_by(BaseWord.name.asc())
 
     def query_parents(self) -> BaseQuery:
-        """
-        Query to get all parents of the Complexes, Little words or Affixes
+        """Query to get all parents of the Complexes, Little words or Affixes
         :return: Query
+
+        Args:
+
+        Returns:
+            BaseQuery
         """
         return self._parents  # if self.type in self.__parentable else []
 
     def query_cpx(self) -> BaseQuery:
-        """
-        Query to qet all the complexes that exist for this word
+        """Query to qet all the complexes that exist for this word
         Only primitives have affixes
-        :return: Query
+
+        Args:
+
+        Returns:
+            BaseQuery
         """
         return self.query_derivatives(word_group="Cpx")
 
     def query_afx(self) -> BaseQuery:
-        """
-        Query to qet all the affixes that exist for this word
+        """Query to qet all the affixes that exist for this word
         Only primitives have affixes
-        :return: Query
+
+        Args:
+
+        Returns:
+            BaseQuery
         """
         return self.query_derivatives(word_type="Afx")
 
     def query_keys(self) -> BaseQuery:
-        """
-        Query for the BaseKeys linked with this BaseWord
-        :return: Query
+        """Query for the BaseKeys linked with this BaseWord
+
+        Args:
+
+        Returns:
+            BaseQuery
         """
         return BaseKey.query.join(
             t_connect_keys, BaseDefinition, BaseWord).filter(BaseWord.id == self.id)
 
     @property
     def parents(self) -> List[BaseWord]:
-        """
-        Get all parents of the Complexes, Little words or Affixes
-        :return: List of BaseWords
+        """Get all parents of the Complexes, Little words or Affixes
+
+        Args:
+
+        Returns:
+            List[BaseWord]
         """
         return self.query_parents().all()
 
     @property
     def complexes(self) -> List[BaseWord]:
-        """
-        Get all word's complexes if exist
-        :return: List of BaseWords
+        """Get all word's complexes if exist
+
+        Args:
+
+        Returns:
+            List[BaseWord]
         """
         return self.query_cpx().all()
 
     @property
     def affixes(self) -> List[BaseWord]:
-        """
-        Get all word's affixes if exist
-        :return: List of BaseWords
+        """Get all word's affixes if exist
+
+        Args:
+
+        Returns:
+            List[BaseWord]
         """
         return self.query_afx().all()
 
     @property
     def keys(self) -> List[BaseKey]:
-        """
-        Get all BaseKey object related to this BaseWord
+        """Get all BaseKey object related to this BaseWord
         Keep in mind that duplicate keys for different definitions
-            will not be added to the final result
-        :return: List of BaseKey
+        will not be added to the final result
+
+        Args:
+
+        Returns:
+            List[BaseKey]
         """
         return self.query_keys().all()
 
     def get_sources_prim(self):
         """
-        :return:
+
+        Returns:
+
         """
         # existing_prim_types = ["C", "D", "I", "L", "N", "O", "S", ]
 
@@ -461,7 +716,9 @@ class BaseWord(db.Model, InitBase, DBBase):
 
     def _get_sources_c_prim(self) -> List[BaseWordSource]:
         """
-        :return:
+
+        Returns:
+
         """
         if self.type.type != "C-Prim":
             return []
@@ -484,12 +741,15 @@ class BaseWord(db.Model, InitBase, DBBase):
         return word_sources
 
     def get_sources_cpx(self, as_str: bool = False) -> List[Union[str, BaseWord]]:
-        """
-        Extract source words from self.origin field accordingly
-        :param as_str: Boolean - return BaseWord objects if False else as simple str
-        :return: List of words from which the self.name was created
+        """Extract source words from self.origin field accordingly
+        Args:
+            as_str (bool): return BaseWord objects if False else as simple str
+            (Default value = False)
+        Example:
+            'foldjacea' > ['forli', 'djano', 'cenja']
+        Returns:
+            List of words from which the self.name was created
 
-        Example: 'foldjacea' > ['forli', 'djano', 'cenja']
         """
 
         # these prims have switched djifoas like 'flo' for 'folma'
@@ -520,10 +780,15 @@ class BaseWord(db.Model, InitBase, DBBase):
         return result_as_str
 
     def get_sources_cpd(self, as_str: bool = False) -> List[Union[str, BaseWord]]:
-        """
-        Extract source words from self.origin field accordingly
-        :param as_str: Boolean - return BaseWord objects if False else as simple str
-        :return: List of words from which the self.name was created
+        """Extract source words from self.origin field accordingly
+
+        Args:
+          as_str: bool: return BaseWord objects if False else as simple str
+          (Default value = False)
+
+        Returns:
+          List of words from which the self.name was created
+
         """
 
         if not self.type.type == "Cpd":
@@ -547,10 +812,14 @@ class BaseWord(db.Model, InitBase, DBBase):
 
     @classmethod
     def by_event(cls, event_id: Union[BaseEvent, int] = None) -> BaseQuery:
-        """
-        Query filtered by specified Event (latest by default)
-        :param event_id: Event object or Event.id (int)
-        :return: Query
+        """Query filtered by specified Event (latest by default)
+
+        Args:
+          event_id: Union[BaseEvent, int]: Event object or Event.id (int) (Default value = None)
+
+        Returns:
+          BaseQuery
+
         """
         if not event_id:
             event_id = BaseEvent.latest().id
@@ -563,11 +832,15 @@ class BaseWord(db.Model, InitBase, DBBase):
 
     @classmethod
     def by_name(cls, name: str, case_sensitive: bool = False) -> BaseQuery:
-        """
-        Word.Query filtered by specified name
-        :param name: str
-        :param case_sensitive: bool
-        :return: Query
+        """Word.Query filtered by specified name
+
+        Args:
+          name: str: 
+          case_sensitive: bool:  (Default value = False)
+
+        Returns:
+          BaseQuery
+
         """
         if case_sensitive:
             return cls.query.filter(cls.name == name)
@@ -578,12 +851,16 @@ class BaseWord(db.Model, InitBase, DBBase):
             cls, key: Union[BaseKey, str],
             language: str = None,
             case_sensitive: bool = False) -> BaseQuery:
-        """
-        Word.Query filtered by specified key
-        :param key: BaseKey object or str
-        :param language: Language of key
-        :param case_sensitive: bool
-        :return: Query
+        """Word.Query filtered by specified key
+
+        Args:
+          key: Union[BaseKey, str]:
+          language: str: Language of key (Default value = None)
+          case_sensitive: bool:  (Default value = False)
+
+        Returns:
+          BaseQuery
+
         """
 
         key = BaseKey.word if isinstance(key, BaseKey) else str(key)
@@ -600,9 +877,7 @@ class BaseWord(db.Model, InitBase, DBBase):
 
 
 class BaseWordSource(InitBase):
-    """
-    Word Source from BaseWord.origin for Prims
-    """
+    """Word Source from BaseWord.origin for Prims"""
     __tablename__ = t_name_word_sources
 
     LANGUAGES = {
@@ -621,9 +896,11 @@ class BaseWordSource(InitBase):
     transcription: str = None
 
     @property
-    def as_string(self):  # For example, '3/5R mesto'
+    def as_string(self) -> str:
         """
-        :return:
+        Format WordSource as string, for example, '3/5R mesto'
+        Returns:
+            str
         """
         return f"{self.coincidence}/{self.length}{self.language} {self.transcription}"
 
@@ -631,3 +908,7 @@ class BaseWordSource(InitBase):
 class BaseWordSpell(InitBase):
     """BaseWordSpell model"""
     __tablename__ = t_name_word_spells
+
+
+if __name__ == '__main__':
+    db.metadata.clear()
