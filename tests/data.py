@@ -20,8 +20,7 @@ keys = [key_1, key_2, key_3, key_4, key_5, key_6, key_7, key_8, key_9, key_10, k
 
 un_key_1 = {'word': 'examine', 'language': 'en', 'id': 1}
 un_key_2 = {'word': 'examine', 'language': 'es', 'id': 2}
-un_key_3 = {'word': 'examine', 'id': 3}
-un_key_4 = {'word': 'examine', 'language': 'es', 'id': 4}
+un_key_3 = {'word': 'examine', 'language': 'es', 'id': 3}
 un_keys = [un_key_1, un_key_2, un_key_3, ]
 
 # ===== EVENTS =================================================================
