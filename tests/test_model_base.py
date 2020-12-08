@@ -458,6 +458,15 @@ class TestWord:
         assert p2.query_derivatives().count() == 2
         assert isinstance(p2.query_derivatives().first(), Word)
 
+        assert p1.query_derivatives(word_type="Afx").count() == 2
+        assert p1.query_derivatives(word_type="2-Cpx").count() == 1
+
+        assert p1.query_derivatives(word_type_x="Predicate").count() == 1
+        assert p2.query_derivatives(word_type_x="Affix").count() == 1
+
+        assert p1.query_derivatives(word_group="Little").count() == 2
+        assert p2.query_derivatives(word_group="Cpx").count() == 1
+
     def test_query_parents(self):
         db_add_objects(Word, words)
         db_connect_words(connect_words)
