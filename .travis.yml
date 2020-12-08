@@ -1,3 +1,4 @@
+sudo: false
 language: python
 python:
   - "3.7"
@@ -10,4 +11,7 @@ install:
   - pip install -r requirements-tests.txt
 # command to run tests
 script:
-  - pytest tests/
+  - pytest --cov=loglan_db tests/
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
