@@ -14,7 +14,8 @@ from loglan_db.model_base import BaseWord as Word, BaseType as Type, BaseEvent a
 from tests.functions import db_connect_authors, db_connect_keys, db_connect_words, \
     db_add_objects, dar, db_add_object
 
-from tests.data import keys, definitions, words, types, authors, settings, syllables
+from tests.data import keys, definitions, words, types, authors, settings, syllables, \
+    prim_words, prim_types, word_1_source_1
 from tests.data import changed_words, changed_events, all_events, doubled_words
 from tests.data import littles, little_types
 from tests.data import definition_1, definition_2, word_1, word_2, word_3
@@ -559,14 +560,33 @@ class TestWord:
     def test_get_sources_prim(self):
         db_add_objects(Word, words)
         db_add_objects(Type, types)
+        db_add_objects(Word, prim_words)
+        db_add_objects(Type, prim_types)
 
         afx = Word.get_by_id(3802)
-        assert afx.get_sources_prim() == []
+        result = afx.get_sources_prim()
+        assert result is None
 
         result = Word.get_by_id(3813).get_sources_prim()
         assert len(result) == 5
         assert isinstance(result, list)
         assert isinstance(result[0], WordSource)
+
+        result = Word.get_by_id(291).get_sources_prim()
+        assert isinstance(result, str)
+        assert result == "balna: balnu"
+
+        result = Word.get_by_id(318).get_sources_prim()
+        assert isinstance(result, str)
+        assert result == "banko: Int."
+
+        result = Word.get_by_id(984).get_sources_prim()
+        assert isinstance(result, str)
+        assert result == "cimpe: abbreviation of cimpenizi"
+
+        result = Word.get_by_id(5655).get_sources_prim()
+        assert isinstance(result, str)
+        assert result == "murmu: Onamatopoetic"
 
     def test__get_sources_c_prim(self):
         db_add_objects(Word, words)
@@ -577,6 +597,10 @@ class TestWord:
         assert len(result) == 5
         assert isinstance(result, list)
         assert isinstance(result[0], WordSource)
+
+        afx = Word.get_by_id(3802)
+        result = afx._get_sources_c_prim()
+        assert result is None
 
     def test_get_sources_cpx(self):
         db_add_objects(Word, words)
@@ -611,6 +635,13 @@ class TestWord:
         assert isinstance(result[0], str)
         assert result == ['bi', 'cio']
 
+        db_add_objects(Word, words)
+        db_add_objects(Type, types)
+
+        afx = Word.get_by_id(3802)
+        result = afx.get_sources_cpd()
+        assert result == []
+
     def test_by_event(self):
         db_add_objects(Word, changed_words + words)
         db_add_objects(Event, all_events)
@@ -622,6 +653,9 @@ class TestWord:
         assert len(result) == 10
 
         result = Word.by_event(5).all()
+        assert len(result) == 9
+
+        result = Word.by_event().all()
         assert len(result) == 9
 
     def test_by_name(self):
@@ -640,6 +674,9 @@ class TestWord:
         result = Word.by_name("duo").first()
         assert isinstance(result, Word)
 
+        result = Word.by_name("Duo", case_sensitive=True).first()
+        assert result is None
+
     def test_by_key(self):
         db_add_objects(Word, words)
         db_add_objects(Definition, definitions)
@@ -649,5 +686,37 @@ class TestWord:
         result = Word.by_key("test").count()
         assert result == 5
 
+        result = Word.by_key("Test", case_sensitive=True).count()
+        assert result == 0
+
+        result = Word.by_key("Test").count()
+        assert result == 5
+
         result = [w.name for w in Word.by_key("test").all()]
         assert result == ['pru', 'pruci', 'prukao']
+
+        result = Word.by_key("test", language="es").count()
+        assert result == 0
+
+        result = Word.by_key("test", language="en").count()
+        assert result == 5
+
+
+@pytest.mark.usefixtures("db")
+class TestWordSource:
+    """WordSource tests."""
+
+    def test_create_from_dict_with_data(self):
+        """Get WordSource"""
+        word_source = WordSource(**word_1_source_1)
+        assert isinstance(word_source.coincidence, int)
+        assert isinstance(word_source.length, int)
+        assert isinstance(word_source.language, str)
+        assert isinstance(word_source.transcription, str)
+
+    def test_as_string(self):
+        word_source = WordSource(**word_1_source_1)
+        result = word_source.as_string
+
+        assert isinstance(result, str)
+        assert result == "2/2E do"

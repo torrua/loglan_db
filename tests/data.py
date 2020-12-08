@@ -127,3 +127,24 @@ little_types = [little_type_1, little_type_2, ]
 doubled_word_1 = {'updated': None, 'notes': None, 'id': 1835, 'TID_old': None, 'id_old': 1722, 'name': 'duo', 'type_id': 17, 'origin': 'du(rz)o', 'event_start_id': 1, 'origin_x': '', 'event_end_id': None, 'match': '', 'created': datetime.datetime(2020, 10, 25, 7, 53, 54, 873132), 'rank': '1.0', 'year': datetime.date(1975, 1, 1)}
 doubled_word_2 = {'updated': None, 'notes': {'author': '(?)', 'year': '(?)'}, 'id': 1836, 'TID_old': None, 'id_old': 9958, 'name': 'duo', 'type_id': 2, 'origin': 'du(rz)o', 'event_start_id': 1, 'origin_x': '', 'event_end_id': None, 'match': '', 'created': datetime.datetime(2020, 10, 25, 7, 53, 54, 873132), 'rank': '7+?', 'year': datetime.date(1988, 1, 1)}
 doubled_words = [doubled_word_1, doubled_word_2, ]
+
+
+# ===== PRIM WORDS ===========================================================
+prim_d = {'TID_old': None, 'name': 'balna', 'origin': 'balnu', 'type_id': 10, 'origin_x': '', 'event_start_id': 1, 'match': '', 'event_end_id': None, 'rank': '7+', 'year': datetime.date(2000, 1, 1), 'notes': None, 'id': 291, 'id_old': 197}
+prim_i = {'TID_old': None, 'name': 'banko', 'origin': 'Int.', 'type_id': 11, 'origin_x': '', 'event_start_id': 1, 'match': '', 'event_end_id': None, 'rank': '1.8', 'year': datetime.date(1975, 1, 1), 'notes': None, 'id': 318, 'id_old': 224}
+prim_l = {'TID_old': None, 'name': 'cimpe', 'origin': 'abbreviation of cimpenizi', 'type_id': 12, 'origin_x': '', 'event_start_id': 1, 'match': '', 'event_end_id': None, 'rank': '7+', 'year': datetime.date(1988, 1, 1), 'notes': None, 'id': 984, 'id_old': 971}
+prim_o = {'TID_old': None, 'name': 'murmu', 'origin': 'Onamatopoetic', 'type_id': 14, 'origin_x': '', 'event_start_id': 1, 'match': '', 'event_end_id': None, 'rank': '2.5', 'year': datetime.date(1987, 1, 1), 'notes': None, 'id': 5655, 'id_old': 5648}
+prim_words = [prim_d, prim_i, prim_l, prim_o, ]
+
+# ===== PRIM TYPES ===========================================================
+type_d = {'parentable': False, 'type_x': 'Predicate', 'id': 10, 'description': 'Derived Primitive, one of the primitives that follows the cultural (language, nationality, culture) or animal (male, female, infant, resembling, unspecified) declension.', 'group': 'Prim', 'type': 'D-Prim'}
+type_i = {'parentable': False, 'type_x': 'Predicate', 'id': 11, 'description': 'International Primitives, drawn from a single word of international scope. E.g. telfo from "telephone".', 'group': 'Prim', 'type': 'I-Prim'}
+type_l = {'parentable': False, 'type_x': 'Predicate', 'id': 12, 'description': 'Loglan Primitives, a small group of primitives that were drawn from other Loglan words. E.g. logla from the name Loglan.', 'group': 'Prim', 'type': 'L-Prim'}
+type_o = {'parentable': False, 'type_x': 'Predicate', 'id': 14, 'description': 'Onomatopoetic E.g zbuma, to explode.', 'group': 'Prim', 'type': 'O-Prim'}
+prim_types = [type_d, type_i, type_l, type_o, ]
+
+# ===== WORD SOURCES ===========================================================
+word_1_source_1 = {'coincidence': 2, 'length': 2, 'language': 'E', 'transcription': 'do'}
+word_1_source_2 = {'coincidence': 3, 'length': 3, 'language': 'C', 'transcription': 'dzo'}
+word_1_source_3 = {'coincidence': 2, 'length': 4, 'language': 'J', 'transcription': 'suru'}
+word_1_sources = [word_1_source_1, word_1_source_2, word_1_source_3, ]

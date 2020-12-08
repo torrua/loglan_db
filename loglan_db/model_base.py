@@ -699,10 +699,11 @@ class BaseWord(db.Model, InitBase, DBBase):
         Returns:
 
         """
+        # TODO REFACTOR
         # existing_prim_types = ["C", "D", "I", "L", "N", "O", "S", ]
 
         if not self.type.group == "Prim":
-            return []
+            return None
 
         prim_type = self.type.type[:1]
 
@@ -710,18 +711,16 @@ class BaseWord(db.Model, InitBase, DBBase):
             return self._get_sources_c_prim()
 
         if prim_type in ["D", "I", "L", "N", "O", "S", ]:  # TODO
-            return f"{self.name}: {self.origin} < {self.origin_x}"
+            return f"{self.name}: {self.origin}{' < '+ self.origin_x if self.origin_x else ''}"
 
-        return list()
-
-    def _get_sources_c_prim(self) -> List[BaseWordSource]:
+    def _get_sources_c_prim(self) -> Optional[List[BaseWordSource]]:
         """
 
         Returns:
 
         """
         if self.type.type != "C-Prim":
-            return []
+            return None
 
         pattern_source = r"\d+\/\d+\w"
         sources = str(self.origin).split(" | ")
@@ -908,7 +907,3 @@ class BaseWordSource(InitBase):
 class BaseWordSpell(InitBase):
     """BaseWordSpell model"""
     __tablename__ = t_name_word_spells
-
-
-if __name__ == '__main__':
-    db.metadata.clear()
