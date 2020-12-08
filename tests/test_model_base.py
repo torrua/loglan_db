@@ -322,6 +322,10 @@ class TestDefinition:
         assert d3.keys.count() == 2
         assert sorted([k.language for k in d3.keys.all()]) == [es_code, ru_code]
 
+        d4 = dar(Definition, definitions[4])
+        with pytest.raises(TypeError) as _:
+            d4.link_keys(source=1234)
+
 
 @pytest.mark.usefixtures("db")
 class TestWord:
