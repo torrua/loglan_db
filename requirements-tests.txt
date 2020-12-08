@@ -3,4 +3,5 @@ flask_sqlalchemy
 sqlalchemy
 psycopg2
 pytest
+pytest-cov
 coveragepy
