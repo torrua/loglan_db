@@ -18,6 +18,13 @@ from sqlalchemy import exists, or_
 from loglan_db import db
 from loglan_db.model_init import InitBase, DBBase
 
+
+if os.environ.get("IS_PDOC", "False") == "True":
+    from flask_sqlalchemy import SQLAlchemy
+    from loglan_db import app_lod
+    db = SQLAlchemy(app_lod())
+
+
 t_name_authors = "authors"
 """`str` : `__tablename__` value for `BaseAuthor` table"""
 
@@ -56,40 +63,34 @@ t_name_connect_words = "connect_words"
 t_name_connect_keys = "connect_keys"
 """`str` : `__tablename__` value for `t_connect_keys` table"""
 
+__pdoc__ = {
+    'BaseEvent.appeared_words': """*Relationship query for getting a list of words appeared during this event*
 
-if os.environ.get("IS_PDOC", False):
-    __pdoc__ = {
-        'BaseEvent.appeared_words': """*Relationship query for getting a list of words appeared during this event*
-        
-        **query** : Optional[List[BaseWord]]""",
+    **query** : Optional[List[BaseWord]]""",
 
-        'BaseEvent.deprecated_words': """*Relationship query for getting a list of words deprecated during this event*
+    'BaseEvent.deprecated_words': """*Relationship query for getting a list of words deprecated during this event*
 
-        **query** : Optional[List[BaseWord]]""",
+    **query** : Optional[List[BaseWord]]""",
 
-        'BaseAuthor.contribution': """*Relationship query for getting a list of words coined by this author*
-        
-        **query** : Optional[List[BaseWord]]""",
+    'BaseAuthor.contribution': """*Relationship query for getting a list of words coined by this author*
 
-        'BaseType.words': 'words',
-        'BaseDefinition.source_word': 'source_word',
-        'BaseKey.definitions': """*Relationship query for getting a list of definitions related to this key*
-        
-        **query** : Optional[List[BaseDefinition]]""",
+    **query** : Optional[List[BaseWord]]""",
 
-        'BaseAuthor.created': False, 'BaseAuthor.updated': False,
-        'BaseEvent.created': False, 'BaseEvent.updated': False,
-        'BaseKey.created': False, 'BaseKey.updated': False,
-        'BaseSetting.created': False, 'BaseSetting.updated': False,
-        'BaseSyllable.created': False, 'BaseSyllable.updated': False,
-        'BaseType.created': False, 'BaseType.updated': False,
-        'BaseDefinition.created': False, 'BaseDefinition.updated': False,
-        'BaseWord.created': False, 'BaseWord.updated': False,
-    }
+    'BaseType.words': 'words',
+    'BaseDefinition.source_word': 'source_word',
+    'BaseKey.definitions': """*Relationship query for getting a list of definitions related to this key*
 
-    from flask_sqlalchemy import SQLAlchemy
-    from loglan_db import app_lod
-    db = SQLAlchemy(app_lod())
+    **query** : Optional[List[BaseDefinition]]""",
+
+    'BaseAuthor.created': False, 'BaseAuthor.updated': False,
+    'BaseEvent.created': False, 'BaseEvent.updated': False,
+    'BaseKey.created': False, 'BaseKey.updated': False,
+    'BaseSetting.created': False, 'BaseSetting.updated': False,
+    'BaseSyllable.created': False, 'BaseSyllable.updated': False,
+    'BaseType.created': False, 'BaseType.updated': False,
+    'BaseDefinition.created': False, 'BaseDefinition.updated': False,
+    'BaseWord.created': False, 'BaseWord.updated': False,
+}
 
 t_connect_authors = db.Table(
     t_name_connect_authors, db.metadata,
