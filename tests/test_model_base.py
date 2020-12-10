@@ -3,7 +3,6 @@
 """Base Model unit tests."""
 
 import datetime
-
 import pytest
 import sqlalchemy.exc
 
@@ -408,8 +407,13 @@ class TestWord:
 
         for p in [word_2, word_3]:
             prim = Word.get_by_id(p.get("id"))
-            prim.add_child(cmp)
+            result = prim.add_child(cmp)
+            assert result == cmp.name
 
+        assert cmp._parents.count() == 2
+
+        prim = Word.get_by_id(word_3.get("id"))
+        prim.add_child(cmp)
         assert cmp._parents.count() == 2
 
     def test_add_children(self):
@@ -587,6 +591,14 @@ class TestWord:
         result = Word.get_by_id(5655).get_sources_prim()
         assert isinstance(result, str)
         assert result == "murmu: Onamatopoetic"
+
+        result = Word.get_by_id(641).get_sources_prim()
+        assert isinstance(result, str)
+        assert result == "bordo: Fr. Bordeaux"
+
+        result = Word.get_by_id(849).get_sources_prim()
+        assert isinstance(result, str)
+        assert result == "carbo: ISV"
 
     def test__get_sources_c_prim(self):
         db_add_objects(Word, words)

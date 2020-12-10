@@ -8,10 +8,11 @@ import pytest
 from loglan_db.model_export import ExportAuthor as Author, ExportEvent as Event, \
     ExportSyllable as Syllable, ExportSetting as Setting, ExportType as Type, \
     ExportWord as Word, ExportDefinition as Definition, ExportWordSpell as WordSpell
-from tests.data import author_1, event_1, syllable_35, setting_1, type_1, word_1
+from tests.data import author_1, other_author_1, event_1, syllable_35, setting_1, type_1, word_1, other_word_1
 from tests.data import connect_authors, connect_words
 from tests.data import definitions, words, types, authors
-from tests.functions import db_add_and_return, db_add_objects, db_connect_authors, db_connect_words
+from tests.functions import db_add_and_return, db_add_objects, db_add_object, \
+    db_connect_authors, db_connect_words
 
 
 @pytest.mark.usefixtures("db")
@@ -107,6 +108,14 @@ class TestWord:
 
         result = word.e_source
         assert result == "JCB (?)"
+
+        db_add_object(Word, other_word_1)
+        db_add_object(Author, other_author_1)
+        db_connect_authors([(13, 1006), (36, 1006), ])
+        word = Word.get_by_id(1006)
+
+        result = word.e_source
+        assert result == "JCB/RAM"
 
     def test_e_year(self):
         """Test year conversion"""

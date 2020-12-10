@@ -711,8 +711,7 @@ class BaseWord(db.Model, InitBase, DBBase):
         if prim_type == "C":
             return self._get_sources_c_prim()
 
-        if prim_type in ["D", "I", "L", "N", "O", "S", ]:  # TODO
-            return f"{self.name}: {self.origin}{' < '+ self.origin_x if self.origin_x else ''}"
+        return f"{self.name}: {self.origin}{' < '+ self.origin_x if self.origin_x else ''}"
 
     def _get_sources_c_prim(self) -> Optional[List[BaseWordSource]]:
         """

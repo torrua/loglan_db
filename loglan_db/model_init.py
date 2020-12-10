@@ -20,15 +20,17 @@ class InitBase:
 
     def __str__(self) -> str:
         return str({
-            k: v for k, v in self.__dict__.items()
+            k: v for k, v in sorted(self.__dict__.items())
             if not str(k).startswith("_") and k not in ["created", "updated"]})
 
-    def __init__(self, *initial_data, **kwargs):
-        for dictionary in initial_data:
-            for key in dictionary:
-                setattr(self, key, dictionary[key])
+    def __init__(self, **kwargs):
         for key in kwargs:
             setattr(self, key, kwargs[key])
+
+    @classmethod
+    def from_dict(cls, dic):
+        df = {k: v for k, v in dic.items()}
+        return cls(**df)
 
     def export(self):
         """

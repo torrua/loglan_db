@@ -93,6 +93,14 @@ class TestWord:
         result = word.html_origin(style="normal")
         assert result == '<span class="m_origin">&lt;pru(ci)+ka(kt)o=test act&gt;</span> '
 
+        word.origin = None
+        result = word.html_origin()
+        assert result == "<o>&lt;test act&gt;</o> "
+
+        word.origin_x = None
+        result = word.html_origin()
+        assert result == ""
+
     def test_html_definitions(self):
         """Test exporting word's definitions as a list of HTML strings"""
         db_add_objects(Word, words)
