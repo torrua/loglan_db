@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Default Model of LOD database
+This module contains a default LOD dictionary model for a SQL database.
 """
 
 from loglan_db.model_base import BaseAuthor, BaseEvent, \

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Export extensions of LOD database models
-Add export() function to db object for returning its text string presentation
+This module contains an "Export extensions" for LOD dictionary SQL model.
+Add export() function to db object for returning its text string presentation.
 """
 
 from loglan_db.model_base import BaseAuthor, BaseEvent, BaseSyllable, \

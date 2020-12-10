@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Initializing application module
-Create an application object and database
+This module contains functions and variables for initializing application and db
 """
 
 import os

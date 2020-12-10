@@ -2,22 +2,23 @@
 # pylint: disable=E1101, C0103
 
 """
-This module contains a description of the basic LOD dictionary model for a SQL database.
-Each class is a description of a db table:
+This module contains a basic LOD dictionary model for a SQL database.
+Each class is a detailed description of a db table:
 Authors, Events, Keys, Definitions, Words, etc.
 """
 
 
 from __future__ import annotations
-import re
+
 import os
+import re
 from typing import List, Union, Optional
 
 from flask_sqlalchemy import BaseQuery
 from sqlalchemy import exists, or_
+
 from loglan_db import db
 from loglan_db.model_init import InitBase, DBBase
-
 
 if os.environ.get("IS_PDOC", "False") == "True":
     from flask_sqlalchemy import SQLAlchemy
@@ -700,7 +701,6 @@ class BaseWord(db.Model, InitBase, DBBase):
         Returns:
 
         """
-        # TODO REFACTOR
         # existing_prim_types = ["C", "D", "I", "L", "N", "O", "S", ]
 
         if not self.type.group == "Prim":
