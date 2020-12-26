@@ -3,8 +3,8 @@
 HTML Export extensions of LOD database models
 """
 import os
+from typing import Optional
 from loglan_db.model_export import ExportWord, ExportDefinition
-
 
 DEFAULT_HTML_STYLE = os.getenv("DEFAULT_HTML_STYLE", "ultra")
 
@@ -111,6 +111,33 @@ class HTMLExportWord(ExportWord):
     """
 
     """
+
+    @classmethod
+    def html_all_by_name(cls, name: str, style: str = DEFAULT_HTML_STYLE) -> Optional[str]:
+        """
+        Convert all words found by name into one HTML string
+        Args:
+            name: Name of the search word
+            style: HTML design style
+
+        Returns:
+
+        """
+        words = cls.by_name(name=name).all()
+
+        if not words:
+            return None
+
+        meanings = "\n".join([word.html_meaning(style) for word in words])
+
+        if style == "normal":
+            return f'<div class="word" wid="{words[0].name.lower()}">\n' \
+                   f'<div class="word_line"><span class="word_name">{words[0].name}</span>,</div>\n' \
+                   f'<div class="meanings">\n{meanings}\n</div>\n</div>'
+        else:
+            return f'<w wid="{words[0].name.lower()}"><wl>{words[0].name},</wl>\n' \
+                   f'<ms>\n{meanings}\n</ms>\n</w>'
+
     def html_origin(self, style: str = DEFAULT_HTML_STYLE):
         """
 
@@ -171,8 +198,26 @@ class HTMLExportWord(ExportWord):
         html_tech = f'{html_affixes}{self.html_origin(style)}{html_tech}'
 
         return {
-                "mid": self.id,
-                "technical": html_tech,
-                "definitions": self.html_definitions(style),
-                "used_in": html_usedin
+            "mid": self.id,
+            "technical": html_tech,
+            "definitions": self.html_definitions(style),
+            "used_in": html_usedin
         }
+
+    def html_meaning(self, style: str = DEFAULT_HTML_STYLE) -> str:
+        n_l = "\n"
+        meaning_dict = self.meaning(style)
+        if style == "normal":
+            used_in_list = f'<div class="used_in">Used In: {meaning_dict.get("used_in")}</div>\n</div>' \
+                if meaning_dict.get("used_in") else "</div>"
+            return f'<div class="meaning" id="{meaning_dict.get("mid")}">\n' \
+                   f'<div class="technical">{meaning_dict.get("technical")}</div>\n' \
+                   f'<div class="definitions">{n_l}' \
+                   f'{n_l.join(meaning_dict.get("definitions"))}\n</div>\n{used_in_list}'
+
+        else:
+            used_in_list = f'<us>Used In: {meaning_dict.get("used_in")}</us>\n</m>' \
+                if meaning_dict.get("used_in") else '</m>'
+            return f'<m>\n<t>{meaning_dict.get("technical")}</t>\n' \
+                   f'<ds>{n_l}' \
+                   f'{n_l.join(meaning_dict.get("definitions"))}\n</ds>\n{used_in_list}'

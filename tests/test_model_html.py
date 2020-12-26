@@ -162,3 +162,83 @@ class TestWord:
 
         assert isinstance(result, dict)
         assert result == expected_value
+
+    def test_html_meaning(self):
+        db_add_objects(Word, words)
+        db_add_objects(Type, types)
+        db_add_objects(Author, authors)
+        db_add_objects(Definition, definitions)
+        db_connect_authors(connect_authors)
+        db_connect_words(connect_words)
+        word = Word.get_by_id(7315)
+        expected_result_ultra = """<m>
+<t><afx>pru</afx> <o>&lt;3/4E prove | 2/4C sh yen | 3/6S prueba | 2/5R proba | 2/5F epreuve | 2/5G probe | 2/6J tameshi&gt;</o> <tec>49% C-Prim L4 1975 1.9</tec></t>
+<ds>
+<d>(3n) V is a <k>test</k>/<k>examination</k> for property B in any member of class F. [V&zwj;-&zwj;BF]</d>
+<d>(vt) <k>test</k>, test for … a property … in a member of ….</d>
+<d><du>fu —</du> (a) <k>testable</k>, of classes with -able members.</d>
+<d><du>nu —</du> (a) <k>testable</k>, of testable properties.</d>
+</ds>
+<us>Used In: <use>prukao</use></us>
+</m>"""
+        result = word.html_meaning(style="ultra")
+        assert result == expected_result_ultra
+
+        expected_result_normal = """<div class="meaning" id="7315">
+<div class="technical"><span class="m_afx">pru</span> <span class="m_origin">&lt;3/4E prove | 2/4C sh yen | 3/6S prueba | 2/5R proba | 2/5F epreuve | 2/5G probe | 2/6J tameshi&gt;</span> <span class="m_technical"><span class="m_match">49%</span> <span class="m_type">C-Prim</span> <span class="m_author">L4</span> <span class="m_year">1975</span> <span class="m_rank">1.9</span></span></div>
+<div class="definitions">
+<div class="definition" id=13523><span class="dg">(3n)</span> <span class="db">V is a <k>test</k>/<k>examination</k> for property B in any member of class F.</span> <span class="dt">[V&zwj;-&zwj;BF]</span></div>
+<div class="definition" id=13524><span class="dg">(vt)</span> <span class="db"><k>test</k>, test for … a property … in a member of ….</span></div>
+<div class="definition" id=13525><span class="du">fu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of classes with -able members.</span></div>
+<div class="definition" id=13526><span class="du">nu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of testable properties.</span></div>
+</div>
+<div class="used_in">Used In: <span class="m_use">prukao</span></div>
+</div>"""
+        result = word.html_meaning(style="normal")
+        assert result == expected_result_normal
+
+    def test_html_all_by_name(self):
+        db_add_objects(Word, words)
+        db_add_objects(Type, types)
+        db_add_objects(Author, authors)
+        db_add_objects(Definition, definitions)
+        db_connect_authors(connect_authors)
+        db_connect_words(connect_words)
+
+        result = Word.html_all_by_name("buuku", style="ultra")
+        assert result is None
+
+        expected_result_ultra = """<w wid="pruci"><wl>pruci,</wl>
+<ms>
+<m>
+<t><afx>pru</afx> <o>&lt;3/4E prove | 2/4C sh yen | 3/6S prueba | 2/5R proba | 2/5F epreuve | 2/5G probe | 2/6J tameshi&gt;</o> <tec>49% C-Prim L4 1975 1.9</tec></t>
+<ds>
+<d>(3n) V is a <k>test</k>/<k>examination</k> for property B in any member of class F. [V&zwj;-&zwj;BF]</d>
+<d>(vt) <k>test</k>, test for … a property … in a member of ….</d>
+<d><du>fu —</du> (a) <k>testable</k>, of classes with -able members.</d>
+<d><du>nu —</du> (a) <k>testable</k>, of testable properties.</d>
+</ds>
+<us>Used In: <use>prukao</use></us>
+</m>
+</ms>
+</w>"""
+        result = Word.html_all_by_name("pruci", style="ultra")
+        assert result == expected_result_ultra
+
+        expected_result_normal = """<div class="word" wid="pruci">
+<div class="word_line"><span class="word_name">pruci</span>,</div>
+<div class="meanings">
+<div class="meaning" id="7315">
+<div class="technical"><span class="m_afx">pru</span> <span class="m_origin">&lt;3/4E prove | 2/4C sh yen | 3/6S prueba | 2/5R proba | 2/5F epreuve | 2/5G probe | 2/6J tameshi&gt;</span> <span class="m_technical"><span class="m_match">49%</span> <span class="m_type">C-Prim</span> <span class="m_author">L4</span> <span class="m_year">1975</span> <span class="m_rank">1.9</span></span></div>
+<div class="definitions">
+<div class="definition" id=13523><span class="dg">(3n)</span> <span class="db">V is a <k>test</k>/<k>examination</k> for property B in any member of class F.</span> <span class="dt">[V&zwj;-&zwj;BF]</span></div>
+<div class="definition" id=13524><span class="dg">(vt)</span> <span class="db"><k>test</k>, test for … a property … in a member of ….</span></div>
+<div class="definition" id=13525><span class="du">fu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of classes with -able members.</span></div>
+<div class="definition" id=13526><span class="du">nu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of testable properties.</span></div>
+</div>
+<div class="used_in">Used In: <span class="m_use">prukao</span></div>
+</div>
+</div>
+</div>"""
+        result = Word.html_all_by_name("pruci", style="normal")
+        assert result == expected_result_normal
