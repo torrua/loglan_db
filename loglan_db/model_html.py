@@ -56,13 +56,18 @@ class HTMLExportDefinition(ExportDefinition):
         :param style:
         :return:
         """
-
+        # de = definition english
         tags = {
             "normal": [
-                '<span class="dg">(%s)</span>', '<span class="dt">[%s]</span> ', ' <span class="db">%s</span>',
-                f'<span class="definition" id={self.id}>%s</span>', '<div class="d_line">%s</div>',
-                '<span class="w_name">%s</span>, ', '<span class="w_origin">&lt;%s&gt;</span> ', ],
-            "ultra": ['(%s)', '[%s] ', ' %s', '<d>%s</d>', '<ld>%s</ld>', '<wn>%s</wn>, ', '<o>&lt;%s&gt;</o> ', ],
+                '<span class="dg">(%s)</span>',
+                '<span class="dt">[%s]</span> ',
+                ' <span class="db">%s</span>',
+                f'<span class="definition eng" id={self.id}>%s</span>',
+                '<div class="d_line">%s</div>',
+                '<span class="w_name">%s</span>, ',
+                '<span class="w_origin">&lt;%s&gt;</span> ',
+            ],
+            "ultra": ['(%s)', '[%s] ', ' %s', '<de>%s</de>', '<ld>%s</ld>', '<wn>%s</wn>, ', '<o>&lt;%s&gt;</o> ', ],
         }
         t_d_gram, t_d_tags, t_d_body, t_def, t_def_line, t_word_name, t_word_origin = tags[style]
 
@@ -94,8 +99,8 @@ class HTMLExportDefinition(ExportDefinition):
             # usage, gram, body, tags, definition
             "normal": [
                 '<span class="du">%s</span> ', '<span class="dg">(%s)</span> ', '<span class="db">%s</span>',
-                ' <span class="dt">[%s]</span>', f'<div class="definition" id={self.id}>%s</div>', ],
-            "ultra": ['<du>%s</du> ', '(%s) ', '%s', ' [%s]', '<d>%s</d>', ],
+                ' <span class="dt">[%s]</span>', f'<div class="definition log" id={self.id}>%s</div>', ],
+            "ultra": ['<du>%s</du> ', '(%s) ', '%s', ' [%s]', '<dl>%s</dl>', ],
         }
         t_d_usage, t_d_gram, t_d_body, t_d_tags, t_definition = tags[style]
 
@@ -221,3 +226,35 @@ class HTMLExportWord(ExportWord):
             return f'<m>\n<t>{meaning_dict.get("technical")}</t>\n' \
                    f'<ds>{n_l}' \
                    f'{n_l.join(meaning_dict.get("definitions"))}\n</ds>\n{used_in_list}'
+
+    @classmethod
+    def translation_by_key(cls, key: str, language: str = None, style: str = DEFAULT_HTML_STYLE) -> Optional[str]:
+        """
+        Get information about loglan words by key in a foreign language
+        Args:
+            key:
+            language:
+            style:
+
+        Returns:
+
+        """
+
+        words = cls.by_key(key, language).order_by(cls.name).all()
+
+        if not words:
+            return None
+
+        result = {}
+
+        for word in words:
+            result[word.name] = []
+            definitions = [HTMLExportDefinition.export_for_english(d, word=key, style=style) for d in word.definitions if key.lower() in [key.word.lower() for key in d.keys]]
+            result[word.name].extend(definitions)
+
+        new = '\n'
+
+        from pprint import pprint
+        pprint(result)
+        return new.join([f"{new.join(definitions)}"
+                         for _, definitions in result.items()]).strip()
