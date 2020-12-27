@@ -254,7 +254,5 @@ class HTMLExportWord(ExportWord):
 
         new = '\n'
 
-        from pprint import pprint
-        pprint(result)
         return new.join([f"{new.join(definitions)}"
                          for _, definitions in result.items()]).strip()

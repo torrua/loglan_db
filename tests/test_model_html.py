@@ -5,10 +5,10 @@
 
 import pytest
 
-from loglan_db.model import Type, Author
+from loglan_db.model import Type, Author, Key
 from loglan_db.model_html import HTMLExportWord as Word, HTMLExportDefinition as Definition
-from tests.data import definitions, words, types, authors, word_1, connect_authors, connect_words
-from tests.functions import db_add_and_return, db_add_objects, db_connect_authors, db_connect_words
+from tests.data import definitions, words, types, authors, word_1, connect_authors, connect_words, keys, connect_keys
+from tests.functions import db_add_and_return, db_add_objects, db_connect_authors, db_connect_words, db_connect_keys
 
 
 @pytest.mark.usefixtures("db")
@@ -50,13 +50,13 @@ class TestDefinition:
         definition = Definition.get_by_id(13527)
 
         result = definition.export_for_english(word="test", style="ultra")
-        assert result == "<ld><wn>prukao</wn>, <o>&lt;test act&gt;</o> <d>[K&zwj;-&zwj;BPV]" \
-                         " (4v) K <k>test</k>/examine B for P with test V.</d></ld>"
+        assert result == "<ld><wn>prukao</wn>, <o>&lt;test act&gt;</o> <de>[K&zwj;-&zwj;BPV]" \
+                         " (4v) K <k>test</k>/examine B for P with test V.</de></ld>"
 
         result = definition.export_for_english(word="test", style="normal")
         assert result == '<div class="d_line"><span class="w_name">prukao</span>, ' \
                          '<span class="w_origin">&lt;test act&gt;</span> ' \
-                         '<span class="definition" id=13527><span class="dt">' \
+                         '<span class="definition eng" id=13527><span class="dt">' \
                          '[K&zwj;-&zwj;BPV]</span> <span class="dg">(4v)</span>' \
                          ' <span class="db">K <k>test</k>/examine ' \
                          'B for P with test V.</span></span></div>'
@@ -69,11 +69,11 @@ class TestDefinition:
         definition = Definition.get_by_id(13527)
 
         result = definition.export_for_loglan(style="ultra")
-        assert result == "<d>(4v) K <k>test</k>/<k>examine</k> " \
-                         "B for P with test V. [K&zwj;-&zwj;BPV]</d>"
+        assert result == "<dl>(4v) K <k>test</k>/<k>examine</k> " \
+                         "B for P with test V. [K&zwj;-&zwj;BPV]</dl>"
 
         result = definition.export_for_loglan(style="normal")
-        assert result == '<div class="definition" id=13527><span class="dg">' \
+        assert result == '<div class="definition log" id=13527><span class="dg">' \
                          '(4v)</span> <span class="db">K <k>test</k>/' \
                          '<k>examine</k> B for P with test V.</span> ' \
                          '<span class="dt">[K&zwj;-&zwj;BPV]</span></div>'
@@ -110,13 +110,13 @@ class TestWord:
         result = word.html_definitions(style="ultra")
         assert isinstance(result, list)
         assert len(result) == 4
-        assert result[0] == "<d>(3n) V is a <k>test</k>/<k>examination</k> " \
-                            "for property B in any member of class F. [V&zwj;-&zwj;BF]</d>"
+        assert result[0] == "<dl>(3n) V is a <k>test</k>/<k>examination</k> " \
+                            "for property B in any member of class F. [V&zwj;-&zwj;BF]</dl>"
 
         result = word.html_definitions(style="normal")
         assert isinstance(result, list)
         assert len(result) == 4
-        assert result[0] == '<div class="definition" id=13523><span class="dg">' \
+        assert result[0] == '<div class="definition log" id=13523><span class="dg">' \
                             '(3n)</span> <span class="db">V is a <k>test</k>/' \
                             '<k>examination</k> for property B in any member of class F.' \
                             '</span> <span class="dt">[V&zwj;-&zwj;BF]</span></div>'
@@ -138,11 +138,11 @@ class TestWord:
                          ' 3/6S prueba | 2/5R proba | 2/5F epreuve | 2/5G probe |'
                          ' 2/6J tameshi&gt;</o> <tec>49% C-Prim L4 1975 1.9</tec>',
             'definitions': [
-                '<d>(3n) V is a <k>test</k>/<k>examination</k> for property '
-                'B in any member of class F. [V&zwj;-&zwj;BF]</d>',
-                '<d>(vt) <k>test</k>, test for … a property … in a member of ….</d>',
-                '<d><du>fu —</du> (a) <k>testable</k>, of classes with -able members.</d>',
-                '<d><du>nu —</du> (a) <k>testable</k>, of testable properties.</d>'],
+                '<dl>(3n) V is a <k>test</k>/<k>examination</k> for property '
+                'B in any member of class F. [V&zwj;-&zwj;BF]</dl>',
+                '<dl>(vt) <k>test</k>, test for … a property … in a member of ….</dl>',
+                '<dl><du>fu —</du> (a) <k>testable</k>, of classes with -able members.</dl>',
+                '<dl><du>nu —</du> (a) <k>testable</k>, of testable properties.</dl>'],
             'used_in': '<use>prukao</use>'}
         assert isinstance(result, dict)
         assert result == expected_value
@@ -155,7 +155,7 @@ class TestWord:
             'technical': '<span class="m_origin">&lt;kak(to)&gt;</span> <span class="m_technical">'
                          '<span class="m_type">Afx</span> <span class="m_author">JCB</span> '
                          '<span class="m_year">1988</span> <span class="m_rank">7+</span></span>',
-            'definitions': ['<div class="definition" id=7240><span class="dg">(af)'
+            'definitions': ['<div class="definition log" id=7240><span class="dg">(af)'
                             '</span> <span class="db">a combining form of '
                             '<l>kakto</l>, <k>act</k>.</span></div>'],
             'used_in': None}
@@ -174,10 +174,10 @@ class TestWord:
         expected_result_ultra = """<m>
 <t><afx>pru</afx> <o>&lt;3/4E prove | 2/4C sh yen | 3/6S prueba | 2/5R proba | 2/5F epreuve | 2/5G probe | 2/6J tameshi&gt;</o> <tec>49% C-Prim L4 1975 1.9</tec></t>
 <ds>
-<d>(3n) V is a <k>test</k>/<k>examination</k> for property B in any member of class F. [V&zwj;-&zwj;BF]</d>
-<d>(vt) <k>test</k>, test for … a property … in a member of ….</d>
-<d><du>fu —</du> (a) <k>testable</k>, of classes with -able members.</d>
-<d><du>nu —</du> (a) <k>testable</k>, of testable properties.</d>
+<dl>(3n) V is a <k>test</k>/<k>examination</k> for property B in any member of class F. [V&zwj;-&zwj;BF]</dl>
+<dl>(vt) <k>test</k>, test for … a property … in a member of ….</dl>
+<dl><du>fu —</du> (a) <k>testable</k>, of classes with -able members.</dl>
+<dl><du>nu —</du> (a) <k>testable</k>, of testable properties.</dl>
 </ds>
 <us>Used In: <use>prukao</use></us>
 </m>"""
@@ -187,10 +187,10 @@ class TestWord:
         expected_result_normal = """<div class="meaning" id="7315">
 <div class="technical"><span class="m_afx">pru</span> <span class="m_origin">&lt;3/4E prove | 2/4C sh yen | 3/6S prueba | 2/5R proba | 2/5F epreuve | 2/5G probe | 2/6J tameshi&gt;</span> <span class="m_technical"><span class="m_match">49%</span> <span class="m_type">C-Prim</span> <span class="m_author">L4</span> <span class="m_year">1975</span> <span class="m_rank">1.9</span></span></div>
 <div class="definitions">
-<div class="definition" id=13523><span class="dg">(3n)</span> <span class="db">V is a <k>test</k>/<k>examination</k> for property B in any member of class F.</span> <span class="dt">[V&zwj;-&zwj;BF]</span></div>
-<div class="definition" id=13524><span class="dg">(vt)</span> <span class="db"><k>test</k>, test for … a property … in a member of ….</span></div>
-<div class="definition" id=13525><span class="du">fu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of classes with -able members.</span></div>
-<div class="definition" id=13526><span class="du">nu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of testable properties.</span></div>
+<div class="definition log" id=13523><span class="dg">(3n)</span> <span class="db">V is a <k>test</k>/<k>examination</k> for property B in any member of class F.</span> <span class="dt">[V&zwj;-&zwj;BF]</span></div>
+<div class="definition log" id=13524><span class="dg">(vt)</span> <span class="db"><k>test</k>, test for … a property … in a member of ….</span></div>
+<div class="definition log" id=13525><span class="du">fu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of classes with -able members.</span></div>
+<div class="definition log" id=13526><span class="du">nu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of testable properties.</span></div>
 </div>
 <div class="used_in">Used In: <span class="m_use">prukao</span></div>
 </div>"""
@@ -213,10 +213,10 @@ class TestWord:
 <m>
 <t><afx>pru</afx> <o>&lt;3/4E prove | 2/4C sh yen | 3/6S prueba | 2/5R proba | 2/5F epreuve | 2/5G probe | 2/6J tameshi&gt;</o> <tec>49% C-Prim L4 1975 1.9</tec></t>
 <ds>
-<d>(3n) V is a <k>test</k>/<k>examination</k> for property B in any member of class F. [V&zwj;-&zwj;BF]</d>
-<d>(vt) <k>test</k>, test for … a property … in a member of ….</d>
-<d><du>fu —</du> (a) <k>testable</k>, of classes with -able members.</d>
-<d><du>nu —</du> (a) <k>testable</k>, of testable properties.</d>
+<dl>(3n) V is a <k>test</k>/<k>examination</k> for property B in any member of class F. [V&zwj;-&zwj;BF]</dl>
+<dl>(vt) <k>test</k>, test for … a property … in a member of ….</dl>
+<dl><du>fu —</du> (a) <k>testable</k>, of classes with -able members.</dl>
+<dl><du>nu —</du> (a) <k>testable</k>, of testable properties.</dl>
 </ds>
 <us>Used In: <use>prukao</use></us>
 </m>
@@ -231,10 +231,10 @@ class TestWord:
 <div class="meaning" id="7315">
 <div class="technical"><span class="m_afx">pru</span> <span class="m_origin">&lt;3/4E prove | 2/4C sh yen | 3/6S prueba | 2/5R proba | 2/5F epreuve | 2/5G probe | 2/6J tameshi&gt;</span> <span class="m_technical"><span class="m_match">49%</span> <span class="m_type">C-Prim</span> <span class="m_author">L4</span> <span class="m_year">1975</span> <span class="m_rank">1.9</span></span></div>
 <div class="definitions">
-<div class="definition" id=13523><span class="dg">(3n)</span> <span class="db">V is a <k>test</k>/<k>examination</k> for property B in any member of class F.</span> <span class="dt">[V&zwj;-&zwj;BF]</span></div>
-<div class="definition" id=13524><span class="dg">(vt)</span> <span class="db"><k>test</k>, test for … a property … in a member of ….</span></div>
-<div class="definition" id=13525><span class="du">fu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of classes with -able members.</span></div>
-<div class="definition" id=13526><span class="du">nu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of testable properties.</span></div>
+<div class="definition log" id=13523><span class="dg">(3n)</span> <span class="db">V is a <k>test</k>/<k>examination</k> for property B in any member of class F.</span> <span class="dt">[V&zwj;-&zwj;BF]</span></div>
+<div class="definition log" id=13524><span class="dg">(vt)</span> <span class="db"><k>test</k>, test for … a property … in a member of ….</span></div>
+<div class="definition log" id=13525><span class="du">fu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of classes with -able members.</span></div>
+<div class="definition log" id=13526><span class="du">nu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of testable properties.</span></div>
 </div>
 <div class="used_in">Used In: <span class="m_use">prukao</span></div>
 </div>
@@ -242,3 +242,32 @@ class TestWord:
 </div>"""
         result = Word.html_all_by_name("pruci", style="normal")
         assert result == expected_result_normal
+
+    def test_translation_by_key(self):
+        db_add_objects(Word, words)
+        db_add_objects(Type, types)
+        db_add_objects(Author, authors)
+        db_add_objects(Key, keys)
+        db_add_objects(Definition, definitions)
+        db_connect_authors(connect_authors)
+        db_connect_words(connect_words)
+        db_connect_keys(connect_keys)
+
+        expected_result_ultra = """<ld><wn>pru</wn>, <de>(af) a combining form of <l>pruci</l>, <k>test</k>.</de></ld>
+<ld><wn>pruci</wn>, <de>[V&zwj;-&zwj;BF] (3n) V is a <k>test</k>/examination for property B in any member of class F.</de></ld>
+<ld><wn>pruci</wn>, <de>(vt) <k>test</k>, test for … a property … in a member of ….</de></ld>
+<ld><wn>prukao</wn>, <o>&lt;test act&gt;</o> <de>[K&zwj;-&zwj;BPV] (4v) K <k>test</k>/examine B for P with test V.</de></ld>
+<ld><wn>po prukao</wn>, <o>&lt;test act&gt;</o> <de>(n) a <k>test</k>/examination, an act of testing.</de></ld>"""
+        result = Word.translation_by_key("test")
+        assert result == expected_result_ultra
+
+        expected_result_normal = """<div class="d_line"><span class="w_name">pru</span>, <span class="definition eng" id=13521><span class="dg">(af)</span> <span class="db">a combining form of <l>pruci</l>, <k>test</k>.</span></span></div>
+<div class="d_line"><span class="w_name">pruci</span>, <span class="definition eng" id=13523><span class="dt">[V&zwj;-&zwj;BF]</span> <span class="dg">(3n)</span> <span class="db">V is a <k>test</k>/examination for property B in any member of class F.</span></span></div>
+<div class="d_line"><span class="w_name">pruci</span>, <span class="definition eng" id=13524><span class="dg">(vt)</span> <span class="db"><k>test</k>, test for … a property … in a member of ….</span></span></div>
+<div class="d_line"><span class="w_name">prukao</span>, <span class="w_origin">&lt;test act&gt;</span> <span class="definition eng" id=13527><span class="dt">[K&zwj;-&zwj;BPV]</span> <span class="dg">(4v)</span> <span class="db">K <k>test</k>/examine B for P with test V.</span></span></div>
+<div class="d_line"><span class="w_name">po prukao</span>, <span class="w_origin">&lt;test act&gt;</span> <span class="definition eng" id=13531><span class="dg">(n)</span> <span class="db">a <k>test</k>/examination, an act of testing.</span></span></div>"""
+        result = Word.translation_by_key("test", style="normal")
+        assert result == expected_result_normal
+
+        result = Word.translation_by_key("word_that_does_not_exist")
+        assert result is None
