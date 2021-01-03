@@ -326,6 +326,26 @@ class TestDefinition:
         with pytest.raises(TypeError) as _:
             d4.link_keys(source=1234)
 
+    def test_by_key(self):
+        db_add_objects(Key, keys)
+        db_add_objects(Definition, definitions)
+        db_connect_keys(connect_keys)
+
+        result = Definition.by_key("Test", case_sensitive=True).all()
+        assert len(result) == 0
+
+        result = Definition.by_key("test", case_sensitive=True, partial_results=True).all()
+        assert len(result) == 10
+
+        result = Definition.by_key("test", case_sensitive=True, partial_results=False, language="en").all()
+        assert len(result) == 5
+
+        result = Definition.by_key("Test", case_sensitive=False, partial_results=True).all()
+        assert len(result) == 10
+
+        result = Definition.by_key("test", language="es").all()
+        assert len(result) == 0
+
 
 @pytest.mark.usefixtures("db")
 class TestWord:
