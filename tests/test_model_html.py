@@ -5,9 +5,10 @@
 
 import pytest
 
-from loglan_db.model import Type, Author, Key
+from loglan_db.model import Type, Author, Key, Event
 from loglan_db.model_html import HTMLExportWord as Word, HTMLExportDefinition as Definition
-from tests.data import definitions, words, types, authors, word_1, connect_authors, connect_words, keys, connect_keys
+from tests.data import definitions, words, types, authors, events
+from tests.data import word_1, connect_authors, connect_words, keys, connect_keys
 from tests.functions import db_add_and_return, db_add_objects, db_connect_authors, db_connect_words, db_connect_keys
 
 
@@ -201,6 +202,7 @@ class TestWord:
         db_add_objects(Word, words)
         db_add_objects(Type, types)
         db_add_objects(Author, authors)
+        db_add_objects(Event, events)
         db_add_objects(Definition, definitions)
         db_connect_authors(connect_authors)
         db_connect_words(connect_words)
@@ -208,7 +210,8 @@ class TestWord:
         result = Word.html_all_by_name("buuku", style="ultra")
         assert result is None
 
-        expected_result_ultra = """<w wid="pruci"><wl>pruci,</wl>
+        expected_result_ultra = """<ws>
+<w wid="pruci"><wl>pruci,</wl>
 <ms>
 <m>
 <t><afx>pru</afx> <o>&lt;3/4E prove | 2/4C sh yen | 3/6S prueba | 2/5R proba | 2/5F epreuve | 2/5G probe | 2/6J tameshi&gt;</o> <tec>49% C-Prim L4 1975 1.9</tec></t>
@@ -221,11 +224,15 @@ class TestWord:
 <us>Used In: <use>prukao</use></us>
 </m>
 </ms>
-</w>"""
+</w>
+</ws>
+"""
+
         result = Word.html_all_by_name("pruci", style="ultra")
         assert result == expected_result_ultra
 
-        expected_result_normal = """<div class="word" wid="pruci">
+        expected_result_normal = """<div class="words">
+<div class="word" wid="pruci">
 <div class="word_line"><span class="word_name">pruci</span>,</div>
 <div class="meanings">
 <div class="meaning" id="7315">
@@ -239,8 +246,66 @@ class TestWord:
 <div class="used_in">Used In: <span class="m_use">prukao</span></div>
 </div>
 </div>
-</div>"""
-        result = Word.html_all_by_name("pruci", style="normal")
+</div>
+</div>
+"""
+        result = Word.html_all_by_name("Pruci", style="normal")
+        assert result == expected_result_normal
+
+        result = Word.html_all_by_name("pruci", style="normal", event_id=1)
+        assert result == expected_result_normal
+
+        result = Word.html_all_by_name("Pruci", style="normal", case_sensitive=True)
+        assert result is None
+
+        expected_result_normal = """<div class="words">
+<div class="word" wid="pru">
+<div class="word_line"><span class="word_name">pru</span>,</div>
+<div class="meanings">
+<div class="meaning" id="7314">
+<div class="technical"><span class="m_origin">&lt;pru(ci)&gt;</span> <span class="m_technical"><span class="m_type">Afx</span> <span class="m_author">JCB</span> <span class="m_year">1988</span> <span class="m_rank">7+</span></span></div>
+<div class="definitions">
+<div class="definition log" id=13521><span class="dg">(af)</span> <span class="db">a combining form of <l>pruci</l>, <k>test</k>.</span></div>
+</div>
+</div>
+</div>
+</div>
+<div class="word" wid="pruci">
+<div class="word_line"><span class="word_name">pruci</span>,</div>
+<div class="meanings">
+<div class="meaning" id="7315">
+<div class="technical"><span class="m_afx">pru</span> <span class="m_origin">&lt;3/4E prove | 2/4C sh yen | 3/6S prueba | 2/5R proba | 2/5F epreuve | 2/5G probe | 2/6J tameshi&gt;</span> <span class="m_technical"><span class="m_match">49%</span> <span class="m_type">C-Prim</span> <span class="m_author">L4</span> <span class="m_year">1975</span> <span class="m_rank">1.9</span></span></div>
+<div class="definitions">
+<div class="definition log" id=13523><span class="dg">(3n)</span> <span class="db">V is a <k>test</k>/<k>examination</k> for property B in any member of class F.</span> <span class="dt">[V&zwj;-&zwj;BF]</span></div>
+<div class="definition log" id=13524><span class="dg">(vt)</span> <span class="db"><k>test</k>, test for … a property … in a member of ….</span></div>
+<div class="definition log" id=13525><span class="du">fu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of classes with -able members.</span></div>
+<div class="definition log" id=13526><span class="du">nu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of testable properties.</span></div>
+</div>
+<div class="used_in">Used In: <span class="m_use">prukao</span></div>
+</div>
+</div>
+</div>
+<div class="word" wid="prukao">
+<div class="word_line"><span class="word_name">prukao</span>,</div>
+<div class="meanings">
+<div class="meaning" id="7316">
+<div class="technical"><span class="m_origin">&lt;pru(ci)+ka(kt)o=test act&gt;</span> <span class="m_technical"><span class="m_type">2-Cpx</span> <span class="m_author">L4</span> <span class="m_year">1975</span> <span class="m_rank">1.9</span></span></div>
+<div class="definitions">
+<div class="definition log" id=13527><span class="dg">(4v)</span> <span class="db">K <k>test</k>/<k>examine</k> B for P with test V.</span> <span class="dt">[K&zwj;-&zwj;BPV]</span></div>
+<div class="definition log" id=13528><span class="dg">(n)</span> <span class="db">a <k>tester</k>, one who uses tests.</span></div>
+<div class="definition log" id=13529><span class="du">nu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of one who/that which is -ed.</span></div>
+<div class="definition log" id=13530><span class="du">nu —</span> <span class="dg">(n)</span> <span class="db">a <k>testee</k>, one who is -ed.</span></div>
+<div class="definition log" id=13531><span class="du">po —</span> <span class="dg">(n)</span> <span class="db">a <k>test</k>/<k>examination</k>, an act of testing.</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+"""
+        result = Word.html_all_by_name("pru", style="normal", case_sensitive=True, partial_results=True)
+        assert result == expected_result_normal
+
+        result = Word.html_all_by_name("Pru", style="normal", case_sensitive=False, partial_results=True)
         assert result == expected_result_normal
 
     def test_translation_by_key(self):
