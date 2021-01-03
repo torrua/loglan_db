@@ -3,8 +3,11 @@
 HTML Export extensions of LOD database models
 """
 import os
-from typing import Optional
+from typing import Optional, Union
 from loglan_db.model_export import ExportWord, ExportDefinition
+from loglan_db.model_base import BaseEvent
+from sqlalchemy import or_
+from itertools import groupby
 
 DEFAULT_HTML_STYLE = os.getenv("DEFAULT_HTML_STYLE", "ultra")
 
@@ -118,30 +121,65 @@ class HTMLExportWord(ExportWord):
     """
 
     @classmethod
-    def html_all_by_name(cls, name: str, style: str = DEFAULT_HTML_STYLE) -> Optional[str]:
+    def html_all_by_name(
+            cls, name: str, style: str = DEFAULT_HTML_STYLE, event_id: Union[BaseEvent, int, str] = None,
+            case_sensitive: bool = False, partial_results: bool = False) -> Optional[str]:
         """
         Convert all words found by name into one HTML string
         Args:
             name: Name of the search word
             style: HTML design style
-
+            event_id:
+            case_sensitive:
+            partial_results:
         Returns:
 
         """
-        words = cls.by_name(name=name).all()
+
+        word_template = {
+            "normal": f'<div class="word" wid="%s">\n'
+                      f'<div class="word_line"><span class="word_name">%s</span>,</div>\n'
+                      f'<div class="meanings">\n%s\n</div>\n</div>',
+            "ultra": f'<w wid="%s"><wl>%s,</wl>\n<ms>\n%s\n</ms>\n</w>',
+        }
+        words_template = {
+            "normal": f'<div class="words">\n%s\n</div>\n',
+            "ultra": f'<ws>\n%s\n</ws>\n',
+        }
+
+        if not event_id:
+            event_id = BaseEvent.latest().id
+
+        event_id = int(event_id) if isinstance(event_id, (int, str)) else BaseEvent.id
+
+        words = cls.query.filter(cls.event_start_id <= event_id) \
+            .filter(or_(cls.event_end_id > event_id, cls.event_end_id.is_(None)))
+
+        if case_sensitive:
+            if partial_results:
+                words = words.filter(cls.name.like(f"{name}%"))
+            else:
+                words = words.filter(cls.name == name)
+        else:
+            if partial_results:
+                words = words.filter(cls.name.ilike(f"{name}%"))
+            else:
+                words = words.filter(cls.name.ilike(name))
+
+        words = words.order_by(cls.name).all()
 
         if not words:
             return None
 
-        meanings = "\n".join([word.html_meaning(style) for word in words])
+        grouped_words = groupby(words, lambda ent: ent.name)
+        group_words = {k: list(g) for k, g in grouped_words}
 
-        if style == "normal":
-            return f'<div class="word" wid="{words[0].name.lower()}">\n' \
-                   f'<div class="word_line"><span class="word_name">{words[0].name}</span>,</div>\n' \
-                   f'<div class="meanings">\n{meanings}\n</div>\n</div>'
-        else:
-            return f'<w wid="{words[0].name.lower()}"><wl>{words[0].name},</wl>\n' \
-                   f'<ms>\n{meanings}\n</ms>\n</w>'
+        items = []
+        for name, words in group_words.items():
+            meanings = "\n".join([word.html_meaning(style) for word in words])
+            items.append(word_template[style] % (name.lower(), name, meanings))
+
+        return words_template[style] % "\n".join(items)
 
     def html_origin(self, style: str = DEFAULT_HTML_STYLE):
         """
@@ -249,7 +287,9 @@ class HTMLExportWord(ExportWord):
 
         for word in words:
             result[word.name] = []
-            definitions = [HTMLExportDefinition.export_for_english(d, word=key, style=style) for d in word.definitions if key.lower() in [key.word.lower() for key in d.keys]]
+            definitions = [
+                HTMLExportDefinition.export_for_english(d, word=key, style=style)
+                for d in word.definitions if key.lower() in [key.word.lower() for key in d.keys]]
             result[word.name].extend(definitions)
 
         new = '\n'
