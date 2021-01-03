@@ -462,6 +462,42 @@ class BaseDefinition(db.Model, InitBase, DBBase):
         raise TypeError("Source for keys should have a string, or list of strings."
                         "You input %s" % type(source))
 
+    @classmethod
+    def by_key(
+            cls, key: Union[BaseKey, str],
+            language: str = None,
+            case_sensitive: bool = False,
+            partial_results: bool = False,
+    ) -> BaseQuery:
+        """Definition.Query filtered by specified key
+
+        Args:
+          key: Union[BaseKey, str]:
+          language: str: Language of key (Default value = None)
+          case_sensitive: bool:  (Default value = False)
+          partial_results: bool:  (Default value = False)
+
+        Returns:
+          BaseQuery
+
+        """
+
+        key = BaseKey.word if isinstance(key, BaseKey) else str(key)
+        request = cls.query.join(t_connect_keys, BaseKey).order_by(BaseKey.word)
+
+        if language:
+            request = request.filter(BaseKey.language == language)
+
+        if case_sensitive:
+            if partial_results:
+                return request.filter(BaseKey.word.like(f"{key}%"))
+            return request.filter(BaseKey.word == key)
+
+        if partial_results:
+            return request.filter(BaseKey.word.ilike(f"{key}%"))
+
+        return request.filter(BaseKey.word.ilike(key))
+
 
 class BaseWord(db.Model, InitBase, DBBase):
     """BaseWord model"""
