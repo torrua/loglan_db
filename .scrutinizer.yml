@@ -7,6 +7,11 @@ build:
   environment:
     python: 3.7.1
   nodes:
+    my-tests:
+      dependencies:
+        before:
+          - pip install -r requirements-tests.txt
+
     analysis:
       tests:
         override:
