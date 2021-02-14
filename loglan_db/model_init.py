@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=E1101
 
 """
 Initial common functions for LOD Model Classes
@@ -29,8 +30,7 @@ class InitBase:
 
     @classmethod
     def from_dict(cls, dic):
-        df = {k: v for k, v in dic.items()}
-        return cls(**df)
+        return cls(**dic)
 
     def export(self):
         """

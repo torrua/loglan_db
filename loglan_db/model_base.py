@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=E1101, C0103
+# pylint: disable=E1101, C0103, C0303
 
 """
 This module contains a basic LOD dictionary model for a SQL database.
@@ -7,22 +7,19 @@ Each class is a detailed description of a db table:
 Authors, Events, Keys, Definitions, Words, etc.
 """
 
-
 from __future__ import annotations
 
 import os
 import re
 from typing import List, Union, Optional
 
-from flask_sqlalchemy import BaseQuery
+from flask_sqlalchemy import BaseQuery, SQLAlchemy
 from sqlalchemy import exists, or_
 
-from loglan_db import db
+from loglan_db import db, app_lod
 from loglan_db.model_init import InitBase, DBBase
 
 if os.environ.get("IS_PDOC", "False") == "True":
-    from flask_sqlalchemy import SQLAlchemy
-    from loglan_db import app_lod
     db = SQLAlchemy(app_lod())
 
 
@@ -65,21 +62,25 @@ t_name_connect_keys = "connect_keys"
 """`str` : `__tablename__` value for `t_connect_keys` table"""
 
 __pdoc__ = {
-    'BaseEvent.appeared_words': """*Relationship query for getting a list of words appeared during this event*
+    'BaseEvent.appeared_words':
+        """*Relationship query for getting a list of words appeared during this event*
 
     **query** : Optional[List[BaseWord]]""",
 
-    'BaseEvent.deprecated_words': """*Relationship query for getting a list of words deprecated during this event*
+    'BaseEvent.deprecated_words':
+        """*Relationship query for getting a list of words deprecated during this event*
 
     **query** : Optional[List[BaseWord]]""",
 
-    'BaseAuthor.contribution': """*Relationship query for getting a list of words coined by this author*
+    'BaseAuthor.contribution':
+        """*Relationship query for getting a list of words coined by this author*
 
     **query** : Optional[List[BaseWord]]""",
 
     'BaseType.words': 'words',
     'BaseDefinition.source_word': 'source_word',
-    'BaseKey.definitions': """*Relationship query for getting a list of definitions related to this key*
+    'BaseKey.definitions':
+        """*Relationship query for getting a list of definitions related to this key*
 
     **query** : Optional[List[BaseDefinition]]""",
 
@@ -213,9 +214,12 @@ class BaseEvent(db.Model, InitBase, DBBase):
 class BaseKey(db.Model, InitBase, DBBase):
     """Base Key's DB Model
 
-    Describes a table structure for storing information about key words of the word's definitions.
-    Some key words could belong to many definitions and some definitions could have many key words.
-    That's why the relationship between Key and Definition should be many-to-many. See `t_connect_keys`.
+    Describes a table structure for storing information
+    about key words of the word's definitions.
+    Some key words could belong to many definitions
+    and some definitions could have many key words.
+    That's why the relationship between Key
+    and Definition should be many-to-many. See `t_connect_keys`.
 
     There is additional `word_language` UniqueConstraint here.
 
@@ -331,7 +335,7 @@ class BaseType(db.Model, InitBase, DBBase):
         type_filter = [type_filter, ] if isinstance(type_filter, str) else type_filter
 
         return cls.query.filter(or_(
-            cls.type.in_(type_filter), cls.type_x.in_(type_filter), cls.group.in_(type_filter),))
+            cls.type.in_(type_filter), cls.type_x.in_(type_filter), cls.group.in_(type_filter), ))
 
 
 class BaseDefinition(db.Model, InitBase, DBBase):
@@ -747,7 +751,7 @@ class BaseWord(db.Model, InitBase, DBBase):
         if prim_type == "C":
             return self._get_sources_c_prim()
 
-        return f"{self.name}: {self.origin}{' < '+ self.origin_x if self.origin_x else ''}"
+        return f"{self.name}: {self.origin}{' < ' + self.origin_x if self.origin_x else ''}"
 
     def _get_sources_c_prim(self) -> Optional[List[BaseWordSource]]:
         """
@@ -870,7 +874,7 @@ class BaseWord(db.Model, InitBase, DBBase):
         """Word.Query filtered by specified name
 
         Args:
-          name: str: 
+          name: str:
           case_sensitive: bool:  (Default value = False)
 
         Returns:
