@@ -7,7 +7,7 @@ build:
   environment:
     python: 3.7.1
   nodes:
-    my-tests:
+    tests:
       dependencies:
         before:
           - pip install -r requirements-tests.txt
