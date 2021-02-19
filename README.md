@@ -8,4 +8,4 @@ Loglan Dictionary Database Model for SQLAlchemy
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/torrua/loglan_db/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/torrua/loglan_db/?branch=main)
 [![codecov](https://codecov.io/gh/torrua/loglan_db/branch/main/graph/badge.svg?token=10O3OAC180)](https://codecov.io/gh/torrua/loglan_db)
 
-This package is designed to create a Loglan dictionary SQL database.
+This package is designed to generate SQL database for Loglan dictionary.
