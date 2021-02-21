@@ -9,41 +9,99 @@ from loglan_db.model_base import BaseAuthor, BaseEvent, BaseSyllable, \
 
 
 class ExportAuthor(BaseAuthor):
-    def export(self):
+    """
+    ExportAuthor Class
+    """
+    def export(self) -> str:
+        """
+        Prepare Author data for exporting to text file
+        Returns:
+            Formatted basic string
+        """
         return f"{self.abbreviation}@{self.full_name}@{self.notes}"
 
 
 class ExportEvent(BaseEvent):
-    def export(self):
+    """
+    ExportEvent Class
+    """
+    def export(self) -> str:
+        """
+        Prepare Event data for exporting to text file
+        Returns:
+            Formatted basic string
+        """
         return f"{self.id}@{self.name}" \
                f"@{self.date.strftime('%m/%d/%Y')}@{self.definition}" \
                f"@{self.annotation}@{self.suffix}"
 
 
 class ExportSyllable(BaseSyllable):
-    def export(self):
+    """
+    ExportSyllable Class
+    """
+    def export(self) -> str:
+        """
+        Prepare Syllable data for exporting to text file
+        Returns:
+            Formatted basic string
+        """
         return f"{self.name}@{self.type}@{self.allowed}"
 
 
 class ExportSetting(BaseSetting):
-    def export(self):
-        return f"{self.date.strftime('%d.%m.%Y %H:%M:%S')}@{self.db_version}@{self.last_word_id}@{self.db_release}"
+    """
+    ExportSetting Class
+    """
+    def export(self) -> str:
+        """
+        Prepare Setting data for exporting to text file
+        Returns:
+            Formatted basic string
+        """
+        return f"{self.date.strftime('%d.%m.%Y %H:%M:%S')}" \
+               f"@{self.db_version}" \
+               f"@{self.last_word_id}" \
+               f"@{self.db_release}"
 
 
 class ExportType(BaseType):
-    def export(self):
+    """
+    ExportType Class
+    """
+    def export(self) -> str:
+        """
+        Prepare Type data for exporting to text file
+        Returns:
+            Formatted basic string
+        """
         return f"{self.type}@{self.type_x}@{self.group}@{self.parentable}" \
                f"@{self.description if self.description else ''}"
 
 
 class ExportWord(BaseWord):
+    """
+    ExportWord Class
+    """
     @property
     def e_affixes(self) -> str:
+        """
+
+        Returns:
+
+        """
         w_affixes = self.affixes
-        return ' '.join(sorted({afx.name.replace("-", "") for afx in w_affixes})) if w_affixes else ""
+        return ' '.join(sorted(
+            {afx.name.replace("-", "") for afx in w_affixes}
+        )) if w_affixes else ""
 
     @property
     def e_source(self) -> str:
+        """
+
+        Returns:
+
+        """
         notes = self.notes if self.notes else {}
         w_source = self.authors.all()
         # print(self) if not self.authors.all() else None
@@ -53,19 +111,30 @@ class ExportWord(BaseWord):
 
     @property
     def e_year(self) -> str:
+        """
+
+        Returns:
+
+        """
         notes = self.notes if self.notes else {}
         return str(self.year.year) + (" " + notes["year"] if notes.get("year", False) else "")
 
     @property
-    def e_usedin(self):
+    def e_usedin(self) -> str:
+        """
+
+        Returns:
+
+        """
         w_usedin = self.complexes
         return ' | '.join(sorted({cpx.name for cpx in w_usedin})) if w_usedin else ""
 
-    def export(self):
+    def export(self) -> str:
         """
-                Prepare Word data for exporting to text file
-                :return: Formatted basic string
-                """
+        Prepare Word data for exporting to text file
+        Returns:
+            Formatted basic string
+        """
         notes = self.notes if self.notes else {}
         w_match = self.match
         match = w_match if w_match else ""
@@ -79,7 +148,15 @@ class ExportWord(BaseWord):
 
 
 class ExportDefinition(BaseDefinition):
-    def export(self):
+    """
+    ExportDefinition Class
+    """
+    def export(self) -> str:
+        """
+        Prepare Definition data for exporting to text file
+        Returns:
+            Formatted basic string
+        """
         return f"{self.source_word.id_old}@{self.position}@{self.usage if self.usage else ''}" \
                f"@{self.slots if self.slots else ''}" \
                f"{self.grammar_code if self.grammar_code else ''}" \
@@ -87,10 +164,14 @@ class ExportDefinition(BaseDefinition):
 
 
 class ExportWordSpell(BaseWordSpell, BaseWord):
-    def export(self):
+    """
+    ExportWordSpell Class
+    """
+    def export(self) -> str:
         """
-        Prepare Word Spell data for exporting to text file
-        :return: Formatted basic string
+        Prepare WordSpell data for exporting to text file
+        Returns:
+            Formatted basic string
         """
         code_name = "".join(["0" if symbol.isupper() else "5" for symbol in self.name])
 

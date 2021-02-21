@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+# pylint: disable=R0903
 """
 This module contains a default LOD dictionary model for a SQL database.
 """
@@ -10,46 +10,69 @@ from loglan_db.model_base import BaseAuthor, BaseEvent, \
 
 
 class DictionaryBase:
-    """Workaround for separating classes and making inheritance selections"""
+    """
+    Workaround for separating classes and making inheritance selections
+    """
 
 
 class Author(DictionaryBase, BaseAuthor):
+    """
+    Author Class
+    """
     __mapper_args__ = {
         'polymorphic_identity': "authors",
     }
 
 
 class Event(DictionaryBase, BaseEvent):
-    pass
+    """
+    Event Class
+    """
 
 
 class Key(DictionaryBase, BaseKey):
-    pass
+    """
+    Key Class
+    """
 
 
 class Setting(DictionaryBase, BaseSetting):
-    pass
+    """
+    Setting Class
+    """
 
 
 class Syllable(DictionaryBase, BaseSyllable):
-    pass
+    """
+    Syllable Class
+    """
 
 
 class Type(DictionaryBase, BaseType):
-    pass
+    """
+    Type Class
+    """
 
 
 class Definition(DictionaryBase, BaseDefinition):
-    pass
+    """
+    Author Class
+    """
 
 
 class Word(DictionaryBase, BaseWord):
-    pass
+    """
+    Word Class
+    """
 
 
 class WordSpell(DictionaryBase, BaseWordSpell):
-    pass
+    """
+    WordSpell Class
+    """
 
 
 class WordSource(BaseWordSource):
-    pass
+    """
+    WordSource Class
+    """

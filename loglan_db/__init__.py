@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+# pylint: disable=R0903
 """
 This module contains functions and variables for initializing application and db
 """

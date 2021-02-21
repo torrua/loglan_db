@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=E1101, C0103, C0303
+# pylint: disable=C0103, C0303
 
 """
 This module contains a basic LOD dictionary model for a SQL database.
@@ -629,7 +629,7 @@ class BaseWord(db.Model, InitBase, DBBase):
           word_group: str:  (Default value = None)
 
         Returns:
-
+            BaseQuery
         """
         result = self.__derivatives.filter(self.id == t_connect_words.c.parent_id)
 
@@ -799,17 +799,9 @@ class BaseWord(db.Model, InitBase, DBBase):
         if not self.type.group == "Cpx":
             return []
 
-        sources = self.origin.replace("(", "").replace(")", "").replace("/", "")
-        sources = sources.split("+")
-        sources = [s for s in sources if s not in ["y", "r", "n"]]
-        sources = [
-            s if not s.endswith(("r", "h")) else s[:-1]
-            for s in sources if s not in ["y", "r"]]
+        sources = self._prepare_sources_cpx()
 
-        exclude_type_ids = [t.id for t in BaseType.by(["LW", "Cpd"]).all()]
-        result = BaseWord.query \
-            .filter(BaseWord.name.in_(sources)) \
-            .filter(BaseWord.type_id.notin_(exclude_type_ids)).all()
+        result = self.words_from_source_cpx(sources)
 
         if not as_str:
             return result
@@ -817,6 +809,34 @@ class BaseWord(db.Model, InitBase, DBBase):
         result_as_str = []
         _ = [result_as_str.append(r) for r in sources if r not in result_as_str]
         return result_as_str
+
+    @staticmethod
+    def words_from_source_cpx(sources: List[str]) -> List[BaseWord]:
+        """
+
+        Args:
+            sources:
+
+        Returns:
+
+        """
+        exclude_type_ids = [t.id for t in BaseType.by(["LW", "Cpd"]).all()]
+        return BaseWord.query \
+            .filter(BaseWord.name.in_(sources)) \
+            .filter(BaseWord.type_id.notin_(exclude_type_ids)).all()
+
+    def _prepare_sources_cpx(self) -> List[str]:
+        """
+        # TODO
+        Returns:
+
+        """
+        sources = self.origin.replace("(", "").replace(")", "").replace("/", "")
+        sources = sources.split("+")
+        sources = [
+            s if not s.endswith(("r", "h")) else s[:-1]
+            for s in sources if s not in ["y", "r", "n"]]
+        return sources
 
     def get_sources_cpd(self, as_str: bool = False) -> List[Union[str, BaseWord]]:
         """Extract source words from self.origin field accordingly
@@ -833,12 +853,9 @@ class BaseWord(db.Model, InitBase, DBBase):
         if not self.type.type == "Cpd":
             return []
 
-        sources = self.origin.replace("(", "").replace(")", "").replace("/", "").replace("-", "")
-        sources = [s.strip() for s in sources.split("+")]
+        sources = self._prepare_sources_cpd()
 
-        type_ids = [t.id for t in BaseType.by(["LW", "Cpd"]).all()]
-        result = BaseWord.query.filter(BaseWord.name.in_(sources)) \
-            .filter(BaseWord.type_id.in_(type_ids)).all()
+        result = self.words_from_source_cpd(sources)
 
         if not as_str:
             return result
@@ -848,6 +865,30 @@ class BaseWord(db.Model, InitBase, DBBase):
         _ = [result_as_str.append(r) for r in sources if r not in result_as_str and r]
 
         return result_as_str
+
+    def _prepare_sources_cpd(self) -> List[str]:
+        """
+
+        Returns:
+
+        """
+        sources = self.origin.replace("(", "").replace(")", "").replace("/", "").replace("-", "")
+        sources = [s.strip() for s in sources.split("+")]
+        return sources
+
+    @staticmethod
+    def words_from_source_cpd(sources: List[str]) -> List[BaseWord]:
+        """
+
+        Args:
+            sources:
+
+        Returns:
+
+        """
+        type_ids = [t.id for t in BaseType.by(["LW", "Cpd"]).all()]
+        return BaseWord.query.filter(BaseWord.name.in_(sources)) \
+            .filter(BaseWord.type_id.in_(type_ids)).all()
 
     @classmethod
     def by_event(cls, event_id: Union[BaseEvent, int] = None) -> BaseQuery:

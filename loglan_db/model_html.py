@@ -3,17 +3,21 @@
 HTML Export extensions of LOD database models
 """
 import os
-from typing import Optional, Union
-from loglan_db.model_export import ExportWord, ExportDefinition
-from loglan_db.model_base import BaseEvent
-from sqlalchemy import or_
 from itertools import groupby
+from typing import Optional, Union
+
+from sqlalchemy import or_
+
+from loglan_db.model_base import BaseEvent
+from loglan_db.model_export import ExportWord, ExportDefinition
 
 DEFAULT_HTML_STYLE = os.getenv("DEFAULT_HTML_STYLE", "ultra")
 
 
 class HTMLExportDefinition(ExportDefinition):
-
+    """
+    HTMLExportDefinition Class
+    """
     @staticmethod
     def format_body(body: str) -> str:
         """
@@ -70,7 +74,9 @@ class HTMLExportDefinition(ExportDefinition):
                 '<span class="w_name">%s</span>, ',
                 '<span class="w_origin">&lt;%s&gt;</span> ',
             ],
-            "ultra": ['(%s)', '[%s] ', ' %s', '<de>%s</de>', '<ld>%s</ld>', '<wn>%s</wn>, ', '<o>&lt;%s&gt;</o> ', ],
+            "ultra": [
+                '(%s)', '[%s] ', ' %s', '<de>%s</de>',
+                '<ld>%s</ld>', '<wn>%s</wn>, ', '<o>&lt;%s&gt;</o> ', ],
         }
         t_d_gram, t_d_tags, t_d_body, t_def, t_def_line, t_word_name, t_word_origin = tags[style]
 
@@ -83,10 +89,12 @@ class HTMLExportDefinition(ExportDefinition):
         def_body = t_d_body % def_body
 
         d_source_word = self.source_word
-        w_name = d_source_word.name if not self.usage else self.usage.replace("%", d_source_word.name)
+        w_name = d_source_word.name if not self.usage \
+            else self.usage.replace("%", d_source_word.name)
         word_name = t_word_name % w_name
 
-        w_origin_x = d_source_word.origin_x if d_source_word.origin_x and d_source_word.type.group == "Cpx" else ''
+        w_origin_x = d_source_word.origin_x \
+            if d_source_word.origin_x and d_source_word.type.group == "Cpx" else ''
         word_origin_x = t_word_origin % w_origin_x if w_origin_x else ''
 
         definition = t_def % f'{def_tags}{def_gram}{def_body}'
@@ -101,8 +109,9 @@ class HTMLExportDefinition(ExportDefinition):
         tags = {
             # usage, gram, body, tags, definition
             "normal": [
-                '<span class="du">%s</span> ', '<span class="dg">(%s)</span> ', '<span class="db">%s</span>',
-                ' <span class="dt">[%s]</span>', f'<div class="definition log" id={self.id}>%s</div>', ],
+                '<span class="du">%s</span> ', '<span class="dg">(%s)</span> ',
+                '<span class="db">%s</span>', ' <span class="dt">[%s]</span>',
+                f'<div class="definition log" id={self.id}>%s</div>', ],
             "ultra": ['<du>%s</du> ', '(%s) ', '%s', ' [%s]', '<dl>%s</dl>', ],
         }
         t_d_usage, t_d_gram, t_d_body, t_d_tags, t_definition = tags[style]
@@ -117,13 +126,15 @@ class HTMLExportDefinition(ExportDefinition):
 
 class HTMLExportWord(ExportWord):
     """
-
+    HTMLExportWord Class
     """
 
     @classmethod
     def html_all_by_name(
-            cls, name: str, style: str = DEFAULT_HTML_STYLE, event_id: Union[BaseEvent, int, str] = None,
-            case_sensitive: bool = False, partial_results: bool = False) -> Optional[str]:
+            cls, name: str, style: str = DEFAULT_HTML_STYLE,
+            event_id: Union[BaseEvent, int, str] = None,
+            case_sensitive: bool = False,
+            partial_results: bool = False) -> Optional[str]:
         """
         Convert all words found by name into one HTML string
         Args:
@@ -137,14 +148,14 @@ class HTMLExportWord(ExportWord):
         """
 
         word_template = {
-            "normal": f'<div class="word" wid="%s">\n'
-                      f'<div class="word_line"><span class="word_name">%s</span>,</div>\n'
-                      f'<div class="meanings">\n%s\n</div>\n</div>',
-            "ultra": f'<w wid="%s"><wl>%s,</wl>\n<ms>\n%s\n</ms>\n</w>',
+            "normal": '<div class="word" wid="%s">\n'
+                      '<div class="word_line"><span class="word_name">%s</span>,</div>\n'
+                      '<div class="meanings">\n%s\n</div>\n</div>',
+            "ultra": '<w wid="%s"><wl>%s,</wl>\n<ms>\n%s\n</ms>\n</w>',
         }
         words_template = {
-            "normal": f'<div class="words">\n%s\n</div>\n',
-            "ultra": f'<ws>\n%s\n</ws>\n',
+            "normal": '<div class="words">\n%s\n</div>\n',
+            "ultra": '<ws>\n%s\n</ws>\n',
         }
 
         if not event_id:
@@ -175,35 +186,37 @@ class HTMLExportWord(ExportWord):
         group_words = {k: list(g) for k, g in grouped_words}
 
         items = []
-        for name, words in group_words.items():
+        for word_name, words in group_words.items():
             meanings = "\n".join([word.html_meaning(style) for word in words])
-            items.append(word_template[style] % (name.lower(), name, meanings))
+            items.append(word_template[style] % (word_name.lower(), word_name, meanings))
 
         return words_template[style] % "\n".join(items)
 
     def html_origin(self, style: str = DEFAULT_HTML_STYLE):
         """
 
-        :param style:
-        :return:
+        Args:
+            style:
+
+        Returns:
+
         """
-        o = self.origin
-        ox = self.origin_x
+        orig = self.origin
+        orig_x = self.origin_x
 
-        if (not o) and (not ox):
-            return ''
+        if (not orig) and (not orig_x):
+            return str()
 
-        if not ox:
-            origin = o
-        elif not o:
-            origin = ox
+        if not orig_x:
+            origin = orig
+        elif not orig:
+            origin = orig_x
         else:
-            origin = f'{o}={ox}'
+            origin = f'{orig}={orig_x}'
 
         if style == "normal":
             return f'<span class="m_origin">&lt;{origin}&gt;</span> '
-        else:
-            return f'<o>&lt;{origin}&gt;</o> '
+        return f'<o>&lt;{origin}&gt;</o> '
 
     def html_definitions(self, style: str = DEFAULT_HTML_STYLE):
         """
@@ -219,23 +232,9 @@ class HTMLExportWord(ExportWord):
         :param style:
         :return:
         """
-        tags = {
-            "normal": [
-                '<span class="m_afx">%s</span> ', '<span class="m_match">%s</span> ',
-                '<span class="m_type">%s</span> ', '<span class="m_author">%s</span> ',
-                '<span class="m_year">%s</span> ', '<span class="m_rank">%s</span>',
-                '<span class="m_use">%s</span>', '<span class="m_technical">%s</span>'],
-            "ultra": ['<afx>%s</afx> ', '%s ', '%s ', '%s ', '%s ', '%s', '<use>%s</use>', '<tec>%s</tec>'],
-        }
-        t_afx, t_match, t_type, t_author, t_year, t_rank, t_use, t_technical = tags[style]
-
-        html_affixes = t_afx % self.e_affixes if self.e_affixes else ''
-        html_match = t_match % self.match if self.match else ''
-        html_type = t_type % self.type.type if self.type.type else ''
-        html_source = t_author % self.e_source if self.e_source else ''
-        html_year = t_year % self.e_year if self.e_year else ''
-        html_rank = t_rank % self.rank if self.rank else ''
-        html_usedin = t_use % self.e_usedin.replace("| ", "|&nbsp;") if self.e_usedin else None
+        html_affixes, html_match, html_rank,\
+            html_source, html_type, html_used_in,\
+            html_year, t_technical = self.get_styled_values(style)
 
         html_tech = t_technical % f'{html_match}{html_type}{html_source}{html_year}{html_rank}'
         html_tech = f'{html_affixes}{self.html_origin(style)}{html_tech}'
@@ -244,29 +243,69 @@ class HTMLExportWord(ExportWord):
             "mid": self.id,
             "technical": html_tech,
             "definitions": self.html_definitions(style),
-            "used_in": html_usedin
+            "used_in": html_used_in
         }
 
+    def get_styled_values(self, style: str = DEFAULT_HTML_STYLE) -> tuple:
+        """
+
+        Args:
+            style:
+
+        Returns:
+
+        """
+        tags = {
+            "normal": [
+                '<span class="m_afx">%s</span> ', '<span class="m_match">%s</span> ',
+                '<span class="m_type">%s</span> ', '<span class="m_author">%s</span> ',
+                '<span class="m_year">%s</span> ', '<span class="m_rank">%s</span>',
+                '<span class="m_use">%s</span>', '<span class="m_technical">%s</span>'],
+            "ultra": [
+                '<afx>%s</afx> ', '%s ', '%s ', '%s ',
+                '%s ', '%s', '<use>%s</use>', '<tec>%s</tec>'],
+        }
+        t_afx, t_match, t_type, t_author, t_year, t_rank, t_use, t_technical = tags[style]
+        html_affixes = t_afx % self.e_affixes if self.e_affixes else str()
+        html_match = t_match % self.match if self.match else str()
+        html_type = t_type % self.type.type if self.type.type else str()
+        html_source = t_author % self.e_source if self.e_source else str()
+        html_year = t_year % self.e_year if self.e_year else str()
+        html_rank = t_rank % self.rank if self.rank else str()
+        html_used_in = t_use % self.e_usedin.replace("| ", "|&nbsp;") if self.e_usedin else None
+        return html_affixes, html_match, html_rank, html_source, \
+            html_type, html_used_in, html_year, t_technical
+
     def html_meaning(self, style: str = DEFAULT_HTML_STYLE) -> str:
+        """
+
+        Args:
+            style:
+
+        Returns:
+
+        """
         n_l = "\n"
         meaning_dict = self.meaning(style)
         if style == "normal":
-            used_in_list = f'<div class="used_in">Used In: {meaning_dict.get("used_in")}</div>\n</div>' \
+            used_in_list = f'<div class="used_in">Used In: ' \
+                           f'{meaning_dict.get("used_in")}</div>\n</div>' \
                 if meaning_dict.get("used_in") else "</div>"
             return f'<div class="meaning" id="{meaning_dict.get("mid")}">\n' \
                    f'<div class="technical">{meaning_dict.get("technical")}</div>\n' \
                    f'<div class="definitions">{n_l}' \
                    f'{n_l.join(meaning_dict.get("definitions"))}\n</div>\n{used_in_list}'
 
-        else:
-            used_in_list = f'<us>Used In: {meaning_dict.get("used_in")}</us>\n</m>' \
-                if meaning_dict.get("used_in") else '</m>'
-            return f'<m>\n<t>{meaning_dict.get("technical")}</t>\n' \
-                   f'<ds>{n_l}' \
-                   f'{n_l.join(meaning_dict.get("definitions"))}\n</ds>\n{used_in_list}'
+        used_in_list = f'<us>Used In: {meaning_dict.get("used_in")}</us>\n</m>' \
+            if meaning_dict.get("used_in") else '</m>'
+        return f'<m>\n<t>{meaning_dict.get("technical")}</t>\n' \
+               f'<ds>{n_l}' \
+               f'{n_l.join(meaning_dict.get("definitions"))}\n</ds>\n{used_in_list}'
 
     @classmethod
-    def translation_by_key(cls, key: str, language: str = None, style: str = DEFAULT_HTML_STYLE) -> Optional[str]:
+    def translation_by_key(
+            cls, key: str, language: str = None,
+            style: str = DEFAULT_HTML_STYLE) -> Optional[str]:
         """
         Get information about loglan words by key in a foreign language
         Args:
