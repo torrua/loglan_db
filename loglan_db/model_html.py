@@ -4,7 +4,7 @@ HTML Export extensions of LOD database models
 """
 import os
 from itertools import groupby
-from typing import Optional, Union
+from typing import Optional, Union, List
 
 from sqlalchemy import or_
 
@@ -147,12 +147,6 @@ class HTMLExportWord(ExportWord):
 
         """
 
-        word_template = {
-            "normal": '<div class="word" wid="%s">\n'
-                      '<div class="word_line"><span class="word_name">%s</span>,</div>\n'
-                      '<div class="meanings">\n%s\n</div>\n</div>',
-            "ultra": '<w wid="%s"><wl>%s,</wl>\n<ms>\n%s\n</ms>\n</w>',
-        }
         words_template = {
             "normal": '<div class="words">\n%s\n</div>\n',
             "ultra": '<ws>\n%s\n</ws>\n',
@@ -182,15 +176,35 @@ class HTMLExportWord(ExportWord):
         if not words:
             return None
 
+        items = cls._get_stylized_words(words, style)
+
+        return words_template[style] % "\n".join(items)
+
+    @staticmethod
+    def _get_stylized_words(
+            words: list, style: str = DEFAULT_HTML_STYLE) -> List[str]:
+        """
+
+        Args:
+            words:
+            style:
+
+        Returns:
+
+        """
+        word_template = {
+            "normal": '<div class="word" wid="%s">\n'
+                      '<div class="word_line"><span class="word_name">%s</span>,</div>\n'
+                      '<div class="meanings">\n%s\n</div>\n</div>',
+            "ultra": '<w wid="%s"><wl>%s,</wl>\n<ms>\n%s\n</ms>\n</w>',
+        }
         grouped_words = groupby(words, lambda ent: ent.name)
         group_words = {k: list(g) for k, g in grouped_words}
-
         items = []
         for word_name, words in group_words.items():
             meanings = "\n".join([word.html_meaning(style) for word in words])
             items.append(word_template[style] % (word_name.lower(), word_name, meanings))
-
-        return words_template[style] % "\n".join(items)
+        return items
 
     def html_origin(self, style: str = DEFAULT_HTML_STYLE):
         """
