@@ -6,9 +6,14 @@ import datetime
 import pytest
 import sqlalchemy.exc
 
-from loglan_db.model_base import BaseWord as Word, BaseType as Type, BaseEvent as Event, \
-    BaseAuthor as Author, BaseDefinition as Definition, BaseKey as Key, BaseSetting as Setting, \
-    BaseSyllable as Syllable, BaseWordSource as WordSource
+from loglan_db.model_db.base_word import BaseWord as Word, BaseWordSource as WordSource
+from loglan_db.model_db.base_definition import BaseDefinition as Definition
+from loglan_db.model_db.base_type import BaseType as Type
+from loglan_db.model_db.base_syllable import BaseSyllable as Syllable
+from loglan_db.model_db.base_setting import BaseSetting as Setting
+from loglan_db.model_db.base_key import BaseKey as Key
+from loglan_db.model_db.base_event import BaseEvent as Event
+from loglan_db.model_db.base_author import BaseAuthor as Author
 
 from tests.functions import db_connect_authors, db_connect_keys, db_connect_words, \
     db_add_objects, dar, db_add_object

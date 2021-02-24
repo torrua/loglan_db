@@ -4,9 +4,14 @@
 This module contains a default LOD dictionary model for a SQL database.
 """
 
-from loglan_db.model_base import BaseAuthor, BaseEvent, \
-    BaseKey, BaseSetting, BaseSyllable, BaseType, \
-    BaseDefinition, BaseWord, BaseWordSpell, BaseWordSource
+from loglan_db.model_db.base_word import BaseWordSpell, BaseWord, BaseWordSource
+from loglan_db.model_db.base_definition import BaseDefinition
+from loglan_db.model_db.base_type import BaseType
+from loglan_db.model_db.base_syllable import BaseSyllable
+from loglan_db.model_db.base_setting import BaseSetting
+from loglan_db.model_db.base_key import BaseKey
+from loglan_db.model_db.base_event import BaseEvent
+from loglan_db.model_db.base_author import BaseAuthor
 
 
 class DictionaryBase:

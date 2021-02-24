@@ -8,7 +8,7 @@ from typing import Optional, Union, List
 
 from sqlalchemy import or_
 
-from loglan_db.model_base import BaseEvent
+from loglan_db.model_db.base_event import BaseEvent
 from loglan_db.model_export import ExportWord, ExportDefinition
 
 DEFAULT_HTML_STYLE = os.getenv("DEFAULT_HTML_STYLE", "ultra")
@@ -201,8 +201,8 @@ class HTMLExportWord(ExportWord):
         grouped_words = groupby(words, lambda ent: ent.name)
         group_words = {k: list(g) for k, g in grouped_words}
         items = []
-        for word_name, words in group_words.items():
-            meanings = "\n".join([word.html_meaning(style) for word in words])
+        for word_name, words_list in group_words.items():
+            meanings = "\n".join([word.html_meaning(style) for word in words_list])
             items.append(word_template[style] % (word_name.lower(), word_name, meanings))
         return items
 
@@ -238,7 +238,7 @@ class HTMLExportWord(ExportWord):
         :param style:
         :return:
         """
-        return [HTMLExportDefinition.export_for_loglan(d, style=style) for d in self.definitions]
+        return [HTMLExportDefinition.export_for_loglan(d, style=style) for d in list(self.definitions)]
 
     def meaning(self, style: str = DEFAULT_HTML_STYLE) -> dict:
         """

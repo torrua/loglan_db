@@ -3,7 +3,7 @@
 
 from loglan_db import db
 from loglan_db.model import Word, Key, Event, Author, Type, Definition
-from loglan_db.model_base import t_connect_authors, t_connect_keys, t_connect_words
+from loglan_db.model_db.base_connect_tables import t_connect_authors, t_connect_words, t_connect_keys
 
 
 def print_data_by_word(name: str):
