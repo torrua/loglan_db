@@ -63,6 +63,17 @@ class HTMLExportDefinition(ExportDefinition):
         :param style:
         :return:
         """
+
+        def _word_origin_x(d_source_word, tag):
+            w_origin_x = d_source_word.origin_x \
+                if d_source_word.origin_x and d_source_word.type.group == "Cpx" else ''
+            return tag % w_origin_x if w_origin_x else ''
+
+        def _word_name(usage, d_source_word, tag):
+            w_name = d_source_word.name if not usage \
+                else usage.replace("%", d_source_word.name)
+            return tag % w_name
+
         # de = definition english
         tags = {
             "normal": [
@@ -88,14 +99,8 @@ class HTMLExportDefinition(ExportDefinition):
         def_body = HTMLExportDefinition.highlight_key(def_body, word)
         def_body = t_d_body % def_body
 
-        d_source_word = self.source_word
-        w_name = d_source_word.name if not self.usage \
-            else self.usage.replace("%", d_source_word.name)
-        word_name = t_word_name % w_name
-
-        w_origin_x = d_source_word.origin_x \
-            if d_source_word.origin_x and d_source_word.type.group == "Cpx" else ''
-        word_origin_x = t_word_origin % w_origin_x if w_origin_x else ''
+        word_name = _word_name(self.usage, self.source_word, t_word_name)
+        word_origin_x = _word_origin_x(self.source_word, t_word_origin)
 
         definition = t_def % f'{def_tags}{def_gram}{def_body}'
         return t_def_line % f'{word_name}{word_origin_x}{definition}'
@@ -272,23 +277,24 @@ class HTMLExportWord(ExportWord):
         tags = {
             "normal": [
                 '<span class="m_afx">%s</span> ', '<span class="m_match">%s</span> ',
-                '<span class="m_type">%s</span> ', '<span class="m_author">%s</span> ',
-                '<span class="m_year">%s</span> ', '<span class="m_rank">%s</span>',
-                '<span class="m_use">%s</span>', '<span class="m_technical">%s</span>'],
+                '<span class="m_rank">%s</span>', '<span class="m_author">%s</span> ',
+                '<span class="m_type">%s</span> ', '<span class="m_use">%s</span>',
+                '<span class="m_year">%s</span> ', '<span class="m_technical">%s</span>'],
             "ultra": [
-                '<afx>%s</afx> ', '%s ', '%s ', '%s ',
-                '%s ', '%s', '<use>%s</use>', '<tec>%s</tec>'],
+                '<afx>%s</afx> ', '%s ', '%s', '%s ', '%s ',
+                '<use>%s</use>', '%s ', '<tec>%s</tec>'],
         }
-        t_afx, t_match, t_type, t_author, t_year, t_rank, t_use, t_technical = tags[style]
-        html_affixes = t_afx % self.e_affixes if self.e_affixes else str()
-        html_match = t_match % self.match if self.match else str()
-        html_type = t_type % self.type.type if self.type.type else str()
-        html_source = t_author % self.e_source if self.e_source else str()
-        html_year = t_year % self.e_year if self.e_year else str()
-        html_rank = t_rank % self.rank if self.rank else str()
-        html_used_in = t_use % self.e_usedin.replace("| ", "|&nbsp;") if self.e_usedin else None
-        return html_affixes, html_match, html_rank, html_source, \
-            html_type, html_used_in, html_year, t_technical
+
+        def _stringer(tag: str, value: Optional[str], default_value: Optional[str] = str()):
+            return tag % value if value else default_value
+
+        # t_afx, t_match, t_type, t_author, t_year, t_rank, t_use, t_technical = tags[style]
+        values = [self.e_affixes, self.match, self.rank, self.e_source, self.type.type,
+                  self.e_usedin.replace("| ", "|&nbsp;"), self.e_year, None]
+        default_values = [str(), str(), str(), str(), str(), None, str(), tags[style][-1]]
+
+        return tuple([_stringer(tag, value, default_value) for tag, value, default_value in
+                      zip(tags[style], values, default_values)])
 
     def html_meaning(self, style: str = DEFAULT_HTML_STYLE) -> str:
         """
