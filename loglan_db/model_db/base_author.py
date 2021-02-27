@@ -7,6 +7,15 @@ from loglan_db.model_db import t_name_authors
 from loglan_db import db
 from loglan_db.model_init import InitBase, DBBase
 
+__pdoc__ = {
+
+    'BaseAuthor.contribution':
+        """*Relationship query for getting a list of words coined by this author*
+
+    **query** : Optional[List[BaseWord]]""",
+    'BaseAuthor.created': False, 'BaseAuthor.updated': False,
+}
+
 
 class BaseAuthor(db.Model, InitBase, DBBase):
     """Base Author's DB Model

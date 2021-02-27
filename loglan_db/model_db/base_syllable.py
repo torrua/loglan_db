@@ -7,6 +7,10 @@ from loglan_db.model_db import t_name_syllables
 from loglan_db.model_db.base_word import db
 from loglan_db.model_init import InitBase, DBBase
 
+__pdoc__ = {
+    'BaseSyllable.created': False, 'BaseSyllable.updated': False,
+}
+
 
 class BaseSyllable(db.Model, InitBase, DBBase):
     """Base Syllable's DB Model

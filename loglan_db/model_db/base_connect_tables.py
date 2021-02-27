@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=C0303
-
 """
 This module contains a basic Connection Table Models
 """

@@ -7,6 +7,13 @@ from loglan_db.model_db import t_name_keys
 from loglan_db.model_db.base_word import db
 from loglan_db.model_init import InitBase, DBBase
 
+__pdoc__ = {
+    'BaseKey.definitions':
+        """*Relationship query for getting a list of definitions related to this key*
+
+    **query** : Optional[List[BaseDefinition]]""",
+    'BaseKey.created': False, 'BaseKey.updated': False, }
+
 
 class BaseKey(db.Model, InitBase, DBBase):
     """Base Key's DB Model

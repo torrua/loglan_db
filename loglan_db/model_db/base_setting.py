@@ -7,6 +7,10 @@ from loglan_db.model_db import t_name_settings
 from loglan_db.model_db.base_word import db
 from loglan_db.model_init import InitBase, DBBase
 
+__pdoc__ = {
+    'BaseSetting.created': False, 'BaseSetting.updated': False,
+}
+
 
 class BaseSetting(db.Model, InitBase, DBBase):
     """Base Setting's DB Model

@@ -9,6 +9,20 @@ from loglan_db.model_db import t_name_events
 from loglan_db.model_db.base_word import db
 from loglan_db.model_init import InitBase, DBBase
 
+__pdoc__ = {
+    'BaseEvent.appeared_words':
+        """*Relationship query for getting a list of words appeared during this event*
+
+    **query** : Optional[List[BaseWord]]""",
+
+    'BaseEvent.deprecated_words':
+        """*Relationship query for getting a list of words deprecated during this event*
+
+    **query** : Optional[List[BaseWord]]""",
+
+    'BaseEvent.created': False, 'BaseEvent.updated': False,
+}
+
 
 class BaseEvent(db.Model, InitBase, DBBase):
     """Base Event's DB Model

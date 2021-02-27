@@ -4,7 +4,9 @@
 This module contains a default LOD dictionary model for a SQL database.
 """
 
-from loglan_db.model_db.base_word import BaseWordSpell, BaseWord, BaseWordSource
+from loglan_db.model_db.base_word import BaseWord
+from loglan_db.model_db.base_word_spell import BaseWordSpell
+from loglan_db.model_db.base_word_source import BaseWordSource
 from loglan_db.model_db.base_definition import BaseDefinition
 from loglan_db.model_db.base_type import BaseType
 from loglan_db.model_db.base_syllable import BaseSyllable

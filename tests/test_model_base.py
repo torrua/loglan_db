@@ -6,7 +6,8 @@ import datetime
 import pytest
 import sqlalchemy.exc
 
-from loglan_db.model_db.base_word import BaseWord as Word, BaseWordSource as WordSource
+from loglan_db.model_db.base_word import BaseWord as Word
+from loglan_db.model_db.base_word_source import BaseWordSource as WordSource
 from loglan_db.model_db.base_definition import BaseDefinition as Definition
 from loglan_db.model_db.base_type import BaseType as Type
 from loglan_db.model_db.base_syllable import BaseSyllable as Syllable
@@ -22,7 +23,7 @@ from tests.data import keys, definitions, words, types, authors, settings, sylla
     prim_words, prim_types, word_1_source_1
 from tests.data import changed_words, changed_events, all_events, doubled_words
 from tests.data import littles, little_types
-from tests.data import definition_1, definition_2, word_1, word_2, word_3
+from tests.data import definition_1, definition_2, word_1
 from tests.data import un_key_1, un_key_2, un_key_3
 
 from tests.data import connect_authors
@@ -424,61 +425,6 @@ class TestWord:
 
         assert word.definitions.count() == len(definitions_to_add) == 5
         assert isinstance(word.definitions[0], Definition)
-
-    def test_add_child(self):
-        db_add_objects(Word, words)
-        cmp = Word.get_by_id(word_1.get("id"))
-        assert cmp._parents.count() == 0
-
-        for p in [word_2, word_3]:
-            prim = Word.get_by_id(p.get("id"))
-            result = prim.add_child(cmp)
-            assert result == cmp.name
-
-        assert cmp._parents.count() == 2
-
-        prim = Word.get_by_id(word_3.get("id"))
-        prim.add_child(cmp)
-        assert cmp._parents.count() == 2
-
-    def test_add_children(self):
-        db_add_objects(Word, words)
-        cmp = Word.get_by_id(word_1.get("id"))
-        assert cmp._parents.count() == 0
-
-        for p in [word_2, word_3]:
-            prim = Word.get_by_id(p.get("id"))
-            prim.add_children([cmp, ])
-
-        assert cmp._parents.count() == 2
-
-    def test_add_author(self):
-        db_add_objects(Word, words)
-        db_add_objects(Author, authors)
-
-        word = Word.get_by_id(7316)
-        author = Author.get_by_id(29)
-        assert word.authors.count() == 0
-
-        word.add_author(author)
-        assert word.authors.count() == 1
-        assert word.authors[0] == author
-
-        word.add_author(author)
-        assert word.authors.count() == 1
-
-    def test_add_authors(self):
-        db_add_objects(Word, words)
-        db_add_objects(Author, authors)
-
-        word = Word.get_by_id(7316)
-        assert word.authors.count() == 0
-
-        local_authors = Author.get_all()
-        word.add_authors(local_authors)
-
-        assert word.authors.count() == 2
-        assert isinstance(word.authors[0], Author)
 
     def test_query_derivatives(self):
         db_add_objects(Word, words)

@@ -14,6 +14,11 @@ from loglan_db.model_db.base_key import BaseKey
 from loglan_db.model_db.base_word import db
 from loglan_db.model_init import InitBase, DBBase
 
+__pdoc__ = {
+    'BaseDefinition.source_word': 'source_word',
+    'BaseDefinition.created': False, 'BaseDefinition.updated': False,
+}
+
 
 class BaseDefinition(db.Model, InitBase, DBBase):
     """BaseDefinition model"""

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=C0103, C0303
+# pylint: disable=C0103
 """
 This module contains a basic Word Model and addons
 """
@@ -14,14 +14,15 @@ from flask_sqlalchemy import SQLAlchemy, BaseQuery
 from sqlalchemy import or_
 
 from loglan_db import app_lod, db
-from loglan_db.model_db import t_name_word_spells, t_name_words, \
-    t_name_types, t_name_events, t_name_word_sources
+from loglan_db.model_db import t_name_words, \
+    t_name_types, t_name_events
 from loglan_db.model_db.base_author import BaseAuthor
 from loglan_db.model_db.base_connect_tables import \
     t_connect_authors, t_connect_words, t_connect_keys
 from loglan_db.model_db.base_event import BaseEvent
 from loglan_db.model_db.base_key import BaseKey
 from loglan_db.model_db.base_type import BaseType
+from loglan_db.model_db.base_word_source import BaseWordSource
 from loglan_db.model_init import InitBase, DBBase
 from loglan_db.model_db.base_definition import BaseDefinition
 
@@ -30,154 +31,15 @@ if os.environ.get("IS_PDOC", "False") == "True":
     # TODO Fix pdoc
 
 __pdoc__ = {
-    'BaseEvent.appeared_words':
-        """*Relationship query for getting a list of words appeared during this event*
-
-    **query** : Optional[List[BaseWord]]""",
-
-    'BaseEvent.deprecated_words':
-        """*Relationship query for getting a list of words deprecated during this event*
-
-    **query** : Optional[List[BaseWord]]""",
-
-    'BaseAuthor.contribution':
-        """*Relationship query for getting a list of words coined by this author*
-
-    **query** : Optional[List[BaseWord]]""",
-
-    'BaseType.words': 'words',
-    'BaseDefinition.source_word': 'source_word',
-    'BaseKey.definitions':
-        """*Relationship query for getting a list of definitions related to this key*
-
-    **query** : Optional[List[BaseDefinition]]""",
-
-    'BaseAuthor.created': False, 'BaseAuthor.updated': False,
-    'BaseEvent.created': False, 'BaseEvent.updated': False,
-    'BaseKey.created': False, 'BaseKey.updated': False,
-    'BaseSetting.created': False, 'BaseSetting.updated': False,
-    'BaseSyllable.created': False, 'BaseSyllable.updated': False,
-    'BaseType.created': False, 'BaseType.updated': False,
-    'BaseDefinition.created': False, 'BaseDefinition.updated': False,
     'BaseWord.created': False, 'BaseWord.updated': False,
 }
 
 
-class BaseWord(db.Model, InitBase, DBBase):
-    """BaseWord model"""
-    __tablename__ = t_name_words
+class __WordQuerier:
 
-    id = db.Column(db.Integer, primary_key=True)
-    """Word's internal ID number: Integer"""
-
-    id_old = db.Column(db.Integer, nullable=False)  # Compatibility with the previous database
-    name = db.Column(db.String(64), nullable=False)
-    origin = db.Column(db.String(128))
-    origin_x = db.Column(db.String(64))
-    match = db.Column(db.String(8))
-    rank = db.Column(db.String(8))
-    year = db.Column(db.Date)
-    notes = db.Column(db.JSON)
-    TID_old = db.Column(db.Integer)  # references
-
-    type_id = db.Column("type", db.ForeignKey(f'{t_name_types}.id'), nullable=False)
-    type: BaseType = db.relationship(
-        BaseType.__name__, backref="words", enable_typechecks=False)
-
-    event_start_id = db.Column(
-        "event_start", db.ForeignKey(f'{t_name_events}.id'), nullable=False)
-    event_start: BaseEvent = db.relationship(
-        BaseEvent.__name__, foreign_keys=[event_start_id],
-        backref="appeared_words", enable_typechecks=False)
-
-    event_end_id = db.Column("event_end", db.ForeignKey(f'{t_name_events}.id'))
-    event_end: BaseEvent = db.relationship(
-        BaseEvent.__name__, foreign_keys=[event_end_id],
-        backref="deprecated_words", enable_typechecks=False)
-
-    authors: BaseQuery = db.relationship(
-        BaseAuthor.__name__, secondary=t_connect_authors,
-        backref="contribution", lazy='dynamic', enable_typechecks=False)
-
-    definitions: BaseQuery = db.relationship(
-        BaseDefinition.__name__, backref="source_word",
-        lazy='dynamic', enable_typechecks=False)
-
-    # word's derivatives
-    __derivatives = db.relationship(
-        'BaseWord', secondary=t_connect_words,
-        primaryjoin=(t_connect_words.c.parent_id == id),
-        secondaryjoin=(t_connect_words.c.child_id == id),
-        backref=db.backref('_parents', lazy='dynamic', enable_typechecks=False),
-        lazy='dynamic', enable_typechecks=False)
-
-    def __is_parented(self, child: BaseWord) -> bool:
-        """
-        Check, if this word is already added as a parent for this 'child'
-
-        Args:
-            child: BaseWord: BaseWord object to check
-
-        Returns: bool:
-
-        """
-        return self.__derivatives.filter(t_connect_words.c.child_id == child.id).count() > 0
-
-    def add_child(self, child: BaseWord) -> str:
-        """Add derivative for the source word
-        Get words from Used In and add relationship in database
-
-        Args:
-          child: BaseWord: Object to add
-
-        Returns:
-            String with the name of the added child (BaseWord.name)
-
-        """
-        # TODO add check if type of child is allowed to add to this word
-        if not self.__is_parented(child):
-            self.__derivatives.append(child)
-        return child.name
-
-    def add_children(self, children: List[BaseWord]):
-        """Add derivatives for the source word
-        Get words from Used In and add relationship in database
-
-        Args:
-          children: List[BaseWord]:
-
-        Returns:
-          None
-
-        """
-        # TODO add check if type of child is allowed to add to this word
-        new_children = list(set(children) - set(self.__derivatives))
-        _ = self.__derivatives.extend(new_children) if new_children else None
-
-    def add_author(self, author: BaseAuthor) -> str:
-        """Connect Author object with BaseWord object
-
-        Args:
-          author: BaseAuthor:
-
-        Returns:
-
-        """
-        if not self.authors.filter(BaseAuthor.abbreviation == author.abbreviation).count() > 0:
-            self.authors.append(author)
-        return author.abbreviation
-
-    def add_authors(self, authors: List[BaseAuthor]):
-        """Connect Author objects with BaseWord object
-
-        Args:
-          authors: List[BaseAuthor]:
-
-        Returns:
-
-        """
-        new_authors = list(set(authors) - set(self.authors))
-        _ = self.authors.extend(new_authors) if new_authors else None
+    id: int = None
+    _derivatives: BaseQuery = None
+    _parents: BaseQuery = None
 
     def query_derivatives(self, word_type: str = None,
                           word_type_x: str = None, word_group: str = None) -> BaseQuery:
@@ -191,7 +53,7 @@ class BaseWord(db.Model, InitBase, DBBase):
         Returns:
             BaseQuery
         """
-        result = self.__derivatives.filter(self.id == t_connect_words.c.parent_id)
+        result = self._derivatives.filter(self.id == t_connect_words.c.parent_id)
 
         if word_type or word_type_x or word_group:
             result = result.join(BaseType)
@@ -249,51 +111,13 @@ class BaseWord(db.Model, InitBase, DBBase):
         return BaseKey.query.join(
             t_connect_keys, BaseDefinition, BaseWord).filter(BaseWord.id == self.id)
 
-    @property
-    def parents(self) -> List[BaseWord]:
-        """Get all parents of the Complexes, Little words or Affixes
 
-        Args:
+class __WordSourcer:
 
-        Returns:
-            List[BaseWord]
-        """
-        return self.query_parents().all()
-
-    @property
-    def complexes(self) -> List[BaseWord]:
-        """Get all word's complexes if exist
-
-        Args:
-
-        Returns:
-            List[BaseWord]
-        """
-        return self.query_cpx().all()
-
-    @property
-    def affixes(self) -> List[BaseWord]:
-        """Get all word's affixes if exist
-
-        Args:
-
-        Returns:
-            List[BaseWord]
-        """
-        return self.query_afx().all()
-
-    @property
-    def keys(self) -> List[BaseKey]:
-        """Get all BaseKey object related to this BaseWord
-        Keep in mind that duplicate keys for different definitions
-        will not be added to the final result
-
-        Args:
-
-        Returns:
-            List[BaseKey]
-        """
-        return self.query_keys().all()
+    type: BaseType = None
+    name: db.Column = None
+    origin: db.Column = None
+    origin_x: db.Column = None
 
     def get_sources_prim(self):
         """
@@ -450,6 +274,13 @@ class BaseWord(db.Model, InitBase, DBBase):
         return BaseWord.query.filter(BaseWord.name.in_(sources)) \
             .filter(BaseWord.type_id.in_(type_ids)).all()
 
+
+class __WordGetter:
+    query: BaseQuery = None
+    name: db.Column = None
+    event_start_id: db.Column = None
+    event_end_id: db.Column = None
+
     @classmethod
     def by_event(cls, event_id: Union[BaseEvent, int] = None) -> BaseQuery:
         """Query filtered by specified Event (latest by default)
@@ -516,35 +347,96 @@ class BaseWord(db.Model, InitBase, DBBase):
         return request
 
 
-class BaseWordSource(InitBase):
-    """Word Source from BaseWord.origin for Prims"""
-    __tablename__ = t_name_word_sources
+class BaseWord(db.Model, InitBase, DBBase, __WordQuerier, __WordSourcer, __WordGetter):
+    """BaseWord model"""
+    __tablename__ = t_name_words
 
-    LANGUAGES = {
-        "E": "English",
-        "C": "Chinese",
-        "H": "Hindi",
-        "R": "Russian",
-        "S": "Spanish",
-        "F": "French",
-        "J": "Japanese",
-        "G": "German", }
+    id = db.Column(db.Integer, primary_key=True)
+    """Word's internal ID number: Integer"""
 
-    coincidence: int = None
-    length: int = None
-    language: str = None
-    transcription: str = None
+    id_old = db.Column(db.Integer, nullable=False)  # Compatibility with the previous database
+    name = db.Column(db.String(64), nullable=False)
+    origin = db.Column(db.String(128))
+    origin_x = db.Column(db.String(64))
+    match = db.Column(db.String(8))
+    rank = db.Column(db.String(8))
+    year = db.Column(db.Date)
+    notes = db.Column(db.JSON)
+    TID_old = db.Column(db.Integer)  # references
+
+    type_id = db.Column("type", db.ForeignKey(f'{t_name_types}.id'), nullable=False)
+    type: BaseType = db.relationship(
+        BaseType.__name__, backref="words", enable_typechecks=False)
+
+    event_start_id = db.Column(
+        "event_start", db.ForeignKey(f'{t_name_events}.id'), nullable=False)
+    event_start: BaseEvent = db.relationship(
+        BaseEvent.__name__, foreign_keys=[event_start_id],
+        backref="appeared_words", enable_typechecks=False)
+
+    event_end_id = db.Column("event_end", db.ForeignKey(f'{t_name_events}.id'))
+    event_end: BaseEvent = db.relationship(
+        BaseEvent.__name__, foreign_keys=[event_end_id],
+        backref="deprecated_words", enable_typechecks=False)
+
+    authors: BaseQuery = db.relationship(
+        BaseAuthor.__name__, secondary=t_connect_authors,
+        backref="contribution", lazy='dynamic', enable_typechecks=False)
+
+    definitions: BaseQuery = db.relationship(
+        BaseDefinition.__name__, backref="source_word",
+        lazy='dynamic', enable_typechecks=False)
+
+    # word's derivatives
+    _derivatives = db.relationship(
+        'BaseWord', secondary=t_connect_words,
+        primaryjoin=(t_connect_words.c.parent_id == id),
+        secondaryjoin=(t_connect_words.c.child_id == id),
+        backref=db.backref('_parents', lazy='dynamic', enable_typechecks=False),
+        lazy='dynamic', enable_typechecks=False)
 
     @property
-    def as_string(self) -> str:
-        """
-        Format WordSource as string, for example, '3/5R mesto'
+    def parents(self) -> List[BaseWord]:
+        """Get all parents of the Complexes, Little words or Affixes
+
+        Args:
+
         Returns:
-            str
+            List[BaseWord]
         """
-        return f"{self.coincidence}/{self.length}{self.language} {self.transcription}"
+        return self.query_parents().all()
 
+    @property
+    def complexes(self) -> List[BaseWord]:
+        """Get all word's complexes if exist
 
-class BaseWordSpell(InitBase):
-    """BaseWordSpell model"""
-    __tablename__ = t_name_word_spells
+        Args:
+
+        Returns:
+            List[BaseWord]
+        """
+        return self.query_cpx().all()
+
+    @property
+    def affixes(self) -> List[BaseWord]:
+        """Get all word's affixes if exist
+
+        Args:
+
+        Returns:
+            List[BaseWord]
+        """
+        return self.query_afx().all()
+
+    @property
+    def keys(self) -> List[BaseKey]:
+        """Get all BaseKey object related to this BaseWord
+        Keep in mind that duplicate keys for different definitions
+        will not be added to the final result
+
+        Args:
+
+        Returns:
+            List[BaseKey]
+        """
+        return self.query_keys().all()

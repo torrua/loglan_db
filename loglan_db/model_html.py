@@ -166,15 +166,9 @@ class HTMLExportWord(ExportWord):
             .filter(or_(cls.event_end_id > event_id, cls.event_end_id.is_(None)))
 
         if case_sensitive:
-            if partial_results:
-                words = words.filter(cls.name.like(f"{name}%"))
-            else:
-                words = words.filter(cls.name == name)
+            words = cls.__case_sensitive_words(name, words, partial_results)
         else:
-            if partial_results:
-                words = words.filter(cls.name.ilike(f"{name}%"))
-            else:
-                words = words.filter(cls.name.ilike(name))
+            words = cls.__case_insensitive_words(name, words, partial_results)
 
         words = words.order_by(cls.name).all()
 
@@ -184,6 +178,16 @@ class HTMLExportWord(ExportWord):
         items = cls._get_stylized_words(words, style)
 
         return words_template[style] % "\n".join(items)
+
+    @classmethod
+    def __case_insensitive_words(cls, name, words, partial_results):
+        return words.filter(cls.name.ilike(f"{name}%")) \
+            if partial_results else words.filter(cls.name.ilike(name))
+
+    @classmethod
+    def __case_sensitive_words(cls, name, words, partial_results):
+        return words.filter(cls.name.like(f"{name}%")) \
+            if partial_results else words.filter(cls.name == name)
 
     @staticmethod
     def _get_stylized_words(
@@ -243,7 +247,8 @@ class HTMLExportWord(ExportWord):
         :param style:
         :return:
         """
-        return [HTMLExportDefinition.export_for_loglan(d, style=style) for d in list(self.definitions)]
+        return [HTMLExportDefinition.export_for_loglan(
+            d, style=style) for d in list(self.definitions)]
 
     def meaning(self, style: str = DEFAULT_HTML_STYLE) -> dict:
         """
@@ -342,16 +347,20 @@ class HTMLExportWord(ExportWord):
         if not words:
             return None
 
-        result = {}
+        result = cls.__definitions_by_key(key, words, style)
 
+        new = '\n'
+
+        return new.join([f"{new.join(definitions)}"
+                         for _, definitions in result.items()]).strip()
+
+    @classmethod
+    def __definitions_by_key(cls, key, words, style):
+        result = {}
         for word in words:
             result[word.name] = []
             definitions = [
                 HTMLExportDefinition.export_for_english(d, word=key, style=style)
                 for d in word.definitions if key.lower() in [key.word.lower() for key in d.keys]]
             result[word.name].extend(definitions)
-
-        new = '\n'
-
-        return new.join([f"{new.join(definitions)}"
-                         for _, definitions in result.items()]).strip()
+        return result

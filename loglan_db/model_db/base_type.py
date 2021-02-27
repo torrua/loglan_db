@@ -11,6 +11,11 @@ from loglan_db.model_db import t_name_types
 from loglan_db.model_db.base_word import db
 from loglan_db.model_init import InitBase, DBBase
 
+__pdoc__ = {
+    'BaseType.words': 'words',
+    'BaseType.created': False, 'BaseType.updated': False,
+}
+
 
 class BaseType(db.Model, InitBase, DBBase):
     """BaseType model"""

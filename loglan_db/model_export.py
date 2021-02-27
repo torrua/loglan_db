@@ -4,7 +4,8 @@ This module contains an "Export extensions" for LOD dictionary SQL model.
 Add export() function to db object for returning its text string presentation.
 """
 
-from loglan_db.model_db.base_word import BaseWordSpell, BaseWord
+from loglan_db.model_db.base_word import BaseWord
+from loglan_db.model_db.base_word_spell import BaseWordSpell
 from loglan_db.model_db.base_definition import BaseDefinition
 from loglan_db.model_db.base_type import BaseType
 from loglan_db.model_db.base_syllable import BaseSyllable
