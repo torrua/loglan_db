@@ -7,8 +7,7 @@ This module contains a basic Word Model and addons
 from __future__ import annotations
 
 import os
-import re
-from typing import List, Optional, Union
+from typing import List, Union
 
 from flask_sqlalchemy import SQLAlchemy, BaseQuery
 from sqlalchemy import or_
@@ -22,7 +21,6 @@ from loglan_db.model_db.base_connect_tables import \
 from loglan_db.model_db.base_event import BaseEvent
 from loglan_db.model_db.base_key import BaseKey
 from loglan_db.model_db.base_type import BaseType
-from loglan_db.model_db.base_word_source import BaseWordSource
 from loglan_db.model_init import InitBase, DBBase
 from loglan_db.model_db.base_definition import BaseDefinition
 
@@ -39,7 +37,6 @@ class AddonWordQuerier:
 
     id: int = None
     _derivatives: BaseQuery = None
-    _parents: BaseQuery = None
 
     def query_derivatives(self, word_type: str = None,
                           word_type_x: str = None, word_group: str = None) -> BaseQuery:
@@ -66,17 +63,6 @@ class AddonWordQuerier:
             result = result.filter(BaseType.group == word_group)
 
         return result.order_by(BaseWord.name.asc())
-
-    def query_parents(self) -> BaseQuery:
-        """Query to get all parents of the Complexes, Little words or Affixes
-        :return: Query
-
-        Args:
-
-        Returns:
-            BaseQuery
-        """
-        return self._parents  # if self.type in self.__parentable else []
 
     def query_cpx(self) -> BaseQuery:
         """Query to qet all the complexes that exist for this word
@@ -110,169 +96,6 @@ class AddonWordQuerier:
         """
         return BaseKey.query.join(
             t_connect_keys, BaseDefinition, BaseWord).filter(BaseWord.id == self.id)
-
-
-class AddonWordSourcer:
-
-    type: BaseType = None
-    name: db.Column = None
-    origin: db.Column = None
-    origin_x: db.Column = None
-
-    def get_sources_prim(self):
-        """
-
-        Returns:
-
-        """
-        # existing_prim_types = ["C", "D", "I", "L", "N", "O", "S", ]
-
-        if not self.type.group == "Prim":
-            return None
-
-        prim_type = self.type.type[:1]
-
-        if prim_type == "C":
-            return self._get_sources_c_prim()
-
-        return f"{self.name}: {self.origin}{' < ' + self.origin_x if self.origin_x else ''}"
-
-    def _get_sources_c_prim(self) -> Optional[List[BaseWordSource]]:
-        """
-
-        Returns:
-
-        """
-        if self.type.type != "C-Prim":
-            return None
-
-        pattern_source = r"\d+\/\d+\w"
-        sources = str(self.origin).split(" | ")
-        word_sources = []
-
-        for source in sources:
-            compatibility = re.search(pattern_source, source)[0]
-            c_l = compatibility[:-1].split("/")
-            transcription = (re.search(rf"(?!{pattern_source}) .+", source)[0]).strip()
-            word_source = BaseWordSource(**{
-                "coincidence": int(c_l[0]),
-                "length": int(c_l[1]),
-                "language": compatibility[-1:],
-                "transcription": transcription, })
-            word_sources.append(word_source)
-
-        return word_sources
-
-    def get_sources_cpx(self, as_str: bool = False) -> List[Union[str, BaseWord]]:
-        """Extract source words from self.origin field accordingly
-        Args:
-            as_str (bool): return BaseWord objects if False else as simple str
-            (Default value = False)
-        Example:
-            'foldjacea' > ['forli', 'djano', 'cenja']
-        Returns:
-            List of words from which the self.name was created
-
-        """
-
-        # these prims have switched djifoas like 'flo' for 'folma'
-        switch_prims = [
-            'canli', 'farfu', 'folma', 'forli', 'kutla', 'marka',
-            'mordu', 'sanca', 'sordi', 'suksi', 'surna']
-
-        if not self.type.group == "Cpx":
-            return []
-
-        sources = self._prepare_sources_cpx()
-
-        result = self.words_from_source_cpx(sources)
-
-        if not as_str:
-            return result
-
-        result_as_str = []
-        _ = [result_as_str.append(r) for r in sources if r not in result_as_str]
-        return result_as_str
-
-    @staticmethod
-    def words_from_source_cpx(sources: List[str]) -> List[BaseWord]:
-        """
-
-        Args:
-            sources:
-
-        Returns:
-
-        """
-        exclude_type_ids = [t.id for t in BaseType.by(["LW", "Cpd"]).all()]
-        return BaseWord.query \
-            .filter(BaseWord.name.in_(sources)) \
-            .filter(BaseWord.type_id.notin_(exclude_type_ids)).all()
-
-    def _prepare_sources_cpx(self) -> List[str]:
-        """
-        # TODO
-        Returns:
-
-        """
-        sources = self.origin.replace("(", "").replace(")", "").replace("/", "")
-        sources = sources.split("+")
-        sources = [
-            s if not s.endswith(("r", "h")) else s[:-1]
-            for s in sources if s not in ["y", "r", "n"]]
-        return sources
-
-    def get_sources_cpd(self, as_str: bool = False) -> List[Union[str, BaseWord]]:
-        """Extract source words from self.origin field accordingly
-
-        Args:
-          as_str: bool: return BaseWord objects if False else as simple str
-          (Default value = False)
-
-        Returns:
-          List of words from which the self.name was created
-
-        """
-
-        if not self.type.type == "Cpd":
-            return []
-
-        sources = self._prepare_sources_cpd()
-
-        result = self.words_from_source_cpd(sources)
-
-        if not as_str:
-            return result
-
-        result_as_str = []
-
-        _ = [result_as_str.append(r) for r in sources if r not in result_as_str and r]
-
-        return result_as_str
-
-    def _prepare_sources_cpd(self) -> List[str]:
-        """
-
-        Returns:
-
-        """
-        sources = self.origin.replace("(", "").replace(")", "").replace("/", "").replace("-", "")
-        sources = [s.strip() for s in sources.split("+")]
-        return sources
-
-    @staticmethod
-    def words_from_source_cpd(sources: List[str]) -> List[BaseWord]:
-        """
-
-        Args:
-            sources:
-
-        Returns:
-
-        """
-        type_ids = [t.id for t in BaseType.by(["LW", "Cpd"]).all()]
-        return BaseWord.query.filter(BaseWord.name.in_(sources)) \
-            .filter(BaseWord.type_id.in_(type_ids)).all()
 
 
 class AddonWordGetter:
@@ -347,7 +170,7 @@ class AddonWordGetter:
         return request
 
 
-class BaseWord(db.Model, InitBase, DBBase, AddonWordQuerier, AddonWordSourcer, AddonWordGetter):
+class BaseWord(db.Model, InitBase, DBBase, AddonWordQuerier, AddonWordGetter):
     """BaseWord model"""
     __tablename__ = t_name_words
 
@@ -404,7 +227,7 @@ class BaseWord(db.Model, InitBase, DBBase, AddonWordQuerier, AddonWordSourcer, A
         Returns:
             List[BaseWord]
         """
-        return self.query_parents().all()
+        return self._parents.all()  # if self.type in self.__parentable else []
 
     @property
     def complexes(self) -> List[BaseWord]:

@@ -4,7 +4,7 @@
 
 import pytest
 
-from loglan_db.model_db.base_addon_word_linker import AddonWordLinker
+from loglan_db.model_db.addons.addon_word_linker import AddonWordLinker
 from loglan_db.model_db.base_word import BaseWord
 from loglan_db.model_db.base_author import BaseAuthor as Author
 
