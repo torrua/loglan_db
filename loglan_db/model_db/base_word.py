@@ -97,14 +97,21 @@ class BaseWord(db.Model, InitBase, DBBase):
         if word_type or word_type_x or word_group:
             result = result.join(BaseType)
 
+        result = self.add_query_filters(result, word_type, word_type_x, word_group)
+
+        return result.order_by(BaseWord.name.asc())
+
+    @staticmethod
+    def add_query_filters(
+            result: BaseQuery, word_type: str,
+            word_type_x: str, word_group: str) -> BaseQuery:
         if word_type:
             result = result.filter(BaseType.type == word_type)
         if word_type_x:
             result = result.filter(BaseType.type_x == word_type_x)
         if word_group:
             result = result.filter(BaseType.group == word_group)
-
-        return result.order_by(BaseWord.name.asc())
+        return result
 
     def query_cpx(self) -> BaseQuery:
         """Query to qet all the complexes that exist for this word

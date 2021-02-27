@@ -10,14 +10,12 @@ from sqlalchemy import or_
 
 from loglan_db.model_db.base_event import BaseEvent
 from loglan_db.model_export import ExportWord, ExportDefinition
+from loglan_db.model_db.addons.addon_word_getter import AddonWordGetter
 
 DEFAULT_HTML_STYLE = os.getenv("DEFAULT_HTML_STYLE", "ultra")
 
 
-class HTMLExportDefinition(ExportDefinition):
-    """
-    HTMLExportDefinition Class
-    """
+class DefinitionFormatter:
     @staticmethod
     def format_body(body: str) -> str:
         """
@@ -56,6 +54,31 @@ class HTMLExportDefinition(ExportDefinition):
         def_body = def_body.replace(word_template_temp, word_template_original)
         return def_body
 
+    @staticmethod
+    def tagged_word_origin_x(d_source_word, tag):
+        w_origin_x = d_source_word.origin_x \
+            if d_source_word.origin_x and d_source_word.type.group == "Cpx" else str()
+        return tag % w_origin_x if w_origin_x else str()
+
+    @staticmethod
+    def tagged_word_name(usage, d_source_word, tag):
+        w_name = d_source_word.name if not usage \
+            else usage.replace("%", d_source_word.name)
+        return tag % w_name
+
+    @staticmethod
+    def tagged_definition_body(body, key_word, tag):
+        definition_body = HTMLExportDefinition.format_body(body)
+        definition_body = HTMLExportDefinition.highlight_key(definition_body, key_word)
+        definition_body = tag % definition_body
+        return definition_body
+
+
+class HTMLExportDefinition(ExportDefinition, DefinitionFormatter):
+    """
+    HTMLExportDefinition Class
+    """
+
     def export_for_english(self, word: str, style: str = DEFAULT_HTML_STYLE) -> str:
         """
 
@@ -63,22 +86,6 @@ class HTMLExportDefinition(ExportDefinition):
         :param style:
         :return:
         """
-
-        def _word_origin_x(d_source_word, tag):
-            w_origin_x = d_source_word.origin_x \
-                if d_source_word.origin_x and d_source_word.type.group == "Cpx" else ''
-            return tag % w_origin_x if w_origin_x else ''
-
-        def _word_name(usage, d_source_word, tag):
-            w_name = d_source_word.name if not usage \
-                else usage.replace("%", d_source_word.name)
-            return tag % w_name
-
-        def _def_body(body, key_word, tag):
-            definition_body = HTMLExportDefinition.format_body(body)
-            definition_body = HTMLExportDefinition.highlight_key(definition_body, key_word)
-            definition_body = tag % definition_body
-            return definition_body
 
         # de = definition english
         tags = {
@@ -102,9 +109,9 @@ class HTMLExportDefinition(ExportDefinition):
         def_gram = t_d_gram % gram_form if gram_form else ''
         def_tags = t_d_tags % self.case_tags.replace("-", "&zwj;-&zwj;") if self.case_tags else ''
 
-        def_body = _def_body(self.body, word, t_d_body)
-        word_name = _word_name(self.usage, self.source_word, t_word_name)
-        word_origin_x = _word_origin_x(self.source_word, t_word_origin)
+        def_body = HTMLExportDefinition.tagged_definition_body(self.body, word, t_d_body)
+        word_name = HTMLExportDefinition.tagged_word_name(self.usage, self.source_word, t_word_name)
+        word_origin_x = HTMLExportDefinition.tagged_word_origin_x(self.source_word, t_word_origin)
 
         definition = t_def % f'{def_tags}{def_gram}{def_body}'
         return t_def_line % f'{word_name}{word_origin_x}{definition}'
@@ -133,7 +140,7 @@ class HTMLExportDefinition(ExportDefinition):
         return t_definition % f'{def_usage}{def_gram}{def_body}{def_tags}'
 
 
-class HTMLExportWord(ExportWord):
+class HTMLExportWord(ExportWord, AddonWordGetter):
     """
     HTMLExportWord Class
     """
@@ -344,9 +351,9 @@ class HTMLExportWord(ExportWord):
                f'<ds>{n_l}' \
                f'{n_l.join(meaning_dict.get("definitions"))}\n</ds>\n{used_in_list}'
 
-    @classmethod
+    @staticmethod
     def translation_by_key(
-            cls, key: str, language: str = None,
+            key: str, language: str = None,
             style: str = DEFAULT_HTML_STYLE) -> Optional[str]:
         """
         Get information about loglan words by key in a foreign language
@@ -359,12 +366,12 @@ class HTMLExportWord(ExportWord):
 
         """
 
-        words = cls.by_key(key, language).order_by(cls.name).all()
+        words = HTMLExportWord.by_key(key, language).order_by(HTMLExportWord.name).all()
 
         if not words:
             return None
 
-        result = cls.__definitions_by_key(key, words, style)
+        result = HTMLExportWord.__definitions_by_key(key, words, style)
 
         new = '\n'
 
