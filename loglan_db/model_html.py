@@ -227,19 +227,33 @@ class HTMLExportWord(ExportWord):
         orig = self.origin
         orig_x = self.origin_x
 
-        if (not orig) and (not orig_x):
+        if not (orig or orig_x):
             return str()
 
-        if not orig_x:
-            origin = orig
-        elif not orig:
-            origin = orig_x
-        else:
-            origin = f'{orig}={orig_x}'
+        origin = self.__generate_origin(orig, orig_x)
 
         if style == "normal":
             return f'<span class="m_origin">&lt;{origin}&gt;</span> '
         return f'<o>&lt;{origin}&gt;</o> '
+
+    @staticmethod
+    def __generate_origin(orig: str, orig_x: str) -> str:
+        """
+        Generate basic 'origin' string
+        Args:
+            orig:
+            orig_x:
+
+        Returns:
+
+        """
+        if not orig_x:
+            return orig
+
+        if not orig:
+            return orig_x
+
+        return f'{orig}={orig_x}'
 
     def html_definitions(self, style: str = DEFAULT_HTML_STYLE):
         """
