@@ -3,8 +3,8 @@
 """
 This module contains a basic Author Model
 """
-from loglan_db.model_db import t_name_authors
 from loglan_db import db
+from loglan_db.model_db import t_name_authors
 from loglan_db.model_init import InitBase, DBBase
 
 __pdoc__ = {

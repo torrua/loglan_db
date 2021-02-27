@@ -8,10 +8,10 @@ from typing import List, Optional, Union
 from flask_sqlalchemy import BaseQuery
 from sqlalchemy import exists
 
+from loglan_db import db
 from loglan_db.model_db import t_name_definitions, t_name_words
 from loglan_db.model_db.base_connect_tables import t_connect_keys
 from loglan_db.model_db.base_key import BaseKey
-from loglan_db.model_db.base_word import db
 from loglan_db.model_init import InitBase, DBBase
 
 __pdoc__ = {

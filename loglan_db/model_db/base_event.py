@@ -5,8 +5,8 @@
 This module contains a basic Event Model
 """
 from __future__ import annotations
+from loglan_db import db
 from loglan_db.model_db import t_name_events
-from loglan_db.model_db.base_word import db
 from loglan_db.model_init import InitBase, DBBase
 
 __pdoc__ = {
