@@ -166,9 +166,9 @@ class HTMLExportWord(ExportWord):
             .filter(or_(cls.event_end_id > event_id, cls.event_end_id.is_(None)))
 
         if case_sensitive:
-            words = cls.__case_sensitive_words(name, words, partial_results)
+            words = cls.__case_sensitive_words_filter(name, words, partial_results)
         else:
-            words = cls.__case_insensitive_words(name, words, partial_results)
+            words = cls.__case_insensitive_words_filter(name, words, partial_results)
 
         words = words.order_by(cls.name).all()
 
@@ -180,12 +180,12 @@ class HTMLExportWord(ExportWord):
         return words_template[style] % "\n".join(items)
 
     @classmethod
-    def __case_insensitive_words(cls, name, words, partial_results):
+    def __case_insensitive_words_filter(cls, name, words, partial_results):
         return words.filter(cls.name.ilike(f"{name}%")) \
             if partial_results else words.filter(cls.name.ilike(name))
 
     @classmethod
-    def __case_sensitive_words(cls, name, words, partial_results):
+    def __case_sensitive_words_filter(cls, name, words, partial_results):
         return words.filter(cls.name.like(f"{name}%")) \
             if partial_results else words.filter(cls.name == name)
 
@@ -307,7 +307,6 @@ class HTMLExportWord(ExportWord):
         def _stringer(tag: str, value: Optional[str], default_value: Optional[str] = str()):
             return tag % value if value else default_value
 
-        # t_afx, t_match, t_type, t_author, t_year, t_rank, t_use, t_technical = tags[style]
         values = [self.e_affixes, self.match, self.rank, self.e_source, self.type.type,
                   self.e_usedin.replace("| ", "|&nbsp;"), self.e_year, None]
         default_values = [str(), str(), str(), str(), str(), None, str(), tags[style][-1]]
@@ -368,8 +367,19 @@ class HTMLExportWord(ExportWord):
         return new.join([f"{new.join(definitions)}"
                          for _, definitions in result.items()]).strip()
 
-    @classmethod
-    def __definitions_by_key(cls, key, words, style):
+    @staticmethod
+    def __definitions_by_key(
+            key: str, words: List[ExportWord], style: str = DEFAULT_HTML_STYLE) -> dict:
+        """
+
+        Args:
+            key:
+            words:
+            style:
+
+        Returns:
+
+        """
         result = {}
         for word in words:
             result[word.name] = []
