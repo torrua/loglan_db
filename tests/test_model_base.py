@@ -19,10 +19,8 @@ from loglan_db.model_db.base_author import BaseAuthor as Author
 from tests.functions import db_connect_authors, db_connect_keys, db_connect_words, \
     db_add_objects, dar, db_add_object
 
-from tests.data import keys, definitions, words, types, authors, settings, syllables, \
-    prim_words, prim_types, word_1_source_1
+from tests.data import keys, definitions, words, types, authors, settings, syllables, word_1_source_1
 from tests.data import changed_words, changed_events, all_events, doubled_words
-from tests.data import littles, little_types
 from tests.data import definition_1, definition_2, word_1
 from tests.data import un_key_1, un_key_2, un_key_3
 
@@ -522,65 +520,6 @@ class TestWord:
         assert len(result) == 6
         assert isinstance(result, list)
         assert isinstance(result[0], Key)
-
-    def test_by_event(self):
-        db_add_objects(Word, changed_words + words)
-        db_add_objects(Event, all_events)
-
-        result = Word.get_all()
-        assert len(result) == 13
-
-        result = Word.by_event(1).all()
-        assert len(result) == 10
-
-        result = Word.by_event(5).all()
-        assert len(result) == 9
-
-        result = Word.by_event().all()
-        assert len(result) == 9
-
-    def test_by_name(self):
-        db_add_objects(Word, doubled_words)
-
-        result = Word.by_name("duo").count()
-        assert result == 2
-
-        result = Word.by_name("duo").all()
-        assert isinstance(result, list)
-        assert isinstance(result[0], Word)
-
-        result = sorted([w.type_id for w in result])
-        assert result == [2, 17]
-
-        result = Word.by_name("duo").first()
-        assert isinstance(result, Word)
-
-        result = Word.by_name("Duo", case_sensitive=True).first()
-        assert result is None
-
-    def test_by_key(self):
-        db_add_objects(Word, words)
-        db_add_objects(Definition, definitions)
-        db_add_objects(Key, keys)
-        db_connect_keys(connect_keys)
-
-        result = Word.by_key("test").count()
-        assert result == 5
-
-        result = Word.by_key("Test", case_sensitive=True).count()
-        assert result == 0
-
-        result = Word.by_key("Test").count()
-        assert result == 5
-
-        result = [w.name for w in Word.by_key("test").all()]
-        assert result == ['pru', 'pruci', 'prukao']
-
-        result = Word.by_key("test", language="es").count()
-        assert result == 0
-
-        result = Word.by_key("test", language="en").count()
-        assert result == 5
 
 
 @pytest.mark.usefixtures("db")

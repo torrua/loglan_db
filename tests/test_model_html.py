@@ -6,10 +6,16 @@
 import pytest
 
 from loglan_db.model import Type, Author, Key, Event
-from loglan_db.model_html import HTMLExportWord as Word, HTMLExportDefinition as Definition
+from loglan_db.model_html import HTMLExportWord, HTMLExportDefinition as Definition
 from tests.data import definitions, words, types, authors, events
 from tests.data import word_1, connect_authors, connect_words, keys, connect_keys
-from tests.functions import db_add_and_return, db_add_objects, db_connect_authors, db_connect_words, db_connect_keys
+from tests.functions import db_add_and_return, db_add_objects, \
+    db_connect_authors, db_connect_words, db_connect_keys
+from loglan_db.model_db.addons.addon_word_getter import AddonWordGetter
+
+
+class Word(HTMLExportWord, AddonWordGetter):
+    """HTMLExportWord class with Getter addon"""
 
 
 @pytest.mark.usefixtures("db")

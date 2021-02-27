@@ -7,10 +7,9 @@ This module contains a basic Word Model and addons
 from __future__ import annotations
 
 import os
-from typing import List, Union
+from typing import List
 
 from flask_sqlalchemy import SQLAlchemy, BaseQuery
-from sqlalchemy import or_
 
 from loglan_db import app_lod, db
 from loglan_db.model_db import t_name_words, \
@@ -32,11 +31,53 @@ __pdoc__ = {
     'BaseWord.created': False, 'BaseWord.updated': False,
 }
 
+class BaseWord(db.Model, InitBase, DBBase):
+    """BaseWord model"""
+    __tablename__ = t_name_words
 
-class AddonWordQuerier:
+    id = db.Column(db.Integer, primary_key=True)
+    """Word's internal ID number: Integer"""
 
-    id: int = None
-    _derivatives: BaseQuery = None
+    id_old = db.Column(db.Integer, nullable=False)  # Compatibility with the previous database
+    name = db.Column(db.String(64), nullable=False)
+    origin = db.Column(db.String(128))
+    origin_x = db.Column(db.String(64))
+    match = db.Column(db.String(8))
+    rank = db.Column(db.String(8))
+    year = db.Column(db.Date)
+    notes = db.Column(db.JSON)
+    TID_old = db.Column(db.Integer)  # references
+
+    type_id = db.Column("type", db.ForeignKey(f'{t_name_types}.id'), nullable=False)
+    type: BaseType = db.relationship(
+        BaseType.__name__, backref="words", enable_typechecks=False)
+
+    event_start_id = db.Column(
+        "event_start", db.ForeignKey(f'{t_name_events}.id'), nullable=False)
+    event_start: BaseEvent = db.relationship(
+        BaseEvent.__name__, foreign_keys=[event_start_id],
+        backref="appeared_words", enable_typechecks=False)
+
+    event_end_id = db.Column("event_end", db.ForeignKey(f'{t_name_events}.id'))
+    event_end: BaseEvent = db.relationship(
+        BaseEvent.__name__, foreign_keys=[event_end_id],
+        backref="deprecated_words", enable_typechecks=False)
+
+    authors: BaseQuery = db.relationship(
+        BaseAuthor.__name__, secondary=t_connect_authors,
+        backref="contribution", lazy='dynamic', enable_typechecks=False)
+
+    definitions: BaseQuery = db.relationship(
+        BaseDefinition.__name__, backref="source_word",
+        lazy='dynamic', enable_typechecks=False)
+
+    # word's derivatives
+    _derivatives = db.relationship(
+        'BaseWord', secondary=t_connect_words,
+        primaryjoin=(t_connect_words.c.parent_id == id),
+        secondaryjoin=(t_connect_words.c.child_id == id),
+        backref=db.backref('_parents', lazy='dynamic', enable_typechecks=False),
+        lazy='dynamic', enable_typechecks=False)
 
     def query_derivatives(self, word_type: str = None,
                           word_type_x: str = None, word_group: str = None) -> BaseQuery:
@@ -96,127 +137,6 @@ class AddonWordQuerier:
         """
         return BaseKey.query.join(
             t_connect_keys, BaseDefinition, BaseWord).filter(BaseWord.id == self.id)
-
-
-class AddonWordGetter:
-    query: BaseQuery = None
-    name: db.Column = None
-    event_start_id: db.Column = None
-    event_end_id: db.Column = None
-
-    @classmethod
-    def by_event(cls, event_id: Union[BaseEvent, int] = None) -> BaseQuery:
-        """Query filtered by specified Event (latest by default)
-
-        Args:
-          event_id: Union[BaseEvent, int]: Event object or Event.id (int) (Default value = None)
-
-        Returns:
-          BaseQuery
-
-        """
-        if not event_id:
-            event_id = BaseEvent.latest().id
-
-        event_id = BaseEvent.id if isinstance(event_id, BaseEvent) else int(event_id)
-
-        return cls.query.filter(cls.event_start_id <= event_id) \
-            .filter(or_(cls.event_end_id > event_id, cls.event_end_id.is_(None))) \
-            .order_by(cls.name)
-
-    @classmethod
-    def by_name(cls, name: str, case_sensitive: bool = False) -> BaseQuery:
-        """Word.Query filtered by specified name
-
-        Args:
-          name: str:
-          case_sensitive: bool:  (Default value = False)
-
-        Returns:
-          BaseQuery
-
-        """
-        if case_sensitive:
-            return cls.query.filter(cls.name == name)
-        return cls.query.filter(cls.name.in_([name, name.lower(), name.upper()]))
-
-    @classmethod
-    def by_key(
-            cls, key: Union[BaseKey, str],
-            language: str = None,
-            case_sensitive: bool = False) -> BaseQuery:
-        """Word.Query filtered by specified key
-
-        Args:
-          key: Union[BaseKey, str]:
-          language: str: Language of key (Default value = None)
-          case_sensitive: bool:  (Default value = False)
-
-        Returns:
-          BaseQuery
-
-        """
-
-        key = BaseKey.word if isinstance(key, BaseKey) else str(key)
-        request = cls.query.join(BaseDefinition, t_connect_keys, BaseKey)
-
-        if case_sensitive:
-            request = request.filter(BaseKey.word == key)
-        else:
-            request = request.filter(BaseKey.word.in_([key, key.lower(), key.upper()]))
-
-        if language:
-            request = request.filter(BaseKey.language == language)
-        return request
-
-
-class BaseWord(db.Model, InitBase, DBBase, AddonWordQuerier, AddonWordGetter):
-    """BaseWord model"""
-    __tablename__ = t_name_words
-
-    id = db.Column(db.Integer, primary_key=True)
-    """Word's internal ID number: Integer"""
-
-    id_old = db.Column(db.Integer, nullable=False)  # Compatibility with the previous database
-    name = db.Column(db.String(64), nullable=False)
-    origin = db.Column(db.String(128))
-    origin_x = db.Column(db.String(64))
-    match = db.Column(db.String(8))
-    rank = db.Column(db.String(8))
-    year = db.Column(db.Date)
-    notes = db.Column(db.JSON)
-    TID_old = db.Column(db.Integer)  # references
-
-    type_id = db.Column("type", db.ForeignKey(f'{t_name_types}.id'), nullable=False)
-    type: BaseType = db.relationship(
-        BaseType.__name__, backref="words", enable_typechecks=False)
-
-    event_start_id = db.Column(
-        "event_start", db.ForeignKey(f'{t_name_events}.id'), nullable=False)
-    event_start: BaseEvent = db.relationship(
-        BaseEvent.__name__, foreign_keys=[event_start_id],
-        backref="appeared_words", enable_typechecks=False)
-
-    event_end_id = db.Column("event_end", db.ForeignKey(f'{t_name_events}.id'))
-    event_end: BaseEvent = db.relationship(
-        BaseEvent.__name__, foreign_keys=[event_end_id],
-        backref="deprecated_words", enable_typechecks=False)
-
-    authors: BaseQuery = db.relationship(
-        BaseAuthor.__name__, secondary=t_connect_authors,
-        backref="contribution", lazy='dynamic', enable_typechecks=False)
-
-    definitions: BaseQuery = db.relationship(
-        BaseDefinition.__name__, backref="source_word",
-        lazy='dynamic', enable_typechecks=False)
-
-    # word's derivatives
-    _derivatives = db.relationship(
-        'BaseWord', secondary=t_connect_words,
-        primaryjoin=(t_connect_words.c.parent_id == id),
-        secondaryjoin=(t_connect_words.c.child_id == id),
-        backref=db.backref('_parents', lazy='dynamic', enable_typechecks=False),
-        lazy='dynamic', enable_typechecks=False)
 
     @property
     def parents(self) -> List[BaseWord]:
