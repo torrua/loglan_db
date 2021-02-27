@@ -35,7 +35,7 @@ __pdoc__ = {
 }
 
 
-class __WordQuerier:
+class AddonWordQuerier:
 
     id: int = None
     _derivatives: BaseQuery = None
@@ -112,7 +112,7 @@ class __WordQuerier:
             t_connect_keys, BaseDefinition, BaseWord).filter(BaseWord.id == self.id)
 
 
-class __WordSourcer:
+class AddonWordSourcer:
 
     type: BaseType = None
     name: db.Column = None
@@ -275,7 +275,7 @@ class __WordSourcer:
             .filter(BaseWord.type_id.in_(type_ids)).all()
 
 
-class __WordGetter:
+class AddonWordGetter:
     query: BaseQuery = None
     name: db.Column = None
     event_start_id: db.Column = None
@@ -347,7 +347,7 @@ class __WordGetter:
         return request
 
 
-class BaseWord(db.Model, InitBase, DBBase, __WordQuerier, __WordSourcer, __WordGetter):
+class BaseWord(db.Model, InitBase, DBBase, AddonWordQuerier, AddonWordSourcer, AddonWordGetter):
     """BaseWord model"""
     __tablename__ = t_name_words
 
