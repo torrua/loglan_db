@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=C0103
 """
-This module contains a basic Word Model and addons
+This module contains a basic Word Model
 """
 
 from __future__ import annotations
@@ -30,6 +30,7 @@ if os.environ.get("IS_PDOC", "False") == "True":
 __pdoc__ = {
     'BaseWord.created': False, 'BaseWord.updated': False,
 }
+
 
 class BaseWord(db.Model, InitBase, DBBase):
     """BaseWord model"""

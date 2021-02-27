@@ -74,6 +74,12 @@ class HTMLExportDefinition(ExportDefinition):
                 else usage.replace("%", d_source_word.name)
             return tag % w_name
 
+        def _def_body(body, key_word, tag):
+            definition_body = HTMLExportDefinition.format_body(body)
+            definition_body = HTMLExportDefinition.highlight_key(definition_body, key_word)
+            definition_body = tag % definition_body
+            return definition_body
+
         # de = definition english
         tags = {
             "normal": [
@@ -89,16 +95,14 @@ class HTMLExportDefinition(ExportDefinition):
                 '(%s)', '[%s] ', ' %s', '<de>%s</de>',
                 '<ld>%s</ld>', '<wn>%s</wn>, ', '<o>&lt;%s&gt;</o> ', ],
         }
+
         t_d_gram, t_d_tags, t_d_body, t_def, t_def_line, t_word_name, t_word_origin = tags[style]
 
         gram_form = f'{str(self.slots) if self.slots else ""}' + self.grammar_code
         def_gram = t_d_gram % gram_form if gram_form else ''
         def_tags = t_d_tags % self.case_tags.replace("-", "&zwj;-&zwj;") if self.case_tags else ''
 
-        def_body = HTMLExportDefinition.format_body(self.body)
-        def_body = HTMLExportDefinition.highlight_key(def_body, word)
-        def_body = t_d_body % def_body
-
+        def_body = _def_body(self.body, word, t_d_body)
         word_name = _word_name(self.usage, self.source_word, t_word_name)
         word_origin_x = _word_origin_x(self.source_word, t_word_origin)
 
