@@ -6,7 +6,8 @@
 import pytest
 
 from loglan_db.model import Type, Author, Key, Event
-from loglan_db.model_html import HTMLExportWord, HTMLExportDefinition as Definition
+from loglan_db.model_html.html_word import HTMLExportWord
+from loglan_db.model_html.html_definition import HTMLExportDefinition as Definition
 from tests.data import definitions, words, types, authors, events
 from tests.data import word_1, connect_authors, connect_words, keys, connect_keys
 from tests.functions import db_add_and_return, db_add_objects, \
