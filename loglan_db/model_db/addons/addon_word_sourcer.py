@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+"""
+This module contains an addon for basic Word Model,
+which makes it possible to work with word's sources
+"""
 import re
 from typing import Optional, List, Union
 
@@ -9,6 +14,7 @@ from flask_sqlalchemy import BaseQuery
 
 
 class AddonWordSourcer:
+    """AddonWordSourcer Model"""
 
     type: BaseType = None
     name: db.Column = None

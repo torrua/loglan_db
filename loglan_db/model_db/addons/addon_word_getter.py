@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+"""
+This module contains an addon for basic Word Model,
+which makes it possible to get words by event, name or key
+"""
 from typing import Union
 
 from flask_sqlalchemy import BaseQuery
@@ -11,6 +16,8 @@ from loglan_db.model_db.base_word import db
 
 
 class AddonWordGetter:
+    """AddonWordGetter model"""
+
     query: BaseQuery = None
     name: db.Column = None
     event_start_id: db.Column = None

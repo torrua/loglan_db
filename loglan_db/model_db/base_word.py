@@ -6,12 +6,11 @@ This module contains a basic Word Model
 
 from __future__ import annotations
 
-import os
 from typing import List
 
-from flask_sqlalchemy import SQLAlchemy, BaseQuery
+from flask_sqlalchemy import BaseQuery
 
-from loglan_db import app_lod, db
+from loglan_db import db
 from loglan_db.model_db import t_name_words, \
     t_name_types, t_name_events
 from loglan_db.model_db.base_author import BaseAuthor
@@ -22,10 +21,6 @@ from loglan_db.model_db.base_key import BaseKey
 from loglan_db.model_db.base_type import BaseType
 from loglan_db.model_init import InitBase, DBBase
 from loglan_db.model_db.base_definition import BaseDefinition
-
-if os.environ.get("IS_PDOC", "False") == "True":
-    db = SQLAlchemy(app_lod())
-    # TODO Fix pdoc
 
 __pdoc__ = {
     'BaseWord.created': False, 'BaseWord.updated': False,
