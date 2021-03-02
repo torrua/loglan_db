@@ -143,10 +143,10 @@ class BaseDefinition(db.Model, InitBase, DBBase):
         if not source:
             return self.link_keys_from_definition_body(language=language, pattern=pattern)
 
-        if isinstance(source, str):
+        elif isinstance(source, str):
             return self.link_key_from_str(word=source, language=language)
 
-        if is_list_of_str(source):
+        elif is_list_of_str(source):
             return self.link_keys_from_list_of_str(source=source, language=language)
 
         raise TypeError("Source for keys should have a string, or list of strings."
