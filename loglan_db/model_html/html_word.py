@@ -3,11 +3,12 @@
 """
 This module contains a HTMLExportWord Model
 """
+from __future__ import annotations
 from itertools import groupby
 from typing import Union, Optional, List
 
 from sqlalchemy import or_
-
+from flask_sqlalchemy import BaseQuery
 from loglan_db.model_db.addons.addon_word_getter import AddonWordGetter
 from loglan_db.model_db.base_event import BaseEvent
 from loglan_db.model_export import ExportWord
@@ -15,7 +16,58 @@ from loglan_db.model_html import DEFAULT_HTML_STYLE
 from loglan_db.model_html.html_definition import HTMLExportDefinition
 
 
-class HTMLExportWord(ExportWord, AddonWordGetter):
+class AddonWordTranslator:
+    @staticmethod
+    def definitions_by_key(
+            key: str, words: List[ExportWord], style: str = DEFAULT_HTML_STYLE) -> dict:
+        """
+
+        Args:
+            key:
+            words:
+            style:
+
+        Returns:
+
+        """
+        result = {}
+        for word in words:
+            result[word.name] = []
+            definitions = [
+                HTMLExportDefinition.export_for_english(d, word=key, style=style)
+                for d in word.definitions if key.lower() in [key.word.lower() for key in d.keys]]
+            result[word.name].extend(definitions)
+        return result
+
+    @staticmethod
+    def translation_by_key(
+            key: str, language: str = None,
+            style: str = DEFAULT_HTML_STYLE) -> Optional[str]:
+        """
+        Get information about loglan words by key in a foreign language
+        Args:
+            key:
+            language:
+            style:
+
+        Returns:
+
+        """
+
+        words = HTMLExportWord.by_key(key, language).order_by(HTMLExportWord.name).all()
+
+        if not words:
+            return None
+
+        result = HTMLExportWord.definitions_by_key(key, words, style)
+
+        new = '\n'
+
+        return new.join([f"{new.join(definitions)}"
+                         for _, definitions in result.items()]).strip()
+
+
+class HTMLExportWord(ExportWord, AddonWordGetter, AddonWordTranslator):
     """
     HTMLExportWord Class
     """
@@ -48,15 +100,7 @@ class HTMLExportWord(ExportWord, AddonWordGetter):
 
         event_id = int(event_id) if isinstance(event_id, (int, str)) else BaseEvent.id
 
-        words = cls.query.filter(cls.event_start_id <= event_id) \
-            .filter(or_(cls.event_end_id > event_id, cls.event_end_id.is_(None)))
-
-        if case_sensitive:
-            words = cls.__case_sensitive_words_filter(name, words, partial_results)
-        else:
-            words = cls.__case_insensitive_words_filter(name, words, partial_results)
-
-        words = words.order_by(cls.name).all()
+        words = cls.get_words_by(name, event_id, case_sensitive, partial_results)
 
         if not words:
             return None
@@ -66,12 +110,26 @@ class HTMLExportWord(ExportWord, AddonWordGetter):
         return words_template[style] % "\n".join(items)
 
     @classmethod
-    def __case_insensitive_words_filter(cls, name, words, partial_results):
+    def get_words_by(
+            cls, name: str, event_id: int,
+            case_sensitive: bool, partial_results: bool) -> List[HTMLExportWord]:
+        words = cls.query.filter(cls.event_start_id <= event_id) \
+            .filter(or_(cls.event_end_id > event_id, cls.event_end_id.is_(None)))
+        if case_sensitive:
+            words = cls.__case_sensitive_words_filter(name, words, partial_results)
+        else:
+            words = cls.__case_insensitive_words_filter(name, words, partial_results)
+        return words.order_by(cls.name).all()
+
+    @classmethod
+    def __case_insensitive_words_filter(
+            cls, name: str, words: BaseQuery, partial_results: bool) -> BaseQuery:
         return words.filter(cls.name.ilike(f"{name}%")) \
             if partial_results else words.filter(cls.name.ilike(name))
 
     @classmethod
-    def __case_sensitive_words_filter(cls, name, words, partial_results):
+    def __case_sensitive_words_filter(
+            cls, name: str, words: BaseQuery, partial_results: bool) -> BaseQuery:
         return words.filter(cls.name.like(f"{name}%")) \
             if partial_results else words.filter(cls.name == name)
 
@@ -225,52 +283,3 @@ class HTMLExportWord(ExportWord, AddonWordGetter):
         return f'<m>\n<t>{meaning_dict.get("technical")}</t>\n' \
                f'<ds>{n_l}' \
                f'{n_l.join(meaning_dict.get("definitions"))}\n</ds>\n{used_in_list}'
-
-    @staticmethod
-    def translation_by_key(
-            key: str, language: str = None,
-            style: str = DEFAULT_HTML_STYLE) -> Optional[str]:
-        """
-        Get information about loglan words by key in a foreign language
-        Args:
-            key:
-            language:
-            style:
-
-        Returns:
-
-        """
-
-        words = HTMLExportWord.by_key(key, language).order_by(HTMLExportWord.name).all()
-
-        if not words:
-            return None
-
-        result = HTMLExportWord.__definitions_by_key(key, words, style)
-
-        new = '\n'
-
-        return new.join([f"{new.join(definitions)}"
-                         for _, definitions in result.items()]).strip()
-
-    @staticmethod
-    def __definitions_by_key(
-            key: str, words: List[ExportWord], style: str = DEFAULT_HTML_STYLE) -> dict:
-        """
-
-        Args:
-            key:
-            words:
-            style:
-
-        Returns:
-
-        """
-        result = {}
-        for word in words:
-            result[word.name] = []
-            definitions = [
-                HTMLExportDefinition.export_for_english(d, word=key, style=style)
-                for d in word.definitions if key.lower() in [key.word.lower() for key in d.keys]]
-            result[word.name].extend(definitions)
-        return result
