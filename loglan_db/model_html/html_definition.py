@@ -2,7 +2,7 @@
 """
 This module contains a HTMLExportDefinition Model
 """
-from loglan_db.model_export import ExportDefinition
+from loglan_db.model_db.base_definition import BaseDefinition
 from loglan_db.model_html import DEFAULT_HTML_STYLE
 
 
@@ -65,7 +65,7 @@ class DefinitionFormatter:
         return definition_body
 
 
-class HTMLExportDefinition(ExportDefinition, DefinitionFormatter):
+class HTMLExportDefinition(BaseDefinition, DefinitionFormatter):
     """
     HTMLExportDefinition Class
     """

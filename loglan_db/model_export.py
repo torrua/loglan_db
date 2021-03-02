@@ -85,19 +85,16 @@ class ExportType(BaseType):
                f"@{self.description if self.description else ''}"
 
 
-class ExportWord(BaseWord):
+class AddonExportWordConverter:
     """
-    ExportWord Class
+    Addon for ExportWord class with converters for properties
     """
-    @property
-    def e_affixes(self) -> str:
-        """
-        Returns:
-        """
-        w_affixes = self.affixes
-        return ' '.join(sorted(
-            {afx.name.replace("-", "") for afx in w_affixes}
-        )) if w_affixes else ""
+    notes = None
+    authors = None
+    year = None
+    complexes = None
+    affixes = None
+    rank = None
 
     @property
     def e_source(self) -> str:
@@ -126,13 +123,29 @@ class ExportWord(BaseWord):
         """
         Returns:
         """
-        w_usedin = self.complexes
+        w_usedin = list(self.complexes)
         return ' | '.join(sorted({cpx.name for cpx in w_usedin})) if w_usedin else ""
+
+    @property
+    def e_affixes(self) -> str:
+        """
+        Returns:
+        """
+        w_affixes = list(self.affixes)
+        return ' '.join(sorted(
+            {afx.name.replace("-", "") for afx in w_affixes}
+        )) if w_affixes else ""
 
     @property
     def e_rank(self):
         notes = self.notes if self.notes else {}
         return self.rank + (" " + notes["rank"] if notes.get("rank", None) else "")
+
+
+class ExportWord(BaseWord, AddonExportWordConverter):
+    """
+    ExportWord Class
+    """
 
     def export(self) -> str:
         """

@@ -115,6 +115,9 @@ class TestDefinition:
         with pytest.raises(TypeError) as _:
             d4.link_keys(source=1234)
 
+        with pytest.raises(TypeError) as _:
+            d4.link_keys(source=[1234, 4321])
+
     def test_by_key(self):
         db_add_objects(Key, keys)
         db_add_objects(Definition, definitions)

@@ -11,15 +11,16 @@ from sqlalchemy import or_
 from flask_sqlalchemy import BaseQuery
 from loglan_db.model_db.addons.addon_word_getter import AddonWordGetter
 from loglan_db.model_db.base_event import BaseEvent
-from loglan_db.model_export import ExportWord
+from loglan_db.model_db.base_word import BaseWord
 from loglan_db.model_html import DEFAULT_HTML_STYLE
 from loglan_db.model_html.html_definition import HTMLExportDefinition
+from loglan_db.model_export import AddonExportWordConverter
 
 
 class AddonWordTranslator:
     @staticmethod
     def definitions_by_key(
-            key: str, words: List[ExportWord], style: str = DEFAULT_HTML_STYLE) -> dict:
+            key: str, words: List[BaseWord], style: str = DEFAULT_HTML_STYLE) -> dict:
         """
 
         Args:
@@ -67,7 +68,7 @@ class AddonWordTranslator:
                          for _, definitions in result.items()]).strip()
 
 
-class HTMLExportWord(ExportWord, AddonWordGetter, AddonWordTranslator):
+class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExportWordConverter):
     """
     HTMLExportWord Class
     """

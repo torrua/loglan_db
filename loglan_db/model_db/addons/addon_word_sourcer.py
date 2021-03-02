@@ -5,12 +5,12 @@ which makes it possible to work with word's sources
 """
 import re
 from typing import Optional, List, Union
+from flask_sqlalchemy import BaseQuery
 
 from loglan_db.model_db.base_type import BaseType
 from loglan_db.model_db.base_word import BaseWord
 from loglan_db import db
 from loglan_db.model_db.base_word_source import BaseWordSource
-from flask_sqlalchemy import BaseQuery
 
 
 class AddonWordSourcer:

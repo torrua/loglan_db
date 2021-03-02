@@ -134,6 +134,10 @@ class BaseDefinition(db.Model, InitBase, DBBase):
 
         """
 
+        def is_list_of_str(src: list) -> bool:
+            checked_items = all(isinstance(item, str) for item in src)
+            return bool(isinstance(src, list) and checked_items)
+
         language = language if language else self.language
 
         if not source:
@@ -142,7 +146,7 @@ class BaseDefinition(db.Model, InitBase, DBBase):
         if isinstance(source, str):
             return self.link_key_from_str(word=source, language=language)
 
-        if isinstance(source, list) and all(isinstance(item, str) for item in source):
+        if is_list_of_str(source):
             return self.link_keys_from_list_of_str(source=source, language=language)
 
         raise TypeError("Source for keys should have a string, or list of strings."
