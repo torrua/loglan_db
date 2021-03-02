@@ -62,12 +62,7 @@ def run_with_context(function):
             log.error("Please, specify 'LOD_DATABASE_URL' variable.")
             return
 
-        try:
-            context = app_lod().app_context()
-        except ValueError as err:
-            log.error(err)
-            return
-
+        context = app_lod().app_context()
         context.push()
         function(*args, **kwargs)
         context.pop()
