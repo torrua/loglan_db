@@ -100,6 +100,14 @@ class BaseWord(db.Model, InitBase, DBBase):
     def add_query_filters(
             result: BaseQuery, word_type: str,
             word_type_x: str, word_group: str) -> BaseQuery:
+        """
+        Args:
+            result:
+            word_type:
+            word_type_x:
+            word_group:
+        Returns:
+        """
         if word_type:
             result = result.filter(BaseType.type == word_type)
         if word_type_x:

@@ -7,6 +7,9 @@ from loglan_db.model_html import DEFAULT_HTML_STYLE
 
 
 class DefinitionFormatter:
+    """
+    Additional methods for definition's formatting
+    """
     @staticmethod
     def format_body(body: str) -> str:
         """
@@ -46,19 +49,48 @@ class DefinitionFormatter:
         return def_body
 
     @staticmethod
-    def tagged_word_origin_x(d_source_word, tag):
+    def tagged_word_origin_x(d_source_word, tag: str) -> str:
+        """
+        Generate Word.origin_x as HTML tag
+        Args:
+            d_source_word:
+            tag:
+
+        Returns:
+
+        """
         w_origin_x = d_source_word.origin_x \
             if d_source_word.origin_x and d_source_word.type.group == "Cpx" else str()
         return tag % w_origin_x if w_origin_x else str()
 
     @staticmethod
-    def tagged_word_name(usage, d_source_word, tag):
+    def tagged_word_name(usage: str, d_source_word, tag: str) -> str:
+        """
+        Generate Word.name as HTML tag
+        Args:
+            usage:
+            d_source_word:
+            tag:
+
+        Returns:
+
+        """
         w_name = d_source_word.name if not usage \
             else usage.replace("%", d_source_word.name)
         return tag % w_name
 
     @staticmethod
-    def tagged_definition_body(body, key_word, tag):
+    def tagged_definition_body(body: str, key_word: str, tag: str) -> str:
+        """
+        Generate Definition.body as HTML tag with highlighted key word
+        Args:
+            body:
+            key_word:
+            tag:
+
+        Returns:
+
+        """
         definition_body = HTMLExportDefinition.format_body(body)
         definition_body = HTMLExportDefinition.highlight_key(definition_body, key_word)
         definition_body = tag % definition_body

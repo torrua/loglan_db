@@ -111,9 +111,7 @@ class AddonExportWordConverter:
     @property
     def e_year(self) -> str:
         """
-
         Returns:
-
         """
         notes = self.notes if self.notes else {}
         return str(self.year.year) + (" " + notes["year"] if notes.get("year", False) else "")
@@ -138,6 +136,9 @@ class AddonExportWordConverter:
 
     @property
     def e_rank(self):
+        """
+        Returns:
+        """
         notes = self.notes if self.notes else {}
         return self.rank + (" " + notes["rank"] if notes.get("rank", None) else "")
 

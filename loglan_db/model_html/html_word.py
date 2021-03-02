@@ -18,6 +18,9 @@ from loglan_db.model_export import AddonExportWordConverter
 
 
 class AddonWordTranslator:
+    """
+    Additional methods for HTMLExportWord class
+    """
     @staticmethod
     def definitions_by_key(
             key: str, words: List[BaseWord], style: str = DEFAULT_HTML_STYLE) -> dict:

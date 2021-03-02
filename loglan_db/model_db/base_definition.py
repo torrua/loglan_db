@@ -183,7 +183,7 @@ class BaseDefinition(db.Model, InitBase, DBBase):
                 return request.filter(BaseKey.word.like(f"{key}%"))
             return request.filter(BaseKey.word == key)
 
-        if partial_results:
+        elif partial_results:
             return request.filter(BaseKey.word.ilike(f"{key}%"))
 
         return request.filter(BaseKey.word.ilike(key))
