@@ -143,10 +143,10 @@ class BaseDefinition(db.Model, InitBase, DBBase):
         if not source:
             return self.link_keys_from_definition_body(language=language, pattern=pattern)
 
-        elif isinstance(source, str):
+        if isinstance(source, str):
             return self.link_key_from_str(word=source, language=language)
 
-        elif is_list_of_str(source):
+        if is_list_of_str(source):
             return self.link_keys_from_list_of_str(source=source, language=language)
 
         raise TypeError("Source for keys should have a string, or list of strings."
@@ -179,11 +179,18 @@ class BaseDefinition(db.Model, InitBase, DBBase):
             request = request.filter(BaseKey.language == language)
 
         if case_sensitive:
-            if partial_results:
-                return request.filter(BaseKey.word.like(f"{key}%"))
-            return request.filter(BaseKey.word == key)
+            return cls.__case_sensitive_filter(key, request, partial_results)
+        else:
+            return cls.__case_insensitive_filter(key, request, partial_results)
 
-        elif partial_results:
-            return request.filter(BaseKey.word.ilike(f"{key}%"))
+    @classmethod
+    def __case_sensitive_filter(
+            cls, key: str, request: BaseQuery, partial_results: bool) -> BaseQuery:
+        return request.filter(BaseKey.word.like(f"{key}%")) \
+            if partial_results else request.filter(BaseKey.word == key)
 
-        return request.filter(BaseKey.word.ilike(key))
+    @classmethod
+    def __case_insensitive_filter(
+            cls, key: str, request: BaseQuery, partial_results: bool) -> BaseQuery:
+        return request.filter(BaseKey.word.ilike(f"{key}%")) \
+            if partial_results else request.filter(BaseKey.word.ilike(key))

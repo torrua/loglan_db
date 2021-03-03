@@ -33,6 +33,11 @@ class TestInitBase:
         w = Word.from_dict(word_1)
         assert w.name == "prukao"
 
+    def test_stringer(self):
+        assert Word.stringer(1) == "1"
+        assert Word.stringer(None) == str()
+        assert Word.stringer("text") == "text"
+
 
 @pytest.mark.usefixtures("db")
 class TestDBBase:

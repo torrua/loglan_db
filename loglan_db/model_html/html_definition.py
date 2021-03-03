@@ -128,7 +128,7 @@ class HTMLExportDefinition(BaseDefinition, DefinitionFormatter):
 
         t_d_gram, t_d_tags, t_d_body, t_def, t_def_line, t_word_name, t_word_origin = tags[style]
 
-        gram_form = f'{str(self.slots) if self.slots else ""}' + self.grammar_code
+        gram_form = self.stringer(self.slots) + self.grammar_code
         def_gram = t_d_gram % gram_form if gram_form else ''
         def_tags = t_d_tags % self.case_tags.replace("-", "&zwj;-&zwj;") if self.case_tags else ''
 

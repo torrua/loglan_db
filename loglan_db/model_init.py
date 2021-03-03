@@ -53,6 +53,10 @@ class InitBase:
         :return:
         """
 
+    @staticmethod
+    def stringer(value) -> str:
+        return str(value) if value else str()
+
 
 class DBBase:
     """Common methods and attributes for basic models"""

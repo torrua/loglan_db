@@ -154,11 +154,12 @@ class ExportWord(BaseWord, AddonExportWordConverter):
         Returns:
             Formatted basic string
         """
-        w_match = self.match
-        match = w_match if w_match else ""
-        tid_old = self.TID_old if self.TID_old else ""
-        origin_x = self.origin_x if self.origin_x else ""
-        origin = self.origin if self.origin else ""
+
+        match = self.stringer(self.match)
+        tid_old = self.stringer(self.TID_old)
+        origin_x = self.stringer(self.origin_x)
+        origin = self.stringer(self.origin)
+
         return f"{self.id_old}@{self.type.type}@{self.type.type_x}@{self.e_affixes}" \
                f"@{match}@{self.e_source}@{self.e_year}@{self.e_rank}" \
                f"@{origin}@{origin_x}@{self.e_usedin}@{tid_old}"

@@ -126,16 +126,16 @@ class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExport
         return words.order_by(cls.name).all()
 
     @classmethod
-    def __case_insensitive_words_filter(
-            cls, name: str, words: BaseQuery, partial_results: bool) -> BaseQuery:
-        return words.filter(cls.name.ilike(f"{name}%")) \
-            if partial_results else words.filter(cls.name.ilike(name))
+    def __case_sensitive_words_filter(
+            cls, key: str, request: BaseQuery, partial_results: bool) -> BaseQuery:
+        return request.filter(cls.name.like(f"{key}%")) \
+            if partial_results else request.filter(cls.name == key)
 
     @classmethod
-    def __case_sensitive_words_filter(
-            cls, name: str, words: BaseQuery, partial_results: bool) -> BaseQuery:
-        return words.filter(cls.name.like(f"{name}%")) \
-            if partial_results else words.filter(cls.name == name)
+    def __case_insensitive_words_filter(
+            cls, key: str, request: BaseQuery, partial_results: bool) -> BaseQuery:
+        return request.filter(cls.name.ilike(f"{key}%")) \
+            if partial_results else request.filter(cls.name.ilike(key))
 
     @staticmethod
     def _get_stylized_words(
@@ -252,14 +252,14 @@ class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExport
                 '<use>%s</use>', '%s ', '<tec>%s</tec>'],
         }
 
-        def _stringer(tag: str, value: Optional[str], default_value: Optional[str] = str()):
+        def _tagger(tag: str, value: Optional[str], default_value: Optional[str] = str()):
             return tag % value if value else default_value
 
         values = [self.e_affixes, self.match, self.rank, self.e_source, self.type.type,
                   self.e_usedin.replace("| ", "|&nbsp;"), self.e_year, None]
         default_values = [str(), str(), str(), str(), str(), None, str(), tags[style][-1]]
 
-        return tuple([_stringer(tag, value, default_value) for tag, value, default_value in
+        return tuple([_tagger(tag, value, default_value) for tag, value, default_value in
                       zip(tags[style], values, default_values)])
 
     def html_meaning(self, style: str = DEFAULT_HTML_STYLE) -> str:
