@@ -5,7 +5,8 @@ This module contains a HTMLExportWord Model
 """
 from __future__ import annotations
 from itertools import groupby
-from typing import Union, Optional, List
+from typing import Union, Optional, List, Dict
+from dataclasses import dataclass
 
 from sqlalchemy import or_
 from flask_sqlalchemy import BaseQuery
@@ -15,6 +16,14 @@ from loglan_db.model_db.base_word import BaseWord
 from loglan_db.model_html import DEFAULT_HTML_STYLE
 from loglan_db.model_html.html_definition import HTMLExportDefinition
 from loglan_db.model_export import AddonExportWordConverter
+
+
+@dataclass
+class Meaning:
+    mid: int
+    technical: str
+    definitions: List[str]
+    used_in: str
 
 
 class AddonWordTranslator:
@@ -34,7 +43,7 @@ class AddonWordTranslator:
         Returns:
 
         """
-        result = {}
+        result: Dict[str, List[str]] = {}
         for word in words:
             result[word.name] = []
             definitions = [
@@ -205,16 +214,14 @@ class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExport
 
     def html_definitions(self, style: str = DEFAULT_HTML_STYLE):
         """
-
         :param style:
         :return:
         """
         return [HTMLExportDefinition.export_for_loglan(
             d, style=style) for d in list(self.definitions)]
 
-    def meaning(self, style: str = DEFAULT_HTML_STYLE) -> dict:
+    def meaning(self, style: str = DEFAULT_HTML_STYLE) -> Meaning:
         """
-
         :param style:
         :return:
         """
@@ -224,13 +231,7 @@ class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExport
 
         html_tech = t_technical % f'{html_match}{html_type}{html_source}{html_year}{html_rank}'
         html_tech = f'{html_affixes}{self.html_origin(style)}{html_tech}'
-
-        return {
-            "mid": self.id,
-            "technical": html_tech,
-            "definitions": self.html_definitions(style),
-            "used_in": html_used_in
-        }
+        return Meaning(self.id, html_tech, self.html_definitions(style), html_used_in)
 
     def get_styled_values(self, style: str = DEFAULT_HTML_STYLE) -> tuple:
         """
@@ -272,18 +273,18 @@ class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExport
 
         """
         n_l = "\n"
-        meaning_dict = self.meaning(style)
+        meaning = self.meaning(style)
         if style == "normal":
             used_in_list = f'<div class="used_in">Used In: ' \
-                           f'{meaning_dict.get("used_in")}</div>\n</div>' \
-                if meaning_dict.get("used_in") else "</div>"
-            return f'<div class="meaning" id="{meaning_dict.get("mid")}">\n' \
-                   f'<div class="technical">{meaning_dict.get("technical")}</div>\n' \
+                           f'{meaning.used_in}</div>\n</div>' \
+                if meaning.used_in else "</div>"
+            return f'<div class="meaning" id="{meaning.mid}">\n' \
+                   f'<div class="technical">{meaning.technical}</div>\n' \
                    f'<div class="definitions">{n_l}' \
-                   f'{n_l.join(meaning_dict.get("definitions"))}\n</div>\n{used_in_list}'
+                   f'{n_l.join(meaning.definitions)}\n</div>\n{used_in_list}'
 
-        used_in_list = f'<us>Used In: {meaning_dict.get("used_in")}</us>\n</m>' \
-            if meaning_dict.get("used_in") else '</m>'
-        return f'<m>\n<t>{meaning_dict.get("technical")}</t>\n' \
+        used_in_list = f'<us>Used In: {meaning.used_in}</us>\n</m>' \
+            if meaning.used_in else '</m>'
+        return f'<m>\n<t>{meaning.technical}</t>\n' \
                f'<ds>{n_l}' \
-               f'{n_l.join(meaning_dict.get("definitions"))}\n</ds>\n{used_in_list}'
+               f'{n_l.join(meaning.definitions)}\n</ds>\n{used_in_list}'

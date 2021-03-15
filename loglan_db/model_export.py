@@ -4,6 +4,9 @@ This module contains an "Export extensions" for LOD dictionary SQL model.
 Add export() function to db object for returning its text string presentation.
 """
 
+from typing import Dict, List
+from sqlalchemy.orm import Query
+from datetime import datetime
 from loglan_db.model_db.base_word import BaseWord
 from loglan_db.model_db.base_word_spell import BaseWordSpell
 from loglan_db.model_db.base_definition import BaseDefinition
@@ -89,58 +92,59 @@ class AddonExportWordConverter:
     """
     Addon for ExportWord class with converters for properties
     """
-    notes = None
-    authors = None
-    year = None
-    complexes = None
-    affixes = None
-    rank = None
+    notes: Dict[str, str]
+    authors: Query
+    year: datetime
+    complexes: Query
+    affixes: Query
+    rank: str
 
     @property
     def e_source(self) -> str:
         """
         Returns:
         """
-        notes = self.notes if self.notes else {}
+        notes: Dict[str, str] = self.notes if self.notes else {}
+
         w_source = self.authors.all()
         # print(self) if not self.authors.all() else None
         source = '/'.join(sorted([auth.abbreviation for auth in w_source])) \
             if len(w_source) > 1 else w_source[0].abbreviation
-        return source + (" " + notes["author"] if notes.get("author", False) else "")
+        return f"{source} {notes.get('author', str())}".strip()
 
     @property
     def e_year(self) -> str:
         """
         Returns:
         """
-        notes = self.notes if self.notes else {}
-        return str(self.year.year) + (" " + notes["year"] if notes.get("year", False) else "")
+        notes: Dict[str, str] = self.notes if self.notes else {}
+        return f"{self.year.year} {notes.get('year', str())}".strip()
 
     @property
     def e_usedin(self) -> str:
         """
         Returns:
         """
-        w_usedin = list(self.complexes)
-        return ' | '.join(sorted({cpx.name for cpx in w_usedin})) if w_usedin else ""
+        w_usedin: List[BaseWord] = list(self.complexes) if self.complexes else list()
+        return ' | '.join(sorted({cpx.name for cpx in w_usedin if cpx})) if w_usedin else str()
 
     @property
     def e_affixes(self) -> str:
         """
         Returns:
         """
-        w_affixes = list(self.affixes)
+        w_affixes: List[BaseWord] = list(self.affixes) if self.affixes else list()
         return ' '.join(sorted(
             {afx.name.replace("-", "") for afx in w_affixes}
-        )) if w_affixes else ""
+        )) if w_affixes else str()
 
     @property
-    def e_rank(self):
+    def e_rank(self) -> str:
         """
         Returns:
         """
-        notes = self.notes if self.notes else {}
-        return self.rank + (" " + notes["rank"] if notes.get("rank", None) else "")
+        notes: Dict[str, str] = self.notes if self.notes else {}
+        return f"{self.rank} {notes.get('rank', str())}".strip()
 
 
 class ExportWord(BaseWord, AddonExportWordConverter):

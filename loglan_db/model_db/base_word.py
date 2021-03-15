@@ -75,14 +75,14 @@ class BaseWord(db.Model, InitBase, DBBase):
         backref=db.backref('_parents', lazy='dynamic', enable_typechecks=False),
         lazy='dynamic', enable_typechecks=False)
 
-    def query_derivatives(self, word_type: str = None,
-                          word_type_x: str = None, word_group: str = None) -> BaseQuery:
+    def query_derivatives(self, word_type: str = str(),
+                          word_type_x: str = str(), word_group: str = str()) -> BaseQuery:
         """Query to get all derivatives of the word, depending on its parameters
 
         Args:
-          word_type: str:  (Default value = None)
-          word_type_x: str:  (Default value = None)
-          word_group: str:  (Default value = None)
+          word_type: str:  (Default value = str())
+          word_type_x: str:  (Default value = str())
+          word_group: str:  (Default value = str())
 
         Returns:
             BaseQuery
@@ -98,8 +98,8 @@ class BaseWord(db.Model, InitBase, DBBase):
 
     @staticmethod
     def add_query_filters(
-            result: BaseQuery, word_type: str,
-            word_type_x: str, word_group: str) -> BaseQuery:
+            result: BaseQuery, word_type: str = str(),
+            word_type_x: str = str(), word_group: str = str()) -> BaseQuery:
         """
         Args:
             result:

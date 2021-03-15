@@ -20,10 +20,10 @@ class BaseWordSource(InitBase):
         "J": "Japanese",
         "G": "German", }
 
-    coincidence: int = None
-    length: int = None
-    language: str = None
-    transcription: str = None
+    coincidence: int
+    length: int
+    language: str
+    transcription: str
 
     @property
     def as_string(self) -> str:

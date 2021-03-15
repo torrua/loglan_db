@@ -116,7 +116,8 @@ class BaseDefinition(db.Model, InitBase, DBBase):
 
     def link_keys(
             self, source: Union[List[str], str, None] = None,
-            language: str = None, pattern: str = KEY_PATTERN) -> Union[BaseKey, List[BaseKey]]:
+            language: str = None, pattern: str = KEY_PATTERN
+    ) -> Union[BaseKey, List[BaseKey], None]:
         """Universal method for linking all available types of key sources with BaseDefinition
 
         Args:
@@ -180,8 +181,7 @@ class BaseDefinition(db.Model, InitBase, DBBase):
 
         if case_sensitive:
             return cls.__case_sensitive_filter(key, request, partial_results)
-        else:
-            return cls.__case_insensitive_filter(key, request, partial_results)
+        return cls.__case_insensitive_filter(key, request, partial_results)
 
     @classmethod
     def __case_sensitive_filter(

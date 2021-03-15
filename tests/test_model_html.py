@@ -6,7 +6,7 @@
 import pytest
 
 from loglan_db.model import Type, Author, Key, Event
-from loglan_db.model_html.html_word import HTMLExportWord
+from loglan_db.model_html.html_word import HTMLExportWord, Meaning
 from loglan_db.model_html.html_definition import HTMLExportDefinition as Definition
 from tests.data import definitions, words, types, authors, events
 from tests.data import word_1, connect_authors, connect_words, keys, connect_keys
@@ -152,8 +152,8 @@ class TestWord:
                 '<dl><du>fu —</du> (a) <k>testable</k>, of classes with -able members.</dl>',
                 '<dl><du>nu —</du> (a) <k>testable</k>, of testable properties.</dl>'],
             'used_in': '<use>prukao</use>'}
-        assert isinstance(result, dict)
-        assert result == expected_value
+        assert isinstance(result, Meaning)
+        assert result.__dict__ == expected_value
 
         word = Word.get_by_id(3802)
 
@@ -168,8 +168,8 @@ class TestWord:
                             '<l>kakto</l>, <k>act</k>.</span></div>'],
             'used_in': None}
 
-        assert isinstance(result, dict)
-        assert result == expected_value
+        assert isinstance(result, Meaning)
+        assert result.__dict__ == expected_value
 
     def test_html_meaning(self):
         db_add_objects(Word, words)

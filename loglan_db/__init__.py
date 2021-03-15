@@ -7,7 +7,7 @@ This module contains functions and variables for initializing application and db
 import os
 import logging
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy  # type: ignore
 
 __author__ = "torrua"
 __copyright__ = "Copyright 2020, loglan_db project"

@@ -16,12 +16,12 @@ from loglan_db.model_db.base_word_source import BaseWordSource
 class AddonWordSourcer:
     """AddonWordSourcer Model"""
 
-    type: BaseType = None
-    name: db.Column = None
-    origin: db.Column = None
-    origin_x: db.Column = None
-    type_id: db.Column = None
-    query: BaseQuery = None
+    type: BaseType
+    name: db.Column
+    origin: db.Column
+    origin_x: db.Column
+    type_id: db.Column
+    query: BaseQuery
 
     def get_sources_prim(self):
         """
@@ -55,9 +55,17 @@ class AddonWordSourcer:
         word_sources = []
 
         for source in sources:
-            compatibility = re.search(pattern_source, source)[0]
+            compatibility_search = re.search(pattern_source, source)
+            if not compatibility_search:
+                continue
+            compatibility = compatibility_search[0]
             c_l = compatibility[:-1].split("/")
-            transcription = (re.search(rf"(?!{pattern_source}) .+", source)[0]).strip()
+
+            transcription_search = re.search(rf"(?!{pattern_source}) .+", source)
+            if not transcription_search:
+                continue
+            transcription = str(transcription_search[0]).strip()
+
             word_source = BaseWordSource(**{
                 "coincidence": int(c_l[0]),
                 "length": int(c_l[1]),
@@ -67,7 +75,7 @@ class AddonWordSourcer:
 
         return word_sources
 
-    def get_sources_cpx(self, as_str: bool = False) -> List[Union[str, BaseWord]]:
+    def get_sources_cpx(self, as_str: bool = False) -> List[Union[None, str, BaseWord]]:
         """Extract source words from self.origin field accordingly
         Args:
             as_str (bool): return BaseWord objects if False else as simple str
@@ -88,18 +96,10 @@ class AddonWordSourcer:
             return []
 
         sources = self._prepare_sources_cpx()
-
-        result = self.words_from_source_cpx(sources)
-
-        if not as_str:
-            return result
-
-        result_as_str = []
-        _ = [result_as_str.append(r) for r in sources if r not in result_as_str]
-        return result_as_str
+        return sources if as_str else self.words_from_source_cpx(sources)
 
     @classmethod
-    def words_from_source_cpx(cls, sources: List[str]) -> List[BaseWord]:
+    def words_from_source_cpx(cls, sources: List[str]) -> List[Optional[BaseWord]]:
         """
 
         Args:
@@ -126,7 +126,7 @@ class AddonWordSourcer:
             for s in sources if s not in ["y", "r", "n"]]
         return sources
 
-    def get_sources_cpd(self, as_str: bool = False) -> List[Union[str, BaseWord]]:
+    def get_sources_cpd(self, as_str: bool = False) -> List[Union[None, str, BaseWord]]:
         """Extract source words from self.origin field accordingly
 
         Args:
@@ -142,17 +142,7 @@ class AddonWordSourcer:
             return []
 
         sources = self._prepare_sources_cpd()
-
-        result = self.words_from_source_cpd(sources)
-
-        if not as_str:
-            return result
-
-        result_as_str = []
-
-        _ = [result_as_str.append(r) for r in sources if r not in result_as_str and r]
-
-        return result_as_str
+        return sources if as_str else self.words_from_source_cpd(sources)
 
     def _prepare_sources_cpd(self) -> List[str]:
         """
@@ -161,11 +151,11 @@ class AddonWordSourcer:
 
         """
         sources = self.origin.replace("(", "").replace(")", "").replace("/", "").replace("-", "")
-        sources = [s.strip() for s in sources.split("+")]
+        sources = [s.strip() for s in sources.split("+") if s]
         return sources
 
     @classmethod
-    def words_from_source_cpd(cls, sources: List[str]) -> List:
+    def words_from_source_cpd(cls, sources: List[str]) -> List[Optional[BaseWord]]:
         """
 
         Args:
