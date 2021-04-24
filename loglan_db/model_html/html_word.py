@@ -55,19 +55,20 @@ class AddonWordTranslator:
     @staticmethod
     def translation_by_key(
             key: str, language: str = None,
-            style: str = DEFAULT_HTML_STYLE) -> Optional[str]:
+            style: str = DEFAULT_HTML_STYLE,
+            case_sensitive: bool = False) -> Optional[str]:
         """
         Get information about loglan words by key in a foreign language
         Args:
             key:
             language:
             style:
-
+            case_sensitive:
         Returns:
 
         """
 
-        words = HTMLExportWord.by_key(key, language).order_by(HTMLExportWord.name).all()
+        words = HTMLExportWord.by_key(key, language, case_sensitive).order_by(HTMLExportWord.name).all()
 
         if not words:
             return None
