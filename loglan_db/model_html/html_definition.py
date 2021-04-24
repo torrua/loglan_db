@@ -2,6 +2,7 @@
 """
 This module contains a HTMLExportDefinition Model
 """
+import re
 from loglan_db.model_db.base_definition import BaseDefinition
 from loglan_db.model_html import DEFAULT_HTML_STYLE
 
@@ -30,22 +31,35 @@ class DefinitionFormatter:
             .replace("...", "…").replace("--", "—")
 
     @staticmethod
-    def highlight_key(def_body, word) -> str:
+    def highlight_key(def_body, word, case_sensitive: bool = False) -> str:
         """
         Highlights the current key from the list, deselecting the rest
         :param def_body:
         :param word:
+        :param case_sensitive:
         :return:
         """
 
         to_key = '<k>'  # key
         tc_key = '</k>'
+        to_del = '<do_not_delete>'
+        tc_del = '</do_not_delete>'
+
+        def remove_tag_key(key):
+            return key.replace(tc_key, str()).replace(to_key, str())
+
+        def add_tag_del(match_obj):
+            return f"{to_del}{remove_tag_key(match_obj.group(0))}{tc_del}"
 
         word_template_original = f'{to_key}{word}{tc_key}'
-        word_template_temp = f'<do_not_delete>{word}</do_not_delete>'
-        def_body = def_body.replace(word_template_original, word_template_temp)
-        def_body = def_body.replace(to_key, "").replace(tc_key, "")
-        def_body = def_body.replace(word_template_temp, word_template_original)
+
+        def_body = re.sub(
+            word_template_original, add_tag_del, def_body,
+            flags=0 if case_sensitive else re.IGNORECASE)
+
+        def_body = remove_tag_key(def_body)
+        def_body = def_body.replace(to_del, to_key).replace(tc_del, tc_key)
+
         return def_body
 
     @staticmethod
