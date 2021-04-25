@@ -1,0 +1,1 @@
+recursive-include loglan_db *.py
