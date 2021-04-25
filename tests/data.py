@@ -157,4 +157,5 @@ word_1_sources = [word_1_source_1, word_1_source_2, word_1_source_3, ]
 
 # ===== OTHER ITEMS ===========================================================
 other_word_1 = {'TID_old': None, 'name': 'cirdui', 'origin': 'cir(na)+du(vr)i', 'type_id': 5, 'origin_x': 'learn discover', 'event_start_id': 1, 'match': '', 'event_end_id': None, 'rank': '7+', 'year': datetime.date(1991, 1, 1), 'notes': None, 'id': 1006, 'id_old': 992}
+other_word_2 = {'updated': None, 'notes': None, 'id': 3813, 'TID_old': None, 'id_old': 3880, 'name': 'kakto', 'type_id': 9, 'origin': 'R akt | 4/4S | 3/3F acte | 2/3E act | 2/3H kam', 'event_start_id': 1, 'origin_x': '', 'event_end_id': None, 'match': '56%', 'created': datetime.datetime(2020, 10, 25, 7, 53, 54, 873132), 'rank': '1.0', 'year': datetime.date(1975, 1, 1)}
 other_author_1 = {'full_name': 'Robert McIvor', 'id': 36, 'notes': '', 'abbreviation': 'RAM'}

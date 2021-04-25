@@ -8,7 +8,7 @@ from loglan_db.model_db.base_word import BaseWord
 from loglan_db.model_db.addons.addon_word_sourcer import AddonWordSourcer
 from loglan_db.model_db.base_word_source import BaseWordSource as WordSource
 from tests.data import littles, little_types
-from tests.data import words, types, prim_words, prim_types
+from tests.data import words, types, prim_words, prim_types, other_word_2
 from tests.functions import db_add_objects
 
 
@@ -72,6 +72,12 @@ class TestWord:
         afx = Word.get_by_id(3802)
         result = afx._get_sources_c_prim()
         assert result is None
+
+    def test__get_sources_c_prim_with_partial_data(self):
+        db_add_objects(Word, [other_word_2, ])
+        db_add_objects(Type, types)
+        result = Word.get_by_id(3813)._get_sources_c_prim()
+        assert len(result) == 3
 
     def test_get_sources_cpx(self):
         db_add_objects(Word, words)
