@@ -183,14 +183,14 @@ class BaseDefinition(db.Model, InitBase, DBBase):
             return cls.__case_sensitive_filter(key, request, partial_results)
         return cls.__case_insensitive_filter(key, request, partial_results)
 
-    @classmethod
+    @staticmethod
     def __case_sensitive_filter(
-            cls, key: str, request: BaseQuery, partial_results: bool) -> BaseQuery:
+            key: str, request: BaseQuery, partial_results: bool) -> BaseQuery:
         return request.filter(BaseKey.word.like(f"{key}%")) \
             if partial_results else request.filter(BaseKey.word == key)
 
-    @classmethod
+    @staticmethod
     def __case_insensitive_filter(
-            cls, key: str, request: BaseQuery, partial_results: bool) -> BaseQuery:
+            key: str, request: BaseQuery, partial_results: bool) -> BaseQuery:
         return request.filter(BaseKey.word.ilike(f"{key}%")) \
             if partial_results else request.filter(BaseKey.word.ilike(key))

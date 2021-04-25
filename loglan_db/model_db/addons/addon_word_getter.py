@@ -63,14 +63,15 @@ class AddonWordGetter:
     def by_key(
             cls, key: Union[BaseKey, str],
             language: str = None,
-            case_sensitive: bool = False) -> BaseQuery:
+            case_sensitive: bool = False,
+            partial_results: bool = False) -> BaseQuery:
         """Word.Query filtered by specified key
 
         Args:
           key: Union[BaseKey, str]:
           language: str: Language of key (Default value = None)
           case_sensitive: bool:  (Default value = False)
-
+          partial_results: bool:
         Returns:
           BaseQuery
 
@@ -80,10 +81,22 @@ class AddonWordGetter:
         request = cls.query.join(BaseDefinition, t_connect_keys, BaseKey)
 
         if case_sensitive:
-            request = request.filter(BaseKey.word == key)
-        else:
-            request = request.filter(BaseKey.word.in_([key, key.lower(), key.upper()]))
+            request = cls.__case_sensitive_filter(key, request, partial_results)
+        request = cls.__case_insensitive_filter(key, request, partial_results)
 
         if language:
             request = request.filter(BaseKey.language == language)
-        return request
+
+        return request.order_by(cls.name)
+
+    @staticmethod
+    def __case_sensitive_filter(
+            key: str, request: BaseQuery, partial_results: bool) -> BaseQuery:
+        return request.filter(BaseKey.word.like(f"{key}%")) \
+            if partial_results else request.filter(BaseKey.word == key)
+
+    @staticmethod
+    def __case_insensitive_filter(
+            key: str, request: BaseQuery, partial_results: bool) -> BaseQuery:
+        return request.filter(BaseKey.word.ilike(f"{key}%")) \
+            if partial_results else request.filter(BaseKey.word.ilike(key))

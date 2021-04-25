@@ -55,6 +55,14 @@ class InitBase:
 
     @staticmethod
     def stringer(value) -> str:
+        """
+        Convert variable to string
+        Args:
+            value:
+
+        Returns:
+
+        """
         return str(value) if value else str()
 
 

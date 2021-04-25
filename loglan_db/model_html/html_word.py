@@ -20,6 +20,7 @@ from loglan_db.model_export import AddonExportWordConverter
 
 @dataclass
 class Meaning:
+    """Meaning Class"""
     mid: int
     technical: str
     definitions: List[str]
@@ -32,23 +33,42 @@ class AddonWordTranslator:
     """
     @staticmethod
     def definitions_by_key(
-            key: str, words: List[BaseWord], style: str = DEFAULT_HTML_STYLE) -> dict:
+            key: str, words: List[BaseWord],
+            style: str = DEFAULT_HTML_STYLE,
+            case_sensitive: bool = False,
+            partial_results: bool = False) -> dict:
         """
 
         Args:
             key:
             words:
             style:
-
+            case_sensitive:
+            partial_results:
         Returns:
 
         """
+
+        def conditions(
+                x_key: str, x_keys: list,
+                x_case_sensitive: bool,
+                x_partial_results: bool) -> bool:
+            current_keys = [k.word for k in x_keys] if \
+                x_case_sensitive else [k.word.lower() for k in x_keys]
+            current_key = x_key if x_case_sensitive else x_key.lower()
+
+            if x_partial_results:
+                return any([k.startswith(current_key) for k in current_keys])
+            return current_key in current_keys
+
         result: Dict[str, List[str]] = {}
         for word in words:
             result[word.name] = []
             definitions = [
                 HTMLExportDefinition.export_for_english(d, word=key, style=style)
-                for d in word.definitions if key.lower() in [key.word.lower() for key in d.keys]]
+                for d in word.definitions if conditions(
+                    key, d.keys, case_sensitive, partial_results
+                )]
             result[word.name].extend(definitions)
         return result
 
@@ -56,7 +76,8 @@ class AddonWordTranslator:
     def translation_by_key(
             key: str, language: str = None,
             style: str = DEFAULT_HTML_STYLE,
-            case_sensitive: bool = False) -> Optional[str]:
+            case_sensitive: bool = False,
+            partial_results: bool = False) -> Optional[str]:
         """
         Get information about loglan words by key in a foreign language
         Args:
@@ -64,16 +85,20 @@ class AddonWordTranslator:
             language:
             style:
             case_sensitive:
+            partial_results:
         Returns:
 
         """
 
-        words = HTMLExportWord.by_key(key, language, case_sensitive).order_by(HTMLExportWord.name).all()
+        words = HTMLExportWord.by_key(
+            key, language, case_sensitive, partial_results
+        ).order_by(HTMLExportWord.name).all()
 
         if not words:
             return None
 
-        result = HTMLExportWord.definitions_by_key(key, words, style)
+        result = HTMLExportWord.definitions_by_key(
+            key, words, style, case_sensitive, partial_results)
 
         new = '\n'
 
@@ -127,6 +152,16 @@ class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExport
     def get_words_by(
             cls, name: str, event_id: int,
             case_sensitive: bool, partial_results: bool) -> List[HTMLExportWord]:
+        """
+        Args:
+            name:
+            event_id:
+            case_sensitive:
+            partial_results:
+
+        Returns:
+
+        """
         words = cls.query.filter(cls.event_start_id <= event_id) \
             .filter(or_(cls.event_end_id > event_id, cls.event_end_id.is_(None)))
         if case_sensitive:
@@ -134,6 +169,8 @@ class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExport
         else:
             words = cls.__case_insensitive_words_filter(name, words, partial_results)
         return words.order_by(cls.name).all()
+
+    # TOD0 Merge all filter code to onw place
 
     @classmethod
     def __case_sensitive_words_filter(

@@ -315,6 +315,34 @@ class TestWord:
         result = Word.html_all_by_name("Pru", style="normal", case_sensitive=False, partial_results=True)
         assert result == expected_result_normal
 
+    def test_definitions_by_key(self):
+        import itertools
+        db_add_objects(Word, words)
+        db_add_objects(Type, types)
+        db_add_objects(Author, authors)
+        db_add_objects(Key, keys)
+        db_add_objects(Definition, definitions)
+        db_connect_authors(connect_authors)
+        db_connect_words(connect_words)
+        db_connect_keys(connect_keys)
+
+        current_words = Word.by_key(
+            "test", case_sensitive=True, partial_results=True).all()
+
+        current_definitions = Word.definitions_by_key(
+            "test", current_words, case_sensitive=True,
+            partial_results=True).values()
+        ab = itertools.chain(*current_definitions)
+        result = len(list(ab))
+        assert result == 10
+
+        current_definitions = Word.definitions_by_key(
+            "test", current_words, case_sensitive=True,
+            partial_results=False).values()
+        ab = itertools.chain(*current_definitions)
+        result = len(list(ab))
+        assert result == 5
+
     def test_translation_by_key(self):
         db_add_objects(Word, words)
         db_add_objects(Type, types)
