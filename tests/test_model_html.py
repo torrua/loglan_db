@@ -8,7 +8,7 @@ import pytest
 from loglan_db.model import Type, Author, Key, Event
 from loglan_db.model_html.html_word import HTMLExportWord, Meaning
 from loglan_db.model_html.html_definition import HTMLExportDefinition as Definition
-from tests.data import definitions, words, types, authors, events
+from tests.data import definitions, words, types, authors, events, all_events
 from tests.data import word_1, connect_authors, connect_words, keys, connect_keys
 from tests.functions import db_add_and_return, db_add_objects, \
     db_connect_authors, db_connect_words, db_connect_keys
@@ -322,6 +322,8 @@ class TestWord:
         db_add_objects(Author, authors)
         db_add_objects(Key, keys)
         db_add_objects(Definition, definitions)
+        db_add_objects(Event, all_events)
+
         db_connect_authors(connect_authors)
         db_connect_words(connect_words)
         db_connect_keys(connect_keys)
@@ -349,6 +351,8 @@ class TestWord:
         db_add_objects(Author, authors)
         db_add_objects(Key, keys)
         db_add_objects(Definition, definitions)
+        db_add_objects(Event, all_events)
+
         db_connect_authors(connect_authors)
         db_connect_words(connect_words)
         db_connect_keys(connect_keys)

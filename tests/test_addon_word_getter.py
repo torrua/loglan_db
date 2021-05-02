@@ -63,6 +63,8 @@ class TestWord:
         db_add_objects(Word, words)
         db_add_objects(Definition, definitions)
         db_add_objects(Key, keys)
+        db_add_objects(Event, all_events)
+
         db_connect_keys(connect_keys)
 
         result = Word.by_key("test").count()
