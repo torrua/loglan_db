@@ -180,17 +180,17 @@ class BaseDefinition(db.Model, InitBase, DBBase):
             request = request.filter(BaseKey.language == language)
 
         if case_sensitive:
-            return cls.__case_sensitive_filter(key, request, partial_results)
-        return cls.__case_insensitive_filter(key, request, partial_results)
+            return cls._filter_key_case_sensitive_filter(key, partial_results, request)
+        return cls._filter_key_case_insensitive_filter(key, partial_results, request)
 
     @staticmethod
-    def __case_sensitive_filter(
-            key: str, request: BaseQuery, partial_results: bool) -> BaseQuery:
-        return request.filter(BaseKey.word.like(f"{key}%")) \
-            if partial_results else request.filter(BaseKey.word == key)
+    def _filter_key_case_sensitive_filter(
+            key: str, partial_results: bool, add_to: BaseQuery) -> BaseQuery:
+        return add_to.filter(BaseKey.word.like(f"{key}%")) \
+            if partial_results else add_to.filter(BaseKey.word == key)
 
     @staticmethod
-    def __case_insensitive_filter(
-            key: str, request: BaseQuery, partial_results: bool) -> BaseQuery:
-        return request.filter(BaseKey.word.ilike(f"{key}%")) \
-            if partial_results else request.filter(BaseKey.word.ilike(key))
+    def _filter_key_case_insensitive_filter(
+            key: str, partial_results: bool, add_to: BaseQuery) -> BaseQuery:
+        return add_to.filter(BaseKey.word.ilike(f"{key}%")) \
+            if partial_results else add_to.filter(BaseKey.word.ilike(key))
