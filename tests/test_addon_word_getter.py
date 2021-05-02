@@ -12,7 +12,7 @@ from loglan_db.model_db.addons.addon_word_getter import AddonWordGetter
 
 from tests.data import changed_words, all_events, doubled_words
 from tests.data import connect_keys
-from tests.data import keys, definitions, words
+from tests.data import keys, definitions, words, events
 from tests.functions import db_connect_keys, db_add_objects
 
 
@@ -42,7 +42,7 @@ class TestWord:
 
     def test_by_name(self):
         db_add_objects(Word, doubled_words)
-
+        db_add_objects(Event, events)
         result = Word.by_name("duo").count()
         assert result == 2
 

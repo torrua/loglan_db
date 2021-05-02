@@ -8,8 +8,6 @@ from itertools import groupby
 from typing import Union, Optional, List, Dict
 from dataclasses import dataclass
 
-from sqlalchemy import or_
-from flask_sqlalchemy import BaseQuery
 from loglan_db.model_db.addons.addon_word_getter import AddonWordGetter
 from loglan_db.model_db.base_event import BaseEvent
 from loglan_db.model_db.base_word import BaseWord
@@ -76,6 +74,7 @@ class AddonWordTranslator:
     def translation_by_key(
             key: str, language: str = None,
             style: str = DEFAULT_HTML_STYLE,
+            event_id: Union[BaseEvent, int, str] = None,
             case_sensitive: bool = False,
             partial_results: bool = False) -> Optional[str]:
         """
@@ -84,6 +83,7 @@ class AddonWordTranslator:
             key:
             language:
             style:
+            event_id:
             case_sensitive:
             partial_results:
         Returns:
@@ -91,14 +91,19 @@ class AddonWordTranslator:
         """
 
         words = HTMLExportWord.by_key(
-            key, language, case_sensitive, partial_results
-        ).order_by(HTMLExportWord.name).all()
-
+            key=key, language=language,
+            event_id=event_id,
+            case_sensitive=case_sensitive,
+            partial_results=partial_results
+        ).all()
+        [print(word.name, word.id) for word in words]
         if not words:
             return None
 
         result = HTMLExportWord.definitions_by_key(
-            key, words, style, case_sensitive, partial_results)
+            key=key, words=words, style=style,
+            case_sensitive=case_sensitive,
+            partial_results=partial_results)
 
         new = '\n'
 
@@ -139,7 +144,11 @@ class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExport
 
         event_id = int(event_id) if isinstance(event_id, (int, str)) else BaseEvent.id
 
-        words = cls.get_words_by(name, event_id, case_sensitive, partial_results)
+        words = cls.by_name(
+            name=name, event_id=event_id,
+            case_sensitive=case_sensitive,
+            partial_results=partial_results
+        ).all()
 
         if not words:
             return None
@@ -147,42 +156,6 @@ class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExport
         items = cls._get_stylized_words(words, style)
 
         return words_template[style] % "\n".join(items)
-
-    @classmethod
-    def get_words_by(
-            cls, name: str, event_id: int,
-            case_sensitive: bool, partial_results: bool) -> List[HTMLExportWord]:
-        """
-        Args:
-            name:
-            event_id:
-            case_sensitive:
-            partial_results:
-
-        Returns:
-
-        """
-        words = cls.query.filter(cls.event_start_id <= event_id) \
-            .filter(or_(cls.event_end_id > event_id, cls.event_end_id.is_(None)))
-        if case_sensitive:
-            words = cls.__case_sensitive_words_filter(name, words, partial_results)
-        else:
-            words = cls.__case_insensitive_words_filter(name, words, partial_results)
-        return words.order_by(cls.name).all()
-
-    # TOD0 Merge all filter code to onw place
-
-    @classmethod
-    def __case_sensitive_words_filter(
-            cls, key: str, request: BaseQuery, partial_results: bool) -> BaseQuery:
-        return request.filter(cls.name.like(f"{key}%")) \
-            if partial_results else request.filter(cls.name == key)
-
-    @classmethod
-    def __case_insensitive_words_filter(
-            cls, key: str, request: BaseQuery, partial_results: bool) -> BaseQuery:
-        return request.filter(cls.name.ilike(f"{key}%")) \
-            if partial_results else request.filter(cls.name.ilike(key))
 
     @staticmethod
     def _get_stylized_words(
@@ -298,8 +271,8 @@ class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExport
                   self.e_usedin.replace("| ", "|&nbsp;"), self.e_year, None]
         default_values = [str(), str(), str(), str(), str(), None, str(), tags[style][-1]]
 
-        return tuple([_tagger(tag, value, default_value) for tag, value, default_value in
-                      zip(tags[style], values, default_values)])
+        return tuple(_tagger(tag, value, default_value) for tag, value, default_value
+                     in zip(tags[style], values, default_values))
 
     def html_meaning(self, style: str = DEFAULT_HTML_STYLE) -> str:
         """
