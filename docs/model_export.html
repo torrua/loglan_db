@@ -1,0 +1,991 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.9.2" />
+<title>loglan_db.model_export API documentation</title>
+<meta name="description" content="This module contains an &#34;Export extensions&#34; for LOD dictionary SQL model.
+Add export() function to db object for returning its text string presentation." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>loglan_db.model_export</code></h1>
+</header>
+<section id="section-intro">
+<p>This module contains an "Export extensions" for LOD dictionary SQL model.
+Add export() function to db object for returning its text string presentation.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="loglan_db.model_export.AddonExportWordConverter"><code class="flex name class">
+<span>class <span class="ident">AddonExportWordConverter</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Addon for ExportWord class with converters for properties</p></div>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="loglan_db.model_export.ExportWord" href="#loglan_db.model_export.ExportWord">ExportWord</a></li>
+<li><a title="loglan_db.model_html.html_word.HTMLExportWord" href="model_html/html_word.html#loglan_db.model_html.html_word.HTMLExportWord">HTMLExportWord</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="loglan_db.model_export.AddonExportWordConverter.affixes"><code class="name">var <span class="ident">affixes</span> : sqlalchemy.orm.query.Query</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.AddonExportWordConverter.authors"><code class="name">var <span class="ident">authors</span> : sqlalchemy.orm.query.Query</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.AddonExportWordConverter.complexes"><code class="name">var <span class="ident">complexes</span> : sqlalchemy.orm.query.Query</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.AddonExportWordConverter.notes"><code class="name">var <span class="ident">notes</span> : Dict[str, str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.AddonExportWordConverter.rank"><code class="name">var <span class="ident">rank</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.AddonExportWordConverter.year"><code class="name">var <span class="ident">year</span> : datetime.datetime</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="loglan_db.model_export.AddonExportWordConverter.e_affixes"><code class="name">var <span class="ident">e_affixes</span> : str</code></dt>
+<dd>
+<div class="desc"><p>Returns:</p></div>
+</dd>
+<dt id="loglan_db.model_export.AddonExportWordConverter.e_rank"><code class="name">var <span class="ident">e_rank</span> : str</code></dt>
+<dd>
+<div class="desc"><p>Returns:</p></div>
+</dd>
+<dt id="loglan_db.model_export.AddonExportWordConverter.e_source"><code class="name">var <span class="ident">e_source</span> : str</code></dt>
+<dd>
+<div class="desc"><p>Returns:</p></div>
+</dd>
+<dt id="loglan_db.model_export.AddonExportWordConverter.e_usedin"><code class="name">var <span class="ident">e_usedin</span> : str</code></dt>
+<dd>
+<div class="desc"><p>Returns:</p></div>
+</dd>
+<dt id="loglan_db.model_export.AddonExportWordConverter.e_year"><code class="name">var <span class="ident">e_year</span> : str</code></dt>
+<dd>
+<div class="desc"><p>Returns:</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="loglan_db.model_export.ExportAuthor"><code class="flex name class">
+<span>class <span class="ident">ExportAuthor</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>ExportAuthor Class</p>
+<p>A simple constructor that allows initialization from kwargs.</p>
+<p>Sets attributes on the constructed instance using the names and
+values in <code>kwargs</code>.</p>
+<p>Only keys that are present as
+attributes of the instance's class are allowed. These could be,
+for example, any mapped columns or relationships.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="loglan_db.model_db.base_author.BaseAuthor" href="model_db/base_author.html#loglan_db.model_db.base_author.BaseAuthor">BaseAuthor</a></li>
+<li>sqlalchemy.orm.decl_api.Model</li>
+<li>flask_sqlalchemy.model.Model</li>
+<li><a title="loglan_db.model_init.InitBase" href="model_init.html#loglan_db.model_init.InitBase">InitBase</a></li>
+<li><a title="loglan_db.model_init.DBBase" href="model_init.html#loglan_db.model_init.DBBase">DBBase</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="loglan_db.model_export.ExportAuthor.contribution"><code class="name">var <span class="ident">contribution</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="loglan_db.model_export.ExportAuthor.export"><code class="name flex">
+<span>def <span class="ident">export</span></span>(<span>self) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Prepare Author data for exporting to text file</p>
+<h2 id="returns">Returns</h2>
+<p>Formatted basic string</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="loglan_db.model_db.base_author.BaseAuthor" href="model_db/base_author.html#loglan_db.model_db.base_author.BaseAuthor">BaseAuthor</a></b></code>:
+<ul class="hlist">
+<li><code><a title="loglan_db.model_db.base_author.BaseAuthor.abbreviation" href="model_db/base_author.html#loglan_db.model_db.base_author.BaseAuthor.abbreviation">abbreviation</a></code></li>
+<li><code><a title="loglan_db.model_db.base_author.BaseAuthor.attributes_all" href="model_init.html#loglan_db.model_init.DBBase.attributes_all">attributes_all</a></code></li>
+<li><code><a title="loglan_db.model_db.base_author.BaseAuthor.attributes_basic" href="model_init.html#loglan_db.model_init.DBBase.attributes_basic">attributes_basic</a></code></li>
+<li><code><a title="loglan_db.model_db.base_author.BaseAuthor.attributes_extended" href="model_init.html#loglan_db.model_init.DBBase.attributes_extended">attributes_extended</a></code></li>
+<li><code><a title="loglan_db.model_db.base_author.BaseAuthor.created" href="model_db/base_author.html#loglan_db.model_db.base_author.BaseAuthor.created">created</a></code></li>
+<li><code><a title="loglan_db.model_db.base_author.BaseAuthor.delete" href="model_init.html#loglan_db.model_init.DBBase.delete">delete</a></code></li>
+<li><code><a title="loglan_db.model_db.base_author.BaseAuthor.foreign_keys" href="model_init.html#loglan_db.model_init.DBBase.foreign_keys">foreign_keys</a></code></li>
+<li><code><a title="loglan_db.model_db.base_author.BaseAuthor.from_dict" href="model_init.html#loglan_db.model_init.InitBase.from_dict">from_dict</a></code></li>
+<li><code><a title="loglan_db.model_db.base_author.BaseAuthor.full_name" href="model_db/base_author.html#loglan_db.model_db.base_author.BaseAuthor.full_name">full_name</a></code></li>
+<li><code><a title="loglan_db.model_db.base_author.BaseAuthor.get_all" href="model_init.html#loglan_db.model_init.DBBase.get_all">get_all</a></code></li>
+<li><code><a title="loglan_db.model_db.base_author.BaseAuthor.get_by_id" href="model_init.html#loglan_db.model_init.DBBase.get_by_id">get_by_id</a></code></li>
+<li><code><a title="loglan_db.model_db.base_author.BaseAuthor.id" href="model_db/base_author.html#loglan_db.model_db.base_author.BaseAuthor.id">id</a></code></li>
+<li><code><a title="loglan_db.model_db.base_author.BaseAuthor.import_" href="model_init.html#loglan_db.model_init.InitBase.import_">import_</a></code></li>
+<li><code><a title="loglan_db.model_db.base_author.BaseAuthor.non_foreign_keys" href="model_init.html#loglan_db.model_init.DBBase.non_foreign_keys">non_foreign_keys</a></code></li>
+<li><code><a title="loglan_db.model_db.base_author.BaseAuthor.notes" href="model_db/base_author.html#loglan_db.model_db.base_author.BaseAuthor.notes">notes</a></code></li>
+<li><code><a title="loglan_db.model_db.base_author.BaseAuthor.relationships" href="model_init.html#loglan_db.model_init.DBBase.relationships">relationships</a></code></li>
+<li><code><a title="loglan_db.model_db.base_author.BaseAuthor.save" href="model_init.html#loglan_db.model_init.DBBase.save">save</a></code></li>
+<li><code><a title="loglan_db.model_db.base_author.BaseAuthor.stringer" href="model_init.html#loglan_db.model_init.InitBase.stringer">stringer</a></code></li>
+<li><code><a title="loglan_db.model_db.base_author.BaseAuthor.update" href="model_init.html#loglan_db.model_init.DBBase.update">update</a></code></li>
+<li><code><a title="loglan_db.model_db.base_author.BaseAuthor.updated" href="model_db/base_author.html#loglan_db.model_db.base_author.BaseAuthor.updated">updated</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="loglan_db.model_export.ExportDefinition"><code class="flex name class">
+<span>class <span class="ident">ExportDefinition</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>ExportDefinition Class</p>
+<p>A simple constructor that allows initialization from kwargs.</p>
+<p>Sets attributes on the constructed instance using the names and
+values in <code>kwargs</code>.</p>
+<p>Only keys that are present as
+attributes of the instance's class are allowed. These could be,
+for example, any mapped columns or relationships.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="loglan_db.model_db.base_definition.BaseDefinition" href="model_db/base_definition.html#loglan_db.model_db.base_definition.BaseDefinition">BaseDefinition</a></li>
+<li>sqlalchemy.orm.decl_api.Model</li>
+<li>flask_sqlalchemy.model.Model</li>
+<li><a title="loglan_db.model_init.InitBase" href="model_init.html#loglan_db.model_init.InitBase">InitBase</a></li>
+<li><a title="loglan_db.model_init.DBBase" href="model_init.html#loglan_db.model_init.DBBase">DBBase</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="loglan_db.model_export.ExportDefinition.body"><code class="name">var <span class="ident">body</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportDefinition.case_tags"><code class="name">var <span class="ident">case_tags</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportDefinition.e_grammar"><code class="name">var <span class="ident">e_grammar</span> : str</code></dt>
+<dd>
+<div class="desc"><p>Prepare grammar data for export</p>
+<h2 id="returns">Returns</h2>
+<p>Formatted string</p></div>
+</dd>
+<dt id="loglan_db.model_export.ExportDefinition.grammar_code"><code class="name">var <span class="ident">grammar_code</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportDefinition.keys"><code class="name">var <span class="ident">keys</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportDefinition.language"><code class="name">var <span class="ident">language</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportDefinition.notes"><code class="name">var <span class="ident">notes</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportDefinition.position"><code class="name">var <span class="ident">position</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportDefinition.slots"><code class="name">var <span class="ident">slots</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportDefinition.source_word"><code class="name">var <span class="ident">source_word</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportDefinition.usage"><code class="name">var <span class="ident">usage</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportDefinition.word_id"><code class="name">var <span class="ident">word_id</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="loglan_db.model_export.ExportDefinition.export"><code class="name flex">
+<span>def <span class="ident">export</span></span>(<span>self) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Prepare Definition data for exporting to text file</p>
+<h2 id="returns">Returns</h2>
+<p>Formatted basic string</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="loglan_db.model_db.base_definition.BaseDefinition" href="model_db/base_definition.html#loglan_db.model_db.base_definition.BaseDefinition">BaseDefinition</a></b></code>:
+<ul class="hlist">
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.attributes_all" href="model_init.html#loglan_db.model_init.DBBase.attributes_all">attributes_all</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.attributes_basic" href="model_init.html#loglan_db.model_init.DBBase.attributes_basic">attributes_basic</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.attributes_extended" href="model_init.html#loglan_db.model_init.DBBase.attributes_extended">attributes_extended</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.by_key" href="model_db/base_definition.html#loglan_db.model_db.base_definition.BaseDefinition.by_key">by_key</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.created" href="model_db/base_definition.html#loglan_db.model_db.base_definition.BaseDefinition.created">created</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.delete" href="model_init.html#loglan_db.model_init.DBBase.delete">delete</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.foreign_keys" href="model_init.html#loglan_db.model_init.DBBase.foreign_keys">foreign_keys</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.from_dict" href="model_init.html#loglan_db.model_init.InitBase.from_dict">from_dict</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.get_all" href="model_init.html#loglan_db.model_init.DBBase.get_all">get_all</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.get_by_id" href="model_init.html#loglan_db.model_init.DBBase.get_by_id">get_by_id</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.grammar" href="model_db/base_definition.html#loglan_db.model_db.base_definition.BaseDefinition.grammar">grammar</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.id" href="model_db/base_definition.html#loglan_db.model_db.base_definition.BaseDefinition.id">id</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.import_" href="model_init.html#loglan_db.model_init.InitBase.import_">import_</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.link_key_from_str" href="model_db/base_definition.html#loglan_db.model_db.base_definition.BaseDefinition.link_key_from_str">link_key_from_str</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.link_keys" href="model_db/base_definition.html#loglan_db.model_db.base_definition.BaseDefinition.link_keys">link_keys</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.link_keys_from_definition_body" href="model_db/base_definition.html#loglan_db.model_db.base_definition.BaseDefinition.link_keys_from_definition_body">link_keys_from_definition_body</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.link_keys_from_list_of_str" href="model_db/base_definition.html#loglan_db.model_db.base_definition.BaseDefinition.link_keys_from_list_of_str">link_keys_from_list_of_str</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.non_foreign_keys" href="model_init.html#loglan_db.model_init.DBBase.non_foreign_keys">non_foreign_keys</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.relationships" href="model_init.html#loglan_db.model_init.DBBase.relationships">relationships</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.save" href="model_init.html#loglan_db.model_init.DBBase.save">save</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.stringer" href="model_init.html#loglan_db.model_init.InitBase.stringer">stringer</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.update" href="model_init.html#loglan_db.model_init.DBBase.update">update</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.updated" href="model_db/base_definition.html#loglan_db.model_db.base_definition.BaseDefinition.updated">updated</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="loglan_db.model_export.ExportEvent"><code class="flex name class">
+<span>class <span class="ident">ExportEvent</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>ExportEvent Class</p>
+<p>A simple constructor that allows initialization from kwargs.</p>
+<p>Sets attributes on the constructed instance using the names and
+values in <code>kwargs</code>.</p>
+<p>Only keys that are present as
+attributes of the instance's class are allowed. These could be,
+for example, any mapped columns or relationships.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="loglan_db.model_db.base_event.BaseEvent" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent">BaseEvent</a></li>
+<li>sqlalchemy.orm.decl_api.Model</li>
+<li>flask_sqlalchemy.model.Model</li>
+<li><a title="loglan_db.model_init.InitBase" href="model_init.html#loglan_db.model_init.InitBase">InitBase</a></li>
+<li><a title="loglan_db.model_init.DBBase" href="model_init.html#loglan_db.model_init.DBBase">DBBase</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="loglan_db.model_export.ExportEvent.appeared_words"><code class="name">var <span class="ident">appeared_words</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportEvent.deprecated_words"><code class="name">var <span class="ident">deprecated_words</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="loglan_db.model_export.ExportEvent.export"><code class="name flex">
+<span>def <span class="ident">export</span></span>(<span>self) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Prepare Event data for exporting to text file</p>
+<h2 id="returns">Returns</h2>
+<p>Formatted basic string</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="loglan_db.model_db.base_event.BaseEvent" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent">BaseEvent</a></b></code>:
+<ul class="hlist">
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.annotation" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent.annotation">annotation</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.attributes_all" href="model_init.html#loglan_db.model_init.DBBase.attributes_all">attributes_all</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.attributes_basic" href="model_init.html#loglan_db.model_init.DBBase.attributes_basic">attributes_basic</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.attributes_extended" href="model_init.html#loglan_db.model_init.DBBase.attributes_extended">attributes_extended</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.created" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent.created">created</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.date" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent.date">date</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.definition" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent.definition">definition</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.delete" href="model_init.html#loglan_db.model_init.DBBase.delete">delete</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.foreign_keys" href="model_init.html#loglan_db.model_init.DBBase.foreign_keys">foreign_keys</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.from_dict" href="model_init.html#loglan_db.model_init.InitBase.from_dict">from_dict</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.get_all" href="model_init.html#loglan_db.model_init.DBBase.get_all">get_all</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.get_by_id" href="model_init.html#loglan_db.model_init.DBBase.get_by_id">get_by_id</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.id" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent.id">id</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.import_" href="model_init.html#loglan_db.model_init.InitBase.import_">import_</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.latest" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent.latest">latest</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.name" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent.name">name</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.non_foreign_keys" href="model_init.html#loglan_db.model_init.DBBase.non_foreign_keys">non_foreign_keys</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.relationships" href="model_init.html#loglan_db.model_init.DBBase.relationships">relationships</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.save" href="model_init.html#loglan_db.model_init.DBBase.save">save</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.stringer" href="model_init.html#loglan_db.model_init.InitBase.stringer">stringer</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.suffix" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent.suffix">suffix</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.update" href="model_init.html#loglan_db.model_init.DBBase.update">update</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.updated" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent.updated">updated</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="loglan_db.model_export.ExportSetting"><code class="flex name class">
+<span>class <span class="ident">ExportSetting</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>ExportSetting Class</p>
+<p>A simple constructor that allows initialization from kwargs.</p>
+<p>Sets attributes on the constructed instance using the names and
+values in <code>kwargs</code>.</p>
+<p>Only keys that are present as
+attributes of the instance's class are allowed. These could be,
+for example, any mapped columns or relationships.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="loglan_db.model_db.base_setting.BaseSetting" href="model_db/base_setting.html#loglan_db.model_db.base_setting.BaseSetting">BaseSetting</a></li>
+<li>sqlalchemy.orm.decl_api.Model</li>
+<li>flask_sqlalchemy.model.Model</li>
+<li><a title="loglan_db.model_init.InitBase" href="model_init.html#loglan_db.model_init.InitBase">InitBase</a></li>
+<li><a title="loglan_db.model_init.DBBase" href="model_init.html#loglan_db.model_init.DBBase">DBBase</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="loglan_db.model_export.ExportSetting.export"><code class="name flex">
+<span>def <span class="ident">export</span></span>(<span>self) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Prepare Setting data for exporting to text file</p>
+<h2 id="returns">Returns</h2>
+<p>Formatted basic string</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="loglan_db.model_db.base_setting.BaseSetting" href="model_db/base_setting.html#loglan_db.model_db.base_setting.BaseSetting">BaseSetting</a></b></code>:
+<ul class="hlist">
+<li><code><a title="loglan_db.model_db.base_setting.BaseSetting.attributes_all" href="model_init.html#loglan_db.model_init.DBBase.attributes_all">attributes_all</a></code></li>
+<li><code><a title="loglan_db.model_db.base_setting.BaseSetting.attributes_basic" href="model_init.html#loglan_db.model_init.DBBase.attributes_basic">attributes_basic</a></code></li>
+<li><code><a title="loglan_db.model_db.base_setting.BaseSetting.attributes_extended" href="model_init.html#loglan_db.model_init.DBBase.attributes_extended">attributes_extended</a></code></li>
+<li><code><a title="loglan_db.model_db.base_setting.BaseSetting.created" href="model_db/base_setting.html#loglan_db.model_db.base_setting.BaseSetting.created">created</a></code></li>
+<li><code><a title="loglan_db.model_db.base_setting.BaseSetting.date" href="model_db/base_setting.html#loglan_db.model_db.base_setting.BaseSetting.date">date</a></code></li>
+<li><code><a title="loglan_db.model_db.base_setting.BaseSetting.db_release" href="model_db/base_setting.html#loglan_db.model_db.base_setting.BaseSetting.db_release">db_release</a></code></li>
+<li><code><a title="loglan_db.model_db.base_setting.BaseSetting.db_version" href="model_db/base_setting.html#loglan_db.model_db.base_setting.BaseSetting.db_version">db_version</a></code></li>
+<li><code><a title="loglan_db.model_db.base_setting.BaseSetting.delete" href="model_init.html#loglan_db.model_init.DBBase.delete">delete</a></code></li>
+<li><code><a title="loglan_db.model_db.base_setting.BaseSetting.foreign_keys" href="model_init.html#loglan_db.model_init.DBBase.foreign_keys">foreign_keys</a></code></li>
+<li><code><a title="loglan_db.model_db.base_setting.BaseSetting.from_dict" href="model_init.html#loglan_db.model_init.InitBase.from_dict">from_dict</a></code></li>
+<li><code><a title="loglan_db.model_db.base_setting.BaseSetting.get_all" href="model_init.html#loglan_db.model_init.DBBase.get_all">get_all</a></code></li>
+<li><code><a title="loglan_db.model_db.base_setting.BaseSetting.get_by_id" href="model_init.html#loglan_db.model_init.DBBase.get_by_id">get_by_id</a></code></li>
+<li><code><a title="loglan_db.model_db.base_setting.BaseSetting.id" href="model_db/base_setting.html#loglan_db.model_db.base_setting.BaseSetting.id">id</a></code></li>
+<li><code><a title="loglan_db.model_db.base_setting.BaseSetting.import_" href="model_init.html#loglan_db.model_init.InitBase.import_">import_</a></code></li>
+<li><code><a title="loglan_db.model_db.base_setting.BaseSetting.last_word_id" href="model_db/base_setting.html#loglan_db.model_db.base_setting.BaseSetting.last_word_id">last_word_id</a></code></li>
+<li><code><a title="loglan_db.model_db.base_setting.BaseSetting.non_foreign_keys" href="model_init.html#loglan_db.model_init.DBBase.non_foreign_keys">non_foreign_keys</a></code></li>
+<li><code><a title="loglan_db.model_db.base_setting.BaseSetting.relationships" href="model_init.html#loglan_db.model_init.DBBase.relationships">relationships</a></code></li>
+<li><code><a title="loglan_db.model_db.base_setting.BaseSetting.save" href="model_init.html#loglan_db.model_init.DBBase.save">save</a></code></li>
+<li><code><a title="loglan_db.model_db.base_setting.BaseSetting.stringer" href="model_init.html#loglan_db.model_init.InitBase.stringer">stringer</a></code></li>
+<li><code><a title="loglan_db.model_db.base_setting.BaseSetting.update" href="model_init.html#loglan_db.model_init.DBBase.update">update</a></code></li>
+<li><code><a title="loglan_db.model_db.base_setting.BaseSetting.updated" href="model_db/base_setting.html#loglan_db.model_db.base_setting.BaseSetting.updated">updated</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="loglan_db.model_export.ExportSyllable"><code class="flex name class">
+<span>class <span class="ident">ExportSyllable</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>ExportSyllable Class</p>
+<p>A simple constructor that allows initialization from kwargs.</p>
+<p>Sets attributes on the constructed instance using the names and
+values in <code>kwargs</code>.</p>
+<p>Only keys that are present as
+attributes of the instance's class are allowed. These could be,
+for example, any mapped columns or relationships.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="loglan_db.model_db.base_syllable.BaseSyllable" href="model_db/base_syllable.html#loglan_db.model_db.base_syllable.BaseSyllable">BaseSyllable</a></li>
+<li>sqlalchemy.orm.decl_api.Model</li>
+<li>flask_sqlalchemy.model.Model</li>
+<li><a title="loglan_db.model_init.InitBase" href="model_init.html#loglan_db.model_init.InitBase">InitBase</a></li>
+<li><a title="loglan_db.model_init.DBBase" href="model_init.html#loglan_db.model_init.DBBase">DBBase</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="loglan_db.model_export.ExportSyllable.export"><code class="name flex">
+<span>def <span class="ident">export</span></span>(<span>self) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Prepare Syllable data for exporting to text file</p>
+<h2 id="returns">Returns</h2>
+<p>Formatted basic string</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="loglan_db.model_db.base_syllable.BaseSyllable" href="model_db/base_syllable.html#loglan_db.model_db.base_syllable.BaseSyllable">BaseSyllable</a></b></code>:
+<ul class="hlist">
+<li><code><a title="loglan_db.model_db.base_syllable.BaseSyllable.allowed" href="model_db/base_syllable.html#loglan_db.model_db.base_syllable.BaseSyllable.allowed">allowed</a></code></li>
+<li><code><a title="loglan_db.model_db.base_syllable.BaseSyllable.attributes_all" href="model_init.html#loglan_db.model_init.DBBase.attributes_all">attributes_all</a></code></li>
+<li><code><a title="loglan_db.model_db.base_syllable.BaseSyllable.attributes_basic" href="model_init.html#loglan_db.model_init.DBBase.attributes_basic">attributes_basic</a></code></li>
+<li><code><a title="loglan_db.model_db.base_syllable.BaseSyllable.attributes_extended" href="model_init.html#loglan_db.model_init.DBBase.attributes_extended">attributes_extended</a></code></li>
+<li><code><a title="loglan_db.model_db.base_syllable.BaseSyllable.created" href="model_db/base_syllable.html#loglan_db.model_db.base_syllable.BaseSyllable.created">created</a></code></li>
+<li><code><a title="loglan_db.model_db.base_syllable.BaseSyllable.delete" href="model_init.html#loglan_db.model_init.DBBase.delete">delete</a></code></li>
+<li><code><a title="loglan_db.model_db.base_syllable.BaseSyllable.foreign_keys" href="model_init.html#loglan_db.model_init.DBBase.foreign_keys">foreign_keys</a></code></li>
+<li><code><a title="loglan_db.model_db.base_syllable.BaseSyllable.from_dict" href="model_init.html#loglan_db.model_init.InitBase.from_dict">from_dict</a></code></li>
+<li><code><a title="loglan_db.model_db.base_syllable.BaseSyllable.get_all" href="model_init.html#loglan_db.model_init.DBBase.get_all">get_all</a></code></li>
+<li><code><a title="loglan_db.model_db.base_syllable.BaseSyllable.get_by_id" href="model_init.html#loglan_db.model_init.DBBase.get_by_id">get_by_id</a></code></li>
+<li><code><a title="loglan_db.model_db.base_syllable.BaseSyllable.id" href="model_db/base_syllable.html#loglan_db.model_db.base_syllable.BaseSyllable.id">id</a></code></li>
+<li><code><a title="loglan_db.model_db.base_syllable.BaseSyllable.import_" href="model_init.html#loglan_db.model_init.InitBase.import_">import_</a></code></li>
+<li><code><a title="loglan_db.model_db.base_syllable.BaseSyllable.name" href="model_db/base_syllable.html#loglan_db.model_db.base_syllable.BaseSyllable.name">name</a></code></li>
+<li><code><a title="loglan_db.model_db.base_syllable.BaseSyllable.non_foreign_keys" href="model_init.html#loglan_db.model_init.DBBase.non_foreign_keys">non_foreign_keys</a></code></li>
+<li><code><a title="loglan_db.model_db.base_syllable.BaseSyllable.relationships" href="model_init.html#loglan_db.model_init.DBBase.relationships">relationships</a></code></li>
+<li><code><a title="loglan_db.model_db.base_syllable.BaseSyllable.save" href="model_init.html#loglan_db.model_init.DBBase.save">save</a></code></li>
+<li><code><a title="loglan_db.model_db.base_syllable.BaseSyllable.stringer" href="model_init.html#loglan_db.model_init.InitBase.stringer">stringer</a></code></li>
+<li><code><a title="loglan_db.model_db.base_syllable.BaseSyllable.type" href="model_db/base_syllable.html#loglan_db.model_db.base_syllable.BaseSyllable.type">type</a></code></li>
+<li><code><a title="loglan_db.model_db.base_syllable.BaseSyllable.update" href="model_init.html#loglan_db.model_init.DBBase.update">update</a></code></li>
+<li><code><a title="loglan_db.model_db.base_syllable.BaseSyllable.updated" href="model_db/base_syllable.html#loglan_db.model_db.base_syllable.BaseSyllable.updated">updated</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="loglan_db.model_export.ExportType"><code class="flex name class">
+<span>class <span class="ident">ExportType</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>ExportType Class</p>
+<p>A simple constructor that allows initialization from kwargs.</p>
+<p>Sets attributes on the constructed instance using the names and
+values in <code>kwargs</code>.</p>
+<p>Only keys that are present as
+attributes of the instance's class are allowed. These could be,
+for example, any mapped columns or relationships.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="loglan_db.model_db.base_type.BaseType" href="model_db/base_type.html#loglan_db.model_db.base_type.BaseType">BaseType</a></li>
+<li>sqlalchemy.orm.decl_api.Model</li>
+<li>flask_sqlalchemy.model.Model</li>
+<li><a title="loglan_db.model_init.InitBase" href="model_init.html#loglan_db.model_init.InitBase">InitBase</a></li>
+<li><a title="loglan_db.model_init.DBBase" href="model_init.html#loglan_db.model_init.DBBase">DBBase</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="loglan_db.model_export.ExportType.description"><code class="name">var <span class="ident">description</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportType.group"><code class="name">var <span class="ident">group</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportType.parentable"><code class="name">var <span class="ident">parentable</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportType.type"><code class="name">var <span class="ident">type</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportType.type_x"><code class="name">var <span class="ident">type_x</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportType.words"><code class="name">var <span class="ident">words</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="loglan_db.model_export.ExportType.export"><code class="name flex">
+<span>def <span class="ident">export</span></span>(<span>self) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Prepare Type data for exporting to text file</p>
+<h2 id="returns">Returns</h2>
+<p>Formatted basic string</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="loglan_db.model_db.base_type.BaseType" href="model_db/base_type.html#loglan_db.model_db.base_type.BaseType">BaseType</a></b></code>:
+<ul class="hlist">
+<li><code><a title="loglan_db.model_db.base_type.BaseType.attributes_all" href="model_init.html#loglan_db.model_init.DBBase.attributes_all">attributes_all</a></code></li>
+<li><code><a title="loglan_db.model_db.base_type.BaseType.attributes_basic" href="model_init.html#loglan_db.model_init.DBBase.attributes_basic">attributes_basic</a></code></li>
+<li><code><a title="loglan_db.model_db.base_type.BaseType.attributes_extended" href="model_init.html#loglan_db.model_init.DBBase.attributes_extended">attributes_extended</a></code></li>
+<li><code><a title="loglan_db.model_db.base_type.BaseType.by" href="model_db/base_type.html#loglan_db.model_db.base_type.BaseType.by">by</a></code></li>
+<li><code><a title="loglan_db.model_db.base_type.BaseType.created" href="model_db/base_type.html#loglan_db.model_db.base_type.BaseType.created">created</a></code></li>
+<li><code><a title="loglan_db.model_db.base_type.BaseType.delete" href="model_init.html#loglan_db.model_init.DBBase.delete">delete</a></code></li>
+<li><code><a title="loglan_db.model_db.base_type.BaseType.foreign_keys" href="model_init.html#loglan_db.model_init.DBBase.foreign_keys">foreign_keys</a></code></li>
+<li><code><a title="loglan_db.model_db.base_type.BaseType.from_dict" href="model_init.html#loglan_db.model_init.InitBase.from_dict">from_dict</a></code></li>
+<li><code><a title="loglan_db.model_db.base_type.BaseType.get_all" href="model_init.html#loglan_db.model_init.DBBase.get_all">get_all</a></code></li>
+<li><code><a title="loglan_db.model_db.base_type.BaseType.get_by_id" href="model_init.html#loglan_db.model_init.DBBase.get_by_id">get_by_id</a></code></li>
+<li><code><a title="loglan_db.model_db.base_type.BaseType.id" href="model_db/base_type.html#loglan_db.model_db.base_type.BaseType.id">id</a></code></li>
+<li><code><a title="loglan_db.model_db.base_type.BaseType.import_" href="model_init.html#loglan_db.model_init.InitBase.import_">import_</a></code></li>
+<li><code><a title="loglan_db.model_db.base_type.BaseType.non_foreign_keys" href="model_init.html#loglan_db.model_init.DBBase.non_foreign_keys">non_foreign_keys</a></code></li>
+<li><code><a title="loglan_db.model_db.base_type.BaseType.relationships" href="model_init.html#loglan_db.model_init.DBBase.relationships">relationships</a></code></li>
+<li><code><a title="loglan_db.model_db.base_type.BaseType.save" href="model_init.html#loglan_db.model_init.DBBase.save">save</a></code></li>
+<li><code><a title="loglan_db.model_db.base_type.BaseType.stringer" href="model_init.html#loglan_db.model_init.InitBase.stringer">stringer</a></code></li>
+<li><code><a title="loglan_db.model_db.base_type.BaseType.update" href="model_init.html#loglan_db.model_init.DBBase.update">update</a></code></li>
+<li><code><a title="loglan_db.model_db.base_type.BaseType.updated" href="model_db/base_type.html#loglan_db.model_db.base_type.BaseType.updated">updated</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="loglan_db.model_export.ExportWord"><code class="flex name class">
+<span>class <span class="ident">ExportWord</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>ExportWord Class</p>
+<p>A simple constructor that allows initialization from kwargs.</p>
+<p>Sets attributes on the constructed instance using the names and
+values in <code>kwargs</code>.</p>
+<p>Only keys that are present as
+attributes of the instance's class are allowed. These could be,
+for example, any mapped columns or relationships.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="loglan_db.model_db.base_word.BaseWord" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord">BaseWord</a></li>
+<li>sqlalchemy.orm.decl_api.Model</li>
+<li>flask_sqlalchemy.model.Model</li>
+<li><a title="loglan_db.model_init.InitBase" href="model_init.html#loglan_db.model_init.InitBase">InitBase</a></li>
+<li><a title="loglan_db.model_init.DBBase" href="model_init.html#loglan_db.model_init.DBBase">DBBase</a></li>
+<li><a title="loglan_db.model_export.AddonExportWordConverter" href="#loglan_db.model_export.AddonExportWordConverter">AddonExportWordConverter</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="loglan_db.model_export.ExportWord.TID_old"><code class="name">var <span class="ident">TID_old</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWord.authors"><code class="name">var <span class="ident">authors</span> : flask_sqlalchemy.BaseQuery</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWord.definitions"><code class="name">var <span class="ident">definitions</span> : flask_sqlalchemy.BaseQuery</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWord.event_end"><code class="name">var <span class="ident">event_end</span> : <a title="loglan_db.model_db.base_event.BaseEvent" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent">BaseEvent</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWord.event_end_id"><code class="name">var <span class="ident">event_end_id</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWord.event_start"><code class="name">var <span class="ident">event_start</span> : <a title="loglan_db.model_db.base_event.BaseEvent" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent">BaseEvent</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWord.event_start_id"><code class="name">var <span class="ident">event_start_id</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWord.id_old"><code class="name">var <span class="ident">id_old</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWord.match"><code class="name">var <span class="ident">match</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWord.name"><code class="name">var <span class="ident">name</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWord.notes"><code class="name">var <span class="ident">notes</span> : Dict[str, str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWord.origin"><code class="name">var <span class="ident">origin</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWord.origin_x"><code class="name">var <span class="ident">origin_x</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWord.rank"><code class="name">var <span class="ident">rank</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWord.type"><code class="name">var <span class="ident">type</span> : <a title="loglan_db.model_db.base_type.BaseType" href="model_db/base_type.html#loglan_db.model_db.base_type.BaseType">BaseType</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWord.type_id"><code class="name">var <span class="ident">type_id</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWord.year"><code class="name">var <span class="ident">year</span> : datetime.datetime</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="loglan_db.model_export.ExportWord.export"><code class="name flex">
+<span>def <span class="ident">export</span></span>(<span>self) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Prepare Word data for exporting to text file</p>
+<h2 id="returns">Returns</h2>
+<p>Formatted basic string</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="loglan_db.model_db.base_word.BaseWord" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord">BaseWord</a></b></code>:
+<ul class="hlist">
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.add_query_filters" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.add_query_filters">add_query_filters</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.affixes" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.affixes">affixes</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.attributes_all" href="model_init.html#loglan_db.model_init.DBBase.attributes_all">attributes_all</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.attributes_basic" href="model_init.html#loglan_db.model_init.DBBase.attributes_basic">attributes_basic</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.attributes_extended" href="model_init.html#loglan_db.model_init.DBBase.attributes_extended">attributes_extended</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.complexes" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.complexes">complexes</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.created" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.created">created</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.delete" href="model_init.html#loglan_db.model_init.DBBase.delete">delete</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.foreign_keys" href="model_init.html#loglan_db.model_init.DBBase.foreign_keys">foreign_keys</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.from_dict" href="model_init.html#loglan_db.model_init.InitBase.from_dict">from_dict</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.get_all" href="model_init.html#loglan_db.model_init.DBBase.get_all">get_all</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.get_by_id" href="model_init.html#loglan_db.model_init.DBBase.get_by_id">get_by_id</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.id" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.id">id</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.import_" href="model_init.html#loglan_db.model_init.InitBase.import_">import_</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.keys" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.keys">keys</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.non_foreign_keys" href="model_init.html#loglan_db.model_init.DBBase.non_foreign_keys">non_foreign_keys</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.parents" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.parents">parents</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.query_afx" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.query_afx">query_afx</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.query_cpx" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.query_cpx">query_cpx</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.query_derivatives" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.query_derivatives">query_derivatives</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.query_keys" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.query_keys">query_keys</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.relationships" href="model_init.html#loglan_db.model_init.DBBase.relationships">relationships</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.save" href="model_init.html#loglan_db.model_init.DBBase.save">save</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.stringer" href="model_init.html#loglan_db.model_init.InitBase.stringer">stringer</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.update" href="model_init.html#loglan_db.model_init.DBBase.update">update</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.updated" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.updated">updated</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="loglan_db.model_export.AddonExportWordConverter" href="#loglan_db.model_export.AddonExportWordConverter">AddonExportWordConverter</a></b></code>:
+<ul class="hlist">
+<li><code><a title="loglan_db.model_export.AddonExportWordConverter.e_affixes" href="#loglan_db.model_export.AddonExportWordConverter.e_affixes">e_affixes</a></code></li>
+<li><code><a title="loglan_db.model_export.AddonExportWordConverter.e_rank" href="#loglan_db.model_export.AddonExportWordConverter.e_rank">e_rank</a></code></li>
+<li><code><a title="loglan_db.model_export.AddonExportWordConverter.e_source" href="#loglan_db.model_export.AddonExportWordConverter.e_source">e_source</a></code></li>
+<li><code><a title="loglan_db.model_export.AddonExportWordConverter.e_usedin" href="#loglan_db.model_export.AddonExportWordConverter.e_usedin">e_usedin</a></code></li>
+<li><code><a title="loglan_db.model_export.AddonExportWordConverter.e_year" href="#loglan_db.model_export.AddonExportWordConverter.e_year">e_year</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="loglan_db.model_export.ExportWordSpell"><code class="flex name class">
+<span>class <span class="ident">ExportWordSpell</span></span>
+<span>(</span><span>**kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>ExportWordSpell Class</p>
+<p>A simple constructor that allows initialization from kwargs.</p>
+<p>Sets attributes on the constructed instance using the names and
+values in <code>kwargs</code>.</p>
+<p>Only keys that are present as
+attributes of the instance's class are allowed. These could be,
+for example, any mapped columns or relationships.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="loglan_db.model_db.base_word_spell.BaseWordSpell" href="model_db/base_word_spell.html#loglan_db.model_db.base_word_spell.BaseWordSpell">BaseWordSpell</a></li>
+<li><a title="loglan_db.model_db.base_word.BaseWord" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord">BaseWord</a></li>
+<li>sqlalchemy.orm.decl_api.Model</li>
+<li>flask_sqlalchemy.model.Model</li>
+<li><a title="loglan_db.model_init.InitBase" href="model_init.html#loglan_db.model_init.InitBase">InitBase</a></li>
+<li><a title="loglan_db.model_init.DBBase" href="model_init.html#loglan_db.model_init.DBBase">DBBase</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="loglan_db.model_export.ExportWordSpell.TID_old"><code class="name">var <span class="ident">TID_old</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWordSpell.authors"><code class="name">var <span class="ident">authors</span> : flask_sqlalchemy.BaseQuery</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWordSpell.definitions"><code class="name">var <span class="ident">definitions</span> : flask_sqlalchemy.BaseQuery</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWordSpell.event_end"><code class="name">var <span class="ident">event_end</span> : <a title="loglan_db.model_db.base_event.BaseEvent" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent">BaseEvent</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWordSpell.event_end_id"><code class="name">var <span class="ident">event_end_id</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWordSpell.event_start"><code class="name">var <span class="ident">event_start</span> : <a title="loglan_db.model_db.base_event.BaseEvent" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent">BaseEvent</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWordSpell.event_start_id"><code class="name">var <span class="ident">event_start_id</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWordSpell.id_old"><code class="name">var <span class="ident">id_old</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWordSpell.match"><code class="name">var <span class="ident">match</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWordSpell.name"><code class="name">var <span class="ident">name</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWordSpell.notes"><code class="name">var <span class="ident">notes</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWordSpell.origin"><code class="name">var <span class="ident">origin</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWordSpell.origin_x"><code class="name">var <span class="ident">origin_x</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWordSpell.rank"><code class="name">var <span class="ident">rank</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWordSpell.type"><code class="name">var <span class="ident">type</span> : <a title="loglan_db.model_db.base_type.BaseType" href="model_db/base_type.html#loglan_db.model_db.base_type.BaseType">BaseType</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWordSpell.type_id"><code class="name">var <span class="ident">type_id</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_export.ExportWordSpell.year"><code class="name">var <span class="ident">year</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="loglan_db.model_export.ExportWordSpell.export"><code class="name flex">
+<span>def <span class="ident">export</span></span>(<span>self) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Prepare WordSpell data for exporting to text file</p>
+<h2 id="returns">Returns</h2>
+<p>Formatted basic string</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="loglan_db.model_db.base_word_spell.BaseWordSpell" href="model_db/base_word_spell.html#loglan_db.model_db.base_word_spell.BaseWordSpell">BaseWordSpell</a></b></code>:
+<ul class="hlist">
+<li><code><a title="loglan_db.model_db.base_word_spell.BaseWordSpell.from_dict" href="model_init.html#loglan_db.model_init.InitBase.from_dict">from_dict</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word_spell.BaseWordSpell.import_" href="model_init.html#loglan_db.model_init.InitBase.import_">import_</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word_spell.BaseWordSpell.stringer" href="model_init.html#loglan_db.model_init.InitBase.stringer">stringer</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="loglan_db.model_db.base_word.BaseWord" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord">BaseWord</a></b></code>:
+<ul class="hlist">
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.created" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.created">created</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.id" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.id">id</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.updated" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.updated">updated</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="loglan_db.model_db.base_word.BaseWord" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord">BaseWord</a></b></code>:
+<ul class="hlist">
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.add_query_filters" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.add_query_filters">add_query_filters</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.affixes" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.affixes">affixes</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.attributes_all" href="model_init.html#loglan_db.model_init.DBBase.attributes_all">attributes_all</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.attributes_basic" href="model_init.html#loglan_db.model_init.DBBase.attributes_basic">attributes_basic</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.attributes_extended" href="model_init.html#loglan_db.model_init.DBBase.attributes_extended">attributes_extended</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.complexes" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.complexes">complexes</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.delete" href="model_init.html#loglan_db.model_init.DBBase.delete">delete</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.foreign_keys" href="model_init.html#loglan_db.model_init.DBBase.foreign_keys">foreign_keys</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.get_all" href="model_init.html#loglan_db.model_init.DBBase.get_all">get_all</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.get_by_id" href="model_init.html#loglan_db.model_init.DBBase.get_by_id">get_by_id</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.keys" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.keys">keys</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.non_foreign_keys" href="model_init.html#loglan_db.model_init.DBBase.non_foreign_keys">non_foreign_keys</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.parents" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.parents">parents</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.query_afx" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.query_afx">query_afx</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.query_cpx" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.query_cpx">query_cpx</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.query_derivatives" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.query_derivatives">query_derivatives</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.query_keys" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.query_keys">query_keys</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.relationships" href="model_init.html#loglan_db.model_init.DBBase.relationships">relationships</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.save" href="model_init.html#loglan_db.model_init.DBBase.save">save</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.update" href="model_init.html#loglan_db.model_init.DBBase.update">update</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="loglan_db" href="index.html">loglan_db</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="loglan_db.model_export.AddonExportWordConverter" href="#loglan_db.model_export.AddonExportWordConverter">AddonExportWordConverter</a></code></h4>
+<ul class="two-column">
+<li><code><a title="loglan_db.model_export.AddonExportWordConverter.affixes" href="#loglan_db.model_export.AddonExportWordConverter.affixes">affixes</a></code></li>
+<li><code><a title="loglan_db.model_export.AddonExportWordConverter.authors" href="#loglan_db.model_export.AddonExportWordConverter.authors">authors</a></code></li>
+<li><code><a title="loglan_db.model_export.AddonExportWordConverter.complexes" href="#loglan_db.model_export.AddonExportWordConverter.complexes">complexes</a></code></li>
+<li><code><a title="loglan_db.model_export.AddonExportWordConverter.e_affixes" href="#loglan_db.model_export.AddonExportWordConverter.e_affixes">e_affixes</a></code></li>
+<li><code><a title="loglan_db.model_export.AddonExportWordConverter.e_rank" href="#loglan_db.model_export.AddonExportWordConverter.e_rank">e_rank</a></code></li>
+<li><code><a title="loglan_db.model_export.AddonExportWordConverter.e_source" href="#loglan_db.model_export.AddonExportWordConverter.e_source">e_source</a></code></li>
+<li><code><a title="loglan_db.model_export.AddonExportWordConverter.e_usedin" href="#loglan_db.model_export.AddonExportWordConverter.e_usedin">e_usedin</a></code></li>
+<li><code><a title="loglan_db.model_export.AddonExportWordConverter.e_year" href="#loglan_db.model_export.AddonExportWordConverter.e_year">e_year</a></code></li>
+<li><code><a title="loglan_db.model_export.AddonExportWordConverter.notes" href="#loglan_db.model_export.AddonExportWordConverter.notes">notes</a></code></li>
+<li><code><a title="loglan_db.model_export.AddonExportWordConverter.rank" href="#loglan_db.model_export.AddonExportWordConverter.rank">rank</a></code></li>
+<li><code><a title="loglan_db.model_export.AddonExportWordConverter.year" href="#loglan_db.model_export.AddonExportWordConverter.year">year</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="loglan_db.model_export.ExportAuthor" href="#loglan_db.model_export.ExportAuthor">ExportAuthor</a></code></h4>
+<ul class="">
+<li><code><a title="loglan_db.model_export.ExportAuthor.contribution" href="#loglan_db.model_export.ExportAuthor.contribution">contribution</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportAuthor.export" href="#loglan_db.model_export.ExportAuthor.export">export</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="loglan_db.model_export.ExportDefinition" href="#loglan_db.model_export.ExportDefinition">ExportDefinition</a></code></h4>
+<ul class="two-column">
+<li><code><a title="loglan_db.model_export.ExportDefinition.body" href="#loglan_db.model_export.ExportDefinition.body">body</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportDefinition.case_tags" href="#loglan_db.model_export.ExportDefinition.case_tags">case_tags</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportDefinition.e_grammar" href="#loglan_db.model_export.ExportDefinition.e_grammar">e_grammar</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportDefinition.export" href="#loglan_db.model_export.ExportDefinition.export">export</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportDefinition.grammar_code" href="#loglan_db.model_export.ExportDefinition.grammar_code">grammar_code</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportDefinition.keys" href="#loglan_db.model_export.ExportDefinition.keys">keys</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportDefinition.language" href="#loglan_db.model_export.ExportDefinition.language">language</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportDefinition.notes" href="#loglan_db.model_export.ExportDefinition.notes">notes</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportDefinition.position" href="#loglan_db.model_export.ExportDefinition.position">position</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportDefinition.slots" href="#loglan_db.model_export.ExportDefinition.slots">slots</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportDefinition.source_word" href="#loglan_db.model_export.ExportDefinition.source_word">source_word</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportDefinition.usage" href="#loglan_db.model_export.ExportDefinition.usage">usage</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportDefinition.word_id" href="#loglan_db.model_export.ExportDefinition.word_id">word_id</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="loglan_db.model_export.ExportEvent" href="#loglan_db.model_export.ExportEvent">ExportEvent</a></code></h4>
+<ul class="">
+<li><code><a title="loglan_db.model_export.ExportEvent.appeared_words" href="#loglan_db.model_export.ExportEvent.appeared_words">appeared_words</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportEvent.deprecated_words" href="#loglan_db.model_export.ExportEvent.deprecated_words">deprecated_words</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportEvent.export" href="#loglan_db.model_export.ExportEvent.export">export</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="loglan_db.model_export.ExportSetting" href="#loglan_db.model_export.ExportSetting">ExportSetting</a></code></h4>
+<ul class="">
+<li><code><a title="loglan_db.model_export.ExportSetting.export" href="#loglan_db.model_export.ExportSetting.export">export</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="loglan_db.model_export.ExportSyllable" href="#loglan_db.model_export.ExportSyllable">ExportSyllable</a></code></h4>
+<ul class="">
+<li><code><a title="loglan_db.model_export.ExportSyllable.export" href="#loglan_db.model_export.ExportSyllable.export">export</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="loglan_db.model_export.ExportType" href="#loglan_db.model_export.ExportType">ExportType</a></code></h4>
+<ul class="two-column">
+<li><code><a title="loglan_db.model_export.ExportType.description" href="#loglan_db.model_export.ExportType.description">description</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportType.export" href="#loglan_db.model_export.ExportType.export">export</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportType.group" href="#loglan_db.model_export.ExportType.group">group</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportType.parentable" href="#loglan_db.model_export.ExportType.parentable">parentable</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportType.type" href="#loglan_db.model_export.ExportType.type">type</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportType.type_x" href="#loglan_db.model_export.ExportType.type_x">type_x</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportType.words" href="#loglan_db.model_export.ExportType.words">words</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="loglan_db.model_export.ExportWord" href="#loglan_db.model_export.ExportWord">ExportWord</a></code></h4>
+<ul class="two-column">
+<li><code><a title="loglan_db.model_export.ExportWord.TID_old" href="#loglan_db.model_export.ExportWord.TID_old">TID_old</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWord.authors" href="#loglan_db.model_export.ExportWord.authors">authors</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWord.definitions" href="#loglan_db.model_export.ExportWord.definitions">definitions</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWord.event_end" href="#loglan_db.model_export.ExportWord.event_end">event_end</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWord.event_end_id" href="#loglan_db.model_export.ExportWord.event_end_id">event_end_id</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWord.event_start" href="#loglan_db.model_export.ExportWord.event_start">event_start</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWord.event_start_id" href="#loglan_db.model_export.ExportWord.event_start_id">event_start_id</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWord.export" href="#loglan_db.model_export.ExportWord.export">export</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWord.id_old" href="#loglan_db.model_export.ExportWord.id_old">id_old</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWord.match" href="#loglan_db.model_export.ExportWord.match">match</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWord.name" href="#loglan_db.model_export.ExportWord.name">name</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWord.notes" href="#loglan_db.model_export.ExportWord.notes">notes</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWord.origin" href="#loglan_db.model_export.ExportWord.origin">origin</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWord.origin_x" href="#loglan_db.model_export.ExportWord.origin_x">origin_x</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWord.rank" href="#loglan_db.model_export.ExportWord.rank">rank</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWord.type" href="#loglan_db.model_export.ExportWord.type">type</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWord.type_id" href="#loglan_db.model_export.ExportWord.type_id">type_id</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWord.year" href="#loglan_db.model_export.ExportWord.year">year</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="loglan_db.model_export.ExportWordSpell" href="#loglan_db.model_export.ExportWordSpell">ExportWordSpell</a></code></h4>
+<ul class="two-column">
+<li><code><a title="loglan_db.model_export.ExportWordSpell.TID_old" href="#loglan_db.model_export.ExportWordSpell.TID_old">TID_old</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWordSpell.authors" href="#loglan_db.model_export.ExportWordSpell.authors">authors</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWordSpell.definitions" href="#loglan_db.model_export.ExportWordSpell.definitions">definitions</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWordSpell.event_end" href="#loglan_db.model_export.ExportWordSpell.event_end">event_end</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWordSpell.event_end_id" href="#loglan_db.model_export.ExportWordSpell.event_end_id">event_end_id</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWordSpell.event_start" href="#loglan_db.model_export.ExportWordSpell.event_start">event_start</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWordSpell.event_start_id" href="#loglan_db.model_export.ExportWordSpell.event_start_id">event_start_id</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWordSpell.export" href="#loglan_db.model_export.ExportWordSpell.export">export</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWordSpell.id_old" href="#loglan_db.model_export.ExportWordSpell.id_old">id_old</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWordSpell.match" href="#loglan_db.model_export.ExportWordSpell.match">match</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWordSpell.name" href="#loglan_db.model_export.ExportWordSpell.name">name</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWordSpell.notes" href="#loglan_db.model_export.ExportWordSpell.notes">notes</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWordSpell.origin" href="#loglan_db.model_export.ExportWordSpell.origin">origin</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWordSpell.origin_x" href="#loglan_db.model_export.ExportWordSpell.origin_x">origin_x</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWordSpell.rank" href="#loglan_db.model_export.ExportWordSpell.rank">rank</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWordSpell.type" href="#loglan_db.model_export.ExportWordSpell.type">type</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWordSpell.type_id" href="#loglan_db.model_export.ExportWordSpell.type_id">type_id</a></code></li>
+<li><code><a title="loglan_db.model_export.ExportWordSpell.year" href="#loglan_db.model_export.ExportWordSpell.year">year</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+</footer>
+</body>
+</html>
