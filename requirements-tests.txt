@@ -8,6 +8,4 @@ coveragepy
 pylint-flask-sqlalchemy
 pylint-flask
 scrutinizer-ocular
-radon
-mypy
 sqlalchemy-stubs

@@ -1,0 +1,4 @@
+pycrunch-engine==1.2.1
+pycrunch
+radon
+mypy
