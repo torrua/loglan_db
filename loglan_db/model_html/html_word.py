@@ -120,8 +120,7 @@ class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExport
     def html_all_by_name(
             cls, name: str, style: str = DEFAULT_HTML_STYLE,
             event_id: Union[BaseEvent, int, str] = None,
-            case_sensitive: bool = False,
-            partial_results: bool = False) -> Optional[str]:
+            case_sensitive: bool = False) -> Optional[str]:
         """
         Convert all words found by name into one HTML string
         Args:
@@ -129,7 +128,6 @@ class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExport
             style: HTML design style
             event_id:
             case_sensitive:
-            partial_results:
         Returns:
 
         """
@@ -146,8 +144,7 @@ class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExport
 
         words = cls.by_name(
             name=name, event_id=event_id,
-            case_sensitive=case_sensitive,
-            partial_results=partial_results
+            case_sensitive=case_sensitive
         ).all()
 
         if not words:

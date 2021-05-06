@@ -56,9 +56,6 @@ class TestWord:
         result = Word.by_name("duo").first()
         assert isinstance(result, Word)
 
-        result = Word.by_name("Duo", case_sensitive=True).first()
-        assert result is None
-
     def test_by_key(self):
         db_add_objects(Word, words)
         db_add_objects(Definition, definitions)
@@ -69,9 +66,6 @@ class TestWord:
 
         result = Word.by_key("test").count()
         assert result == 5
-
-        result = Word.by_key("Test", case_sensitive=True).count()
-        assert result == 0
 
         result = Word.by_key("Test").count()
         assert result == 5

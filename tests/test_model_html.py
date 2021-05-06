@@ -262,9 +262,6 @@ class TestWord:
         result = Word.html_all_by_name("pruci", style="normal", event_id=1)
         assert result == expected_result_normal
 
-        result = Word.html_all_by_name("Pruci", style="normal", case_sensitive=True)
-        assert result is None
-
         expected_result_normal = """<div class="words">
 <div class="word" wid="pru">
 <div class="word_line"><span class="word_name">pru</span>,</div>
@@ -309,10 +306,10 @@ class TestWord:
 </div>
 </div>
 """
-        result = Word.html_all_by_name("pru", style="normal", case_sensitive=True, partial_results=True)
+        result = Word.html_all_by_name("pru*", style="normal", case_sensitive=True)
         assert result == expected_result_normal
 
-        result = Word.html_all_by_name("Pru", style="normal", case_sensitive=False, partial_results=True)
+        result = Word.html_all_by_name("Pru*", style="normal", case_sensitive=False)
         assert result == expected_result_normal
 
     def test_definitions_by_key(self):

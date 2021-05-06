@@ -51,15 +51,11 @@ class AddonWordGetter:
             .filter(or_(BaseWord.event_end_id > event_id, BaseWord.event_end_id.is_(None)))
 
     @classmethod
-    def by_name(
-            cls, name: str, event_id: Union[BaseEvent, int] = None,
-            case_sensitive: bool = False,
-            partial_results: bool = False,
-            add_to: BaseQuery = None) -> BaseQuery:
+    def by_name(cls, name: str, event_id: Union[BaseEvent, int] = None, case_sensitive: bool = False,
+                add_to: BaseQuery = None) -> BaseQuery:
         """Word.Query filtered by specified name
 
         Args:
-          partial_results:
           event_id:
           name: str:
           case_sensitive: bool:  (Default value = False)
@@ -70,13 +66,10 @@ class AddonWordGetter:
         """
 
         request = add_to if add_to else cls.query
-        request = cls.by_event(event_id, request)
-
-        if case_sensitive:
-            return cls._filter_word_case_sensitive(
-                key=name, partial_results=partial_results, add_to=request)
-        return cls._filter_word_case_insensitive(
-            key=name, partial_results=partial_results, add_to=request)
+        name = name.replace("*", "%")
+        return cls.by_event(event_id, request).filter(
+            BaseWord.name.like(name) if not case_sensitive else BaseWord.name.ilike(name)
+        )
 
     @classmethod
     def by_key(
@@ -126,15 +119,3 @@ class AddonWordGetter:
             key: str, partial_results: bool, add_to: BaseQuery) -> BaseQuery:
         return add_to.filter(BaseKey.word.ilike(f"{key}%")) \
             if partial_results else add_to.filter(BaseKey.word.ilike(key))
-
-    @staticmethod
-    def _filter_word_case_sensitive(
-            key: str, partial_results: bool, add_to: BaseQuery) -> BaseQuery:
-        return add_to.filter(BaseWord.name.like(f"{key}%")) \
-            if partial_results else add_to.filter(BaseWord.name == key)
-
-    @staticmethod
-    def _filter_word_case_insensitive(
-            key: str, partial_results: bool, add_to: BaseQuery) -> BaseQuery:
-        return add_to.filter(BaseWord.name.ilike(f"{key}%")) \
-            if partial_results else add_to.filter(BaseWord.name.ilike(key))
