@@ -33,8 +33,7 @@ class AddonWordTranslator:
     def definitions_by_key(
             key: str, words: List[BaseWord],
             style: str = DEFAULT_HTML_STYLE,
-            case_sensitive: bool = False,
-            partial_results: bool = False) -> dict:
+            case_sensitive: bool = False) -> dict:
         """
 
         Args:
@@ -42,22 +41,19 @@ class AddonWordTranslator:
             words:
             style:
             case_sensitive:
-            partial_results:
         Returns:
 
         """
 
         def conditions(
                 x_key: str, x_keys: list,
-                x_case_sensitive: bool,
-                x_partial_results: bool) -> bool:
+                x_case_sensitive: bool) -> bool:
             current_keys = [k.word for k in x_keys] if \
                 x_case_sensitive else [k.word.lower() for k in x_keys]
             current_key = x_key if x_case_sensitive else x_key.lower()
 
-            if x_partial_results:
-                return any([k.startswith(current_key) for k in current_keys])
-            return current_key in current_keys
+            import fnmatch
+            return bool(fnmatch.filter(current_keys, current_key))
 
         result: Dict[str, List[str]] = {}
         for word in words:
@@ -65,18 +61,13 @@ class AddonWordTranslator:
             definitions = [
                 HTMLExportDefinition.export_for_english(d, word=key, style=style)
                 for d in word.definitions if conditions(
-                    key, d.keys, case_sensitive, partial_results
-                )]
+                    key, d.keys, case_sensitive)]
             result[word.name].extend(definitions)
         return result
 
     @staticmethod
-    def translation_by_key(
-            key: str, language: str = None,
-            style: str = DEFAULT_HTML_STYLE,
-            event_id: Union[BaseEvent, int, str] = None,
-            case_sensitive: bool = False,
-            partial_results: bool = False) -> Optional[str]:
+    def translation_by_key(key: str, language: str = None, style: str = DEFAULT_HTML_STYLE,
+                           event_id: Union[BaseEvent, int, str] = None, case_sensitive: bool = False) -> Optional[str]:
         """
         Get information about loglan words by key in a foreign language
         Args:
@@ -85,25 +76,17 @@ class AddonWordTranslator:
             style:
             event_id:
             case_sensitive:
-            partial_results:
         Returns:
 
         """
 
-        words = HTMLExportWord.by_key(
-            key=key, language=language,
-            event_id=event_id,
-            case_sensitive=case_sensitive,
-            partial_results=partial_results
-        ).all()
+        words = HTMLExportWord.by_key(key=key, language=language, event_id=event_id,
+                                      case_sensitive=case_sensitive).all()
         [print(word.name, word.id) for word in words]
         if not words:
             return None
 
-        result = HTMLExportWord.definitions_by_key(
-            key=key, words=words, style=style,
-            case_sensitive=case_sensitive,
-            partial_results=partial_results)
+        result = HTMLExportWord.definitions_by_key(key=key, words=words, style=style, case_sensitive=case_sensitive)
 
         new = '\n'
 

@@ -325,19 +325,14 @@ class TestWord:
         db_connect_words(connect_words)
         db_connect_keys(connect_keys)
 
-        current_words = Word.by_key(
-            "test", case_sensitive=True, partial_results=True).all()
+        current_words = Word.by_key("test*", case_sensitive=True).all()
 
-        current_definitions = Word.definitions_by_key(
-            "test", current_words, case_sensitive=True,
-            partial_results=True).values()
+        current_definitions = Word.definitions_by_key("test*", current_words, case_sensitive=True).values()
         ab = itertools.chain(*current_definitions)
         result = len(list(ab))
         assert result == 10
 
-        current_definitions = Word.definitions_by_key(
-            "test", current_words, case_sensitive=True,
-            partial_results=False).values()
+        current_definitions = Word.definitions_by_key("test", current_words, case_sensitive=True).values()
         ab = itertools.chain(*current_definitions)
         result = len(list(ab))
         assert result == 5

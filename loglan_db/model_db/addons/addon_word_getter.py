@@ -72,13 +72,8 @@ class AddonWordGetter:
         )
 
     @classmethod
-    def by_key(
-            cls, key: Union[BaseKey, str],
-            language: str = None,
-            event_id: Union[BaseEvent, int] = None,
-            case_sensitive: bool = False,
-            partial_results: bool = False,
-            add_to: BaseQuery = None) -> BaseQuery:
+    def by_key(cls, key: Union[BaseKey, str], language: str = None, event_id: Union[BaseEvent, int] = None,
+               case_sensitive: bool = False, add_to: BaseQuery = None) -> BaseQuery:
         """Word.Query filtered by specified key
 
         Args:
@@ -86,7 +81,6 @@ class AddonWordGetter:
           language: str: Language of key (Default value = None)
           event_id: Union[BaseEvent, int]:  (Default value = None)
           case_sensitive: bool:  (Default value = False)
-          partial_results: bool:
           add_to:
         Returns:
           BaseQuery
@@ -96,26 +90,11 @@ class AddonWordGetter:
         request = add_to if add_to else cls.query
         request = cls.by_event(event_id, request)
 
-        key = BaseKey.word if isinstance(key, BaseKey) else str(key)
-        request = request.join(BaseDefinition, t_connect_keys, BaseKey)
-
-        if case_sensitive:
-            request = cls._filter_key_case_sensitive(key, partial_results, request)
-        request = cls._filter_key_case_insensitive(key, partial_results, request)
+        key = (BaseKey.word if isinstance(key, BaseKey) else str(key)).replace("*", "%")
+        request = request.join(BaseDefinition, t_connect_keys, BaseKey).filter(
+            BaseKey.word.like(key) if case_sensitive else BaseKey.word.ilike(key))
 
         if language:
             request = request.filter(BaseKey.language == language)
 
         return request.order_by(cls.name)
-
-    @staticmethod
-    def _filter_key_case_sensitive(
-            key: str, partial_results: bool, add_to: BaseQuery) -> BaseQuery:
-        return add_to.filter(BaseKey.word.like(f"{key}%")) \
-            if partial_results else add_to.filter(BaseKey.word == key)
-
-    @staticmethod
-    def _filter_key_case_insensitive(
-            key: str, partial_results: bool, add_to: BaseQuery) -> BaseQuery:
-        return add_to.filter(BaseKey.word.ilike(f"{key}%")) \
-            if partial_results else add_to.filter(BaseKey.word.ilike(key))
