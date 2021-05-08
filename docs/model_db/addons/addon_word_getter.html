@@ -80,7 +80,7 @@ which makes it possible to get words by event, name or key</p>
 <p>BaseQuery</p></div>
 </dd>
 <dt id="loglan_db.model_db.addons.addon_word_getter.AddonWordGetter.by_key"><code class="name flex">
-<span>def <span class="ident">by_key</span></span>(<span>key: Union[<a title="loglan_db.model_db.base_key.BaseKey" href="../base_key.html#loglan_db.model_db.base_key.BaseKey">BaseKey</a>, str], language: str = None, event_id: Union[<a title="loglan_db.model_db.base_event.BaseEvent" href="../base_event.html#loglan_db.model_db.base_event.BaseEvent">BaseEvent</a>, int] = None, case_sensitive: bool = False, partial_results: bool = False, add_to: flask_sqlalchemy.BaseQuery = None) ‑> flask_sqlalchemy.BaseQuery</span>
+<span>def <span class="ident">by_key</span></span>(<span>key: Union[<a title="loglan_db.model_db.base_key.BaseKey" href="../base_key.html#loglan_db.model_db.base_key.BaseKey">BaseKey</a>, str], language: str = None, event_id: Union[<a title="loglan_db.model_db.base_event.BaseEvent" href="../base_event.html#loglan_db.model_db.base_event.BaseEvent">BaseEvent</a>, int] = None, case_sensitive: bool = False, add_to: flask_sqlalchemy.BaseQuery = None) ‑> flask_sqlalchemy.BaseQuery</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Word.Query filtered by specified key</p>
@@ -96,21 +96,18 @@ which makes it possible to get words by event, name or key</p>
 <dt><strong><code>case_sensitive</code></strong></dt>
 <dd>bool:
 (Default value = False)</dd>
-<dt><strong><code>partial_results</code></strong></dt>
-<dd>bool:</dd>
 </dl>
 <p>add_to:</p>
 <h2 id="returns">Returns</h2>
 <p>BaseQuery</p></div>
 </dd>
 <dt id="loglan_db.model_db.addons.addon_word_getter.AddonWordGetter.by_name"><code class="name flex">
-<span>def <span class="ident">by_name</span></span>(<span>name: str, event_id: Union[<a title="loglan_db.model_db.base_event.BaseEvent" href="../base_event.html#loglan_db.model_db.base_event.BaseEvent">BaseEvent</a>, int] = None, case_sensitive: bool = False, partial_results: bool = False, add_to: flask_sqlalchemy.BaseQuery = None) ‑> flask_sqlalchemy.BaseQuery</span>
+<span>def <span class="ident">by_name</span></span>(<span>name: str, event_id: Union[<a title="loglan_db.model_db.base_event.BaseEvent" href="../base_event.html#loglan_db.model_db.base_event.BaseEvent">BaseEvent</a>, int] = None, case_sensitive: bool = False, add_to: flask_sqlalchemy.BaseQuery = None) ‑> flask_sqlalchemy.BaseQuery</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Word.Query filtered by specified name</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt>partial_results:</dt>
 <dt>event_id:</dt>
 <dt><strong><code>name</code></strong></dt>
 <dd>str:</dd>

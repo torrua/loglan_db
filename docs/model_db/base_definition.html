@@ -72,7 +72,7 @@ for example, any mapped columns or relationships.</p></div>
 <h3>Static methods</h3>
 <dl>
 <dt id="loglan_db.model_db.base_definition.BaseDefinition.by_key"><code class="name flex">
-<span>def <span class="ident">by_key</span></span>(<span>key: Union[<a title="loglan_db.model_db.base_key.BaseKey" href="base_key.html#loglan_db.model_db.base_key.BaseKey">BaseKey</a>, str], language: str = None, case_sensitive: bool = False, partial_results: bool = False) ‑> flask_sqlalchemy.BaseQuery</span>
+<span>def <span class="ident">by_key</span></span>(<span>key: Union[<a title="loglan_db.model_db.base_key.BaseKey" href="base_key.html#loglan_db.model_db.base_key.BaseKey">BaseKey</a>, str], language: str = None, case_sensitive: bool = False) ‑> flask_sqlalchemy.BaseQuery</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Definition.Query filtered by specified key</p>
@@ -83,9 +83,6 @@ for example, any mapped columns or relationships.</p></div>
 <dt><strong><code>language</code></strong></dt>
 <dd>str: Language of key (Default value = None)</dd>
 <dt><strong><code>case_sensitive</code></strong></dt>
-<dd>bool:
-(Default value = False)</dd>
-<dt><strong><code>partial_results</code></strong></dt>
 <dd>bool:
 (Default value = False)</dd>
 </dl>

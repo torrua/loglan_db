@@ -45,7 +45,7 @@
 <h3>Static methods</h3>
 <dl>
 <dt id="loglan_db.model_html.html_word.AddonWordTranslator.definitions_by_key"><code class="name flex">
-<span>def <span class="ident">definitions_by_key</span></span>(<span>key: str, words: List[BaseWord], style: str = 'ultra', case_sensitive: bool = False, partial_results: bool = False) ‑> dict</span>
+<span>def <span class="ident">definitions_by_key</span></span>(<span>key: str, words: List[BaseWord], style: str = 'ultra', case_sensitive: bool = False) ‑> dict</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="args">Args</h2>
@@ -53,11 +53,10 @@
 words:
 style:
 case_sensitive:
-partial_results:
 Returns:</p></div>
 </dd>
 <dt id="loglan_db.model_html.html_word.AddonWordTranslator.translation_by_key"><code class="name flex">
-<span>def <span class="ident">translation_by_key</span></span>(<span>key: str, language: str = None, style: str = 'ultra', event_id: Union[BaseEvent, int, str] = None, case_sensitive: bool = False, partial_results: bool = False) ‑> Optional[str]</span>
+<span>def <span class="ident">translation_by_key</span></span>(<span>key: str, language: str = None, style: str = 'ultra', event_id: Union[BaseEvent, int, str] = None, case_sensitive: bool = False) ‑> Optional[str]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Get information about loglan words by key in a foreign language</p>
@@ -67,7 +66,6 @@ language:
 style:
 event_id:
 case_sensitive:
-partial_results:
 Returns:</p></div>
 </dd>
 </dl>
@@ -98,7 +96,7 @@ for example, any mapped columns or relationships.</p></div>
 <h3>Static methods</h3>
 <dl>
 <dt id="loglan_db.model_html.html_word.HTMLExportWord.html_all_by_name"><code class="name flex">
-<span>def <span class="ident">html_all_by_name</span></span>(<span>name: str, style: str = 'ultra', event_id: Union[BaseEvent, int, str] = None, case_sensitive: bool = False, partial_results: bool = False) ‑> Optional[str]</span>
+<span>def <span class="ident">html_all_by_name</span></span>(<span>name: str, style: str = 'ultra', event_id: Union[BaseEvent, int, str] = None, case_sensitive: bool = False) ‑> Optional[str]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Convert all words found by name into one HTML string</p>
@@ -111,7 +109,6 @@ for example, any mapped columns or relationships.</p></div>
 </dl>
 <p>event_id:
 case_sensitive:
-partial_results:
 Returns:</p></div>
 </dd>
 </dl>
