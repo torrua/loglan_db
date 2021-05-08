@@ -80,13 +80,16 @@ class AddonWordTranslator:
 
         """
 
-        words = HTMLExportWord.by_key(key=key, language=language, event_id=event_id,
-                                      case_sensitive=case_sensitive).all()
-        [print(word.name, word.id) for word in words]
+        words = HTMLExportWord.by_key(
+            key=key, language=language, event_id=event_id,
+            case_sensitive=case_sensitive).all()
+
         if not words:
             return None
 
-        result = HTMLExportWord.definitions_by_key(key=key, words=words, style=style, case_sensitive=case_sensitive)
+        result = HTMLExportWord.definitions_by_key(
+            key=key, words=words, style=style,
+            case_sensitive=case_sensitive)
 
         new = '\n'
 
@@ -94,7 +97,9 @@ class AddonWordTranslator:
                          for _, definitions in result.items()]).strip()
 
 
-class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExportWordConverter):
+class HTMLExportWord(
+    BaseWord, AddonWordGetter,
+    AddonWordTranslator, AddonExportWordConverter):
     """
     HTMLExportWord Class
     """

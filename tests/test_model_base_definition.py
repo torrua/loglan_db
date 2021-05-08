@@ -123,16 +123,13 @@ class TestDefinition:
         db_add_objects(Definition, definitions)
         db_connect_keys(connect_keys)
 
-        result = Definition.by_key("Test", case_sensitive=True).all()
-        assert len(result) == 0
-
-        result = Definition.by_key("test", case_sensitive=True, partial_results=True).all()
+        result = Definition.by_key("test*", case_sensitive=True).all()
         assert len(result) == 10
 
-        result = Definition.by_key("test", case_sensitive=True, partial_results=False, language="en").all()
+        result = Definition.by_key("test", language="en", case_sensitive=True).all()
         assert len(result) == 5
 
-        result = Definition.by_key("Test", case_sensitive=False, partial_results=True).all()
+        result = Definition.by_key("Test*", case_sensitive=False).all()
         assert len(result) == 10
 
         result = Definition.by_key("test", language="es").all()

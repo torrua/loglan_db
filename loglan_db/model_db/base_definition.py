@@ -157,40 +157,24 @@ class BaseDefinition(db.Model, InitBase, DBBase):
     def by_key(
             cls, key: Union[BaseKey, str],
             language: str = None,
-            case_sensitive: bool = False,
-            partial_results: bool = False,
-    ) -> BaseQuery:
+            case_sensitive: bool = False) -> BaseQuery:
         """Definition.Query filtered by specified key
 
         Args:
           key: Union[BaseKey, str]:
           language: str: Language of key (Default value = None)
           case_sensitive: bool:  (Default value = False)
-          partial_results: bool:  (Default value = False)
 
         Returns:
           BaseQuery
 
         """
 
-        key = BaseKey.word if isinstance(key, BaseKey) else str(key)
+        key = (BaseKey.word if isinstance(key, BaseKey) else str(key)).replace("*", "%")
         request = cls.query.join(t_connect_keys, BaseKey).order_by(BaseKey.word)
 
         if language:
             request = request.filter(BaseKey.language == language)
 
-        if case_sensitive:
-            return cls._filter_key_case_sensitive_filter(key, partial_results, request)
-        return cls._filter_key_case_insensitive_filter(key, partial_results, request)
-
-    @staticmethod
-    def _filter_key_case_sensitive_filter(
-            key: str, partial_results: bool, add_to: BaseQuery) -> BaseQuery:
-        return add_to.filter(BaseKey.word.like(f"{key}%")) \
-            if partial_results else add_to.filter(BaseKey.word == key)
-
-    @staticmethod
-    def _filter_key_case_insensitive_filter(
-            key: str, partial_results: bool, add_to: BaseQuery) -> BaseQuery:
-        return add_to.filter(BaseKey.word.ilike(f"{key}%")) \
-            if partial_results else add_to.filter(BaseKey.word.ilike(key))
+        return request.filter(
+            BaseKey.word.like(key) if case_sensitive else BaseKey.word.ilike(key))
