@@ -53,7 +53,7 @@ class AddonWordTranslator:
             current_key = x_key if x_case_sensitive else x_key.lower()
 
             import fnmatch
-            return bool(fnmatch.filter(current_keys, current_key))
+            return bool([n for n in current_keys if fnmatch.fnmatchcase(n, current_key)])
 
         result: Dict[str, List[str]] = {}
         for word in words:
@@ -83,7 +83,7 @@ class AddonWordTranslator:
         words = HTMLExportWord.by_key(
             key=key, language=language, event_id=event_id,
             case_sensitive=case_sensitive).all()
-
+        print([w.name for w in words])
         if not words:
             return None
 
