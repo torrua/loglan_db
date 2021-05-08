@@ -45,19 +45,18 @@ class DefinitionFormatter:
         to_del = '<do_not_delete>'
         tc_del = '</do_not_delete>'
 
-        def remove_tag_key(key):
-            return key.replace(tc_key, str()).replace(to_key, str())
+        key_pattern = f"{to_key}{word.replace('*', '.*')}{tc_key}"
+        list_of_keys = def_body.replace("</k>", "</k>@").split("@")
 
-        def add_tag_del(match_obj):
-            return f"{to_del}{remove_tag_key(match_obj.group(0))}{tc_del}"
+        for key in list_of_keys:
+            res = re.search(key_pattern, key, flags=0 if case_sensitive else re.IGNORECASE)
+            if not res:
+                continue
+            original_key = res[0]
+            replace_key = original_key.replace(to_key, to_del).replace(tc_key, tc_del)
+            def_body = def_body.replace(original_key, replace_key)
 
-        word_template_original = f'{to_key}{word}{tc_key}'
-
-        def_body = re.sub(
-            word_template_original, add_tag_del, def_body,
-            flags=0 if case_sensitive else re.IGNORECASE)
-
-        def_body = remove_tag_key(def_body)
+        def_body = def_body.replace(tc_key, str()).replace(to_key, str())
         def_body = def_body.replace(to_del, to_key).replace(tc_del, tc_key)
 
         return def_body
