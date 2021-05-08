@@ -38,6 +38,10 @@ class TestInitBase:
         assert Word.stringer(None) == str()
         assert Word.stringer("text") == "text"
 
+    def test_init(self):
+        result = InitBase(**{"a": 1, "b": 2})
+        assert result.a == 1
+
 
 @pytest.mark.usefixtures("db")
 class TestDBBase:

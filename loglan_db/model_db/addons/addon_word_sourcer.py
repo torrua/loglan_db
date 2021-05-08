@@ -50,30 +50,9 @@ class AddonWordSourcer:
         if self.type.type != "C-Prim":
             return None
 
-        pattern_source = r"\d+\/\d+\w"
         sources = str(self.origin).split(" | ")
-        word_sources = []
 
-        for source in sources:
-            compatibility_search = re.search(pattern_source, source)
-            if not compatibility_search:
-                continue
-            compatibility = compatibility_search[0]
-            c_l = compatibility[:-1].split("/")
-
-            transcription_search = re.search(rf"(?!{pattern_source}) .+", source)
-            if not transcription_search:
-                continue
-            transcription = str(transcription_search[0]).strip()
-
-            word_source = BaseWordSource(**{
-                "coincidence": int(c_l[0]),
-                "length": int(c_l[1]),
-                "language": compatibility[-1:],
-                "transcription": transcription, })
-            word_sources.append(word_source)
-
-        return word_sources
+        return [BaseWordSource(source) for source in sources]
 
     def get_sources_cpx(self, as_str: bool = False) -> List[Union[None, str, BaseWord]]:
         """Extract source words from self.origin field accordingly

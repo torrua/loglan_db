@@ -5,7 +5,7 @@
 import pytest
 
 from loglan_db.model_db.base_word_source import BaseWordSource as WordSource
-from tests.data import word_1_source_1
+from tests.data import word_1_source_1, word_1_source_4
 
 
 @pytest.mark.usefixtures("db")
@@ -14,15 +14,21 @@ class TestWordSource:
 
     def test_create_from_dict_with_data(self):
         """Get WordSource"""
-        word_source = WordSource(**word_1_source_1)
+        word_source = WordSource(word_1_source_1)
         assert isinstance(word_source.coincidence, int)
         assert isinstance(word_source.length, int)
         assert isinstance(word_source.language, str)
         assert isinstance(word_source.transcription, str)
 
     def test_as_string(self):
-        word_source = WordSource(**word_1_source_1)
+        word_source = WordSource(word_1_source_1)
         result = word_source.as_string
 
         assert isinstance(result, str)
-        assert result == "2/2E do"
+        assert result == "2/3E act"
+
+        word_source = WordSource(word_1_source_4)
+        result = word_source.as_string
+
+        assert isinstance(result, str)
+        assert result == ""

@@ -150,10 +150,11 @@ type_s = {'parentable': False, 'type_x': 'Predicate', 'id': 15, 'description': '
 prim_types = [type_d, type_i, type_l, type_o, type_n, type_s]
 
 # ===== WORD SOURCES ===========================================================
-word_1_source_1 = {'coincidence': 2, 'length': 2, 'language': 'E', 'transcription': 'do'}
-word_1_source_2 = {'coincidence': 3, 'length': 3, 'language': 'C', 'transcription': 'dzo'}
-word_1_source_3 = {'coincidence': 2, 'length': 4, 'language': 'J', 'transcription': 'suru'}
-word_1_sources = [word_1_source_1, word_1_source_2, word_1_source_3, ]
+word_1_source_1 = "2/3E act"
+word_1_source_2 = "3/3F acte"
+word_1_source_3 = "2/4C sh yen"
+word_1_source_4 = "4/4S"
+word_1_sources = [word_1_source_1, word_1_source_2, word_1_source_3, word_1_source_4, ]
 
 # ===== OTHER ITEMS ===========================================================
 other_word_1 = {'TID_old': None, 'name': 'cirdui', 'origin': 'cir(na)+du(vr)i', 'type_id': 5, 'origin_x': 'learn discover', 'event_start_id': 1, 'match': '', 'event_end_id': None, 'rank': '7+', 'year': datetime.date(1991, 1, 1), 'notes': None, 'id': 1006, 'id_old': 992}

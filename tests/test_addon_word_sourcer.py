@@ -77,7 +77,7 @@ class TestWord:
         db_add_objects(Word, [other_word_2, ])
         db_add_objects(Type, types)
         result = Word.get_by_id(3813)._get_sources_c_prim()
-        assert len(result) == 3
+        assert len(result) == 5
 
     def test_get_sources_cpx(self):
         db_add_objects(Word, words)
