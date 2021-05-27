@@ -68,7 +68,7 @@ class AddonWordGetter:
         request = add_to if add_to else cls.query
         name = name.replace("*", "%")
         return cls.by_event(event_id, request).filter(
-            BaseWord.name.like(name) if not case_sensitive else BaseWord.name.ilike(name)
+            BaseWord.name.like(name) if case_sensitive else BaseWord.name.ilike(name)
         )
 
     @classmethod
