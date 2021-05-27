@@ -97,9 +97,7 @@ class AddonWordTranslator:
                          for _, definitions in result.items()]).strip()
 
 
-class HTMLExportWord(
-    BaseWord, AddonWordGetter,
-    AddonWordTranslator, AddonExportWordConverter):
+class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExportWordConverter):
     """
     HTMLExportWord Class
     """
@@ -235,10 +233,10 @@ class HTMLExportWord(
 
     def used_in_as_html(self, style: str = DEFAULT_HTML_STYLE) -> str:
         tags = {
-            "normal": '<span class="m_cpx">%s</span>',
+            "normal": '<a class="m_cpx">%s</a>',
             "ultra": '<cpx>%s</cpx>',
         }
-        return "|&nbsp;".join(sorted(
+        return " |&nbsp;".join(sorted(
             {tags[style] % cpx.name for cpx in filter(None, self.complexes)}
         ))
 

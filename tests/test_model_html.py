@@ -200,7 +200,7 @@ class TestWord:
 <div class="definition log" id=13525><span class="du">fu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of classes with -able members.</span></div>
 <div class="definition log" id=13526><span class="du">nu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of testable properties.</span></div>
 </div>
-<div class="used_in">Used In: <span class="m_use"><span class="m_cpx">prukao</span></span></div>
+<div class="used_in">Used In: <span class="m_use"><a class="m_cpx">prukao</a></span></div>
 </div>"""
         result = word.html_meaning(style="normal")
         assert result == expected_result_normal
@@ -250,7 +250,7 @@ class TestWord:
 <div class="definition log" id=13525><span class="du">fu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of classes with -able members.</span></div>
 <div class="definition log" id=13526><span class="du">nu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of testable properties.</span></div>
 </div>
-<div class="used_in">Used In: <span class="m_use"><span class="m_cpx">prukao</span></span></div>
+<div class="used_in">Used In: <span class="m_use"><a class="m_cpx">prukao</a></span></div>
 </div>
 </div>
 </div>
@@ -285,7 +285,7 @@ class TestWord:
 <div class="definition log" id=13525><span class="du">fu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of classes with -able members.</span></div>
 <div class="definition log" id=13526><span class="du">nu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of testable properties.</span></div>
 </div>
-<div class="used_in">Used In: <span class="m_use"><span class="m_cpx">prukao</span></span></div>
+<div class="used_in">Used In: <span class="m_use"><a class="m_cpx">prukao</a></span></div>
 </div>
 </div>
 </div>
