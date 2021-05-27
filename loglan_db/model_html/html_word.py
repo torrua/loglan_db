@@ -229,6 +229,19 @@ class HTMLExportWord(
         html_tech = f'{html_affixes}{self.html_origin(style)}{html_tech}'
         return Meaning(self.id, html_tech, self.html_definitions(style), html_used_in)
 
+    @staticmethod
+    def _tagger(tag: str, value: Optional[str], default_value: Optional[str] = str()):
+        return tag % value if value else default_value
+
+    def used_in_as_html(self, style: str = DEFAULT_HTML_STYLE) -> str:
+        tags = {
+            "normal": '<span class="m_cpx">%s</span>',
+            "ultra": '<cpx>%s</cpx>',
+        }
+        return "|&nbsp;".join(sorted(
+            {tags[style] % cpx.name for cpx in filter(None, self.complexes)}
+        ))
+
     def get_styled_values(self, style: str = DEFAULT_HTML_STYLE) -> tuple:
         """
 
@@ -249,14 +262,11 @@ class HTMLExportWord(
                 '<use>%s</use>', '%s ', '<tec>%s</tec>'],
         }
 
-        def _tagger(tag: str, value: Optional[str], default_value: Optional[str] = str()):
-            return tag % value if value else default_value
-
         values = [self.e_affixes, self.match, self.rank, self.e_source, self.type.type,
-                  self.e_usedin.replace("| ", "|&nbsp;"), self.e_year, None]
+                  self.used_in_as_html(style), self.e_year, None]
         default_values = [str(), str(), str(), str(), str(), None, str(), tags[style][-1]]
 
-        return tuple(_tagger(tag, value, default_value) for tag, value, default_value
+        return tuple(self._tagger(tag, value, default_value) for tag, value, default_value
                      in zip(tags[style], values, default_values))
 
     def html_meaning(self, style: str = DEFAULT_HTML_STYLE) -> str:

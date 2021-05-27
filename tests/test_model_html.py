@@ -151,7 +151,7 @@ class TestWord:
                 '<dl>(vt) <k>test</k>, test for … a property … in a member of ….</dl>',
                 '<dl><du>fu —</du> (a) <k>testable</k>, of classes with -able members.</dl>',
                 '<dl><du>nu —</du> (a) <k>testable</k>, of testable properties.</dl>'],
-            'used_in': '<use>prukao</use>'}
+            'used_in': '<use><cpx>prukao</cpx></use>'}
         assert isinstance(result, Meaning)
         assert result.__dict__ == expected_value
 
@@ -187,7 +187,7 @@ class TestWord:
 <dl><du>fu —</du> (a) <k>testable</k>, of classes with -able members.</dl>
 <dl><du>nu —</du> (a) <k>testable</k>, of testable properties.</dl>
 </ds>
-<us>Used In: <use>prukao</use></us>
+<us>Used In: <use><cpx>prukao</cpx></use></us>
 </m>"""
         result = word.html_meaning(style="ultra")
         assert result == expected_result_ultra
@@ -200,7 +200,7 @@ class TestWord:
 <div class="definition log" id=13525><span class="du">fu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of classes with -able members.</span></div>
 <div class="definition log" id=13526><span class="du">nu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of testable properties.</span></div>
 </div>
-<div class="used_in">Used In: <span class="m_use">prukao</span></div>
+<div class="used_in">Used In: <span class="m_use"><span class="m_cpx">prukao</span></span></div>
 </div>"""
         result = word.html_meaning(style="normal")
         assert result == expected_result_normal
@@ -228,7 +228,7 @@ class TestWord:
 <dl><du>fu —</du> (a) <k>testable</k>, of classes with -able members.</dl>
 <dl><du>nu —</du> (a) <k>testable</k>, of testable properties.</dl>
 </ds>
-<us>Used In: <use>prukao</use></us>
+<us>Used In: <use><cpx>prukao</cpx></use></us>
 </m>
 </ms>
 </w>
@@ -250,7 +250,7 @@ class TestWord:
 <div class="definition log" id=13525><span class="du">fu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of classes with -able members.</span></div>
 <div class="definition log" id=13526><span class="du">nu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of testable properties.</span></div>
 </div>
-<div class="used_in">Used In: <span class="m_use">prukao</span></div>
+<div class="used_in">Used In: <span class="m_use"><span class="m_cpx">prukao</span></span></div>
 </div>
 </div>
 </div>
@@ -285,7 +285,7 @@ class TestWord:
 <div class="definition log" id=13525><span class="du">fu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of classes with -able members.</span></div>
 <div class="definition log" id=13526><span class="du">nu —</span> <span class="dg">(a)</span> <span class="db"><k>testable</k>, of testable properties.</span></div>
 </div>
-<div class="used_in">Used In: <span class="m_use">prukao</span></div>
+<div class="used_in">Used In: <span class="m_use"><span class="m_cpx">prukao</span></span></div>
 </div>
 </div>
 </div>

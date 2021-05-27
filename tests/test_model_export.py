@@ -8,7 +8,8 @@ import pytest
 from loglan_db.model_export import ExportAuthor as Author, ExportEvent as Event, \
     ExportSyllable as Syllable, ExportSetting as Setting, ExportType as Type, \
     ExportWord as Word, ExportDefinition as Definition, ExportWordSpell as WordSpell
-from tests.data import author_1, other_author_1, event_1, syllable_35, setting_1, type_1, word_1, other_word_1
+from tests.data import author_1, other_author_1, event_1, syllable_35, \
+    setting_1, type_1, word_1, other_word_1, word_2
 from tests.data import connect_authors, connect_words
 from tests.data import definitions, words, types, authors
 from tests.functions import db_add_and_return, db_add_objects, db_add_object, \
@@ -134,6 +135,15 @@ class TestWord:
 
         result = word.e_usedin
         assert result == "prukao"
+
+    def test_e_usedin_empty(self):
+        """Test used_in conversion if no cpx"""
+        db_add_object(Word, word_2)
+        db_add_objects(Type, types)
+        word = Word.get_by_id(3813)
+
+        result = word.e_usedin
+        assert result == str()
 
 
 @pytest.mark.usefixtures("db")

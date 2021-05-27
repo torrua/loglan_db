@@ -125,8 +125,9 @@ class AddonExportWordConverter:
         """
         Returns:
         """
-        w_usedin: List[BaseWord] = list(self.complexes) if self.complexes else list()
-        return ' | '.join(sorted({cpx.name for cpx in w_usedin if cpx})) if w_usedin else str()
+        if not self.complexes:
+            return str()
+        return ' | '.join(sorted({cpx.name for cpx in filter(None, self.complexes)}))
 
     @property
     def e_affixes(self) -> str:
