@@ -1,6 +1,6 @@
 -r requirements.txt
 
-coveragePy==1.6.0
+coveragePy
 pylint-flask-sqlalchemy==0.2.0
 pylint-flask==0.6
 pylint==2.10.2
