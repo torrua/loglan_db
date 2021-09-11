@@ -1,10 +1,10 @@
 -r requirements.txt
 
 coveragePy
-pylint-flask-sqlalchemy==0.2.0
-pylint-flask==0.6
-pylint==2.10.2
-pytest-cov==2.12.1
-pytest==6.2.5
-scrutinizer-ocular==1.0.3
-sqlalchemy-stubs==0.4
+pylint-flask-sqlalchemy
+pylint-flask
+pylint
+pytest-cov
+pytest
+scrutinizer-ocular
+sqlalchemy-stubs
