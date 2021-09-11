@@ -1,4 +1,4 @@
-Flask-SQLAlchemy==2.5.1
+Flask-SQLAlchemy
 Flask
-SQLAlchemy==1.4.23
-psycopg2==2.9.1
+SQLAlchemy
+psycopg2
