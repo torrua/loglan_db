@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.2" />
+<meta name="generator" content="pdoc 0.10.0" />
 <title>loglan_db.model_html.html_word API documentation</title>
 <meta name="description" content="This module contains a HTMLExportWord Model" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -122,6 +122,10 @@ Returns:</p></div>
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="loglan_db.model_html.html_word.HTMLExportWord.created"><code class="name">var <span class="ident">created</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="loglan_db.model_html.html_word.HTMLExportWord.definitions"><code class="name">var <span class="ident">definitions</span> : flask_sqlalchemy.BaseQuery</code></dt>
 <dd>
 <div class="desc"></div>
@@ -175,6 +179,10 @@ Returns:</p></div>
 <div class="desc"></div>
 </dd>
 <dt id="loglan_db.model_html.html_word.HTMLExportWord.type_id"><code class="name">var <span class="ident">type_id</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_html.html_word.HTMLExportWord.updated"><code class="name">var <span class="ident">updated</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -240,7 +248,6 @@ Returns:</p></div>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.attributes_basic" href="../model_init.html#loglan_db.model_init.DBBase.attributes_basic">attributes_basic</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.attributes_extended" href="../model_init.html#loglan_db.model_init.DBBase.attributes_extended">attributes_extended</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.complexes" href="../model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.complexes">complexes</a></code></li>
-<li><code><a title="loglan_db.model_db.base_word.BaseWord.created" href="../model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.created">created</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.delete" href="../model_init.html#loglan_db.model_init.DBBase.delete">delete</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.export" href="../model_init.html#loglan_db.model_init.InitBase.export">export</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.foreign_keys" href="../model_init.html#loglan_db.model_init.DBBase.foreign_keys">foreign_keys</a></code></li>
@@ -260,7 +267,6 @@ Returns:</p></div>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.save" href="../model_init.html#loglan_db.model_init.DBBase.save">save</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.stringer" href="../model_init.html#loglan_db.model_init.InitBase.stringer">stringer</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.update" href="../model_init.html#loglan_db.model_init.DBBase.update">update</a></code></li>
-<li><code><a title="loglan_db.model_db.base_word.BaseWord.updated" href="../model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.updated">updated</a></code></li>
 </ul>
 </li>
 <li><code><b><a title="loglan_db.model_db.addons.addon_word_getter.AddonWordGetter" href="../model_db/addons/addon_word_getter.html#loglan_db.model_db.addons.addon_word_getter.AddonWordGetter">AddonWordGetter</a></b></code>:
@@ -341,6 +347,7 @@ Returns:</p></div>
 <ul class="two-column">
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.TID_old" href="#loglan_db.model_html.html_word.HTMLExportWord.TID_old">TID_old</a></code></li>
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.authors" href="#loglan_db.model_html.html_word.HTMLExportWord.authors">authors</a></code></li>
+<li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.created" href="#loglan_db.model_html.html_word.HTMLExportWord.created">created</a></code></li>
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.definitions" href="#loglan_db.model_html.html_word.HTMLExportWord.definitions">definitions</a></code></li>
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.event_end" href="#loglan_db.model_html.html_word.HTMLExportWord.event_end">event_end</a></code></li>
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.event_end_id" href="#loglan_db.model_html.html_word.HTMLExportWord.event_end_id">event_end_id</a></code></li>
@@ -361,6 +368,7 @@ Returns:</p></div>
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.rank" href="#loglan_db.model_html.html_word.HTMLExportWord.rank">rank</a></code></li>
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.type" href="#loglan_db.model_html.html_word.HTMLExportWord.type">type</a></code></li>
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.type_id" href="#loglan_db.model_html.html_word.HTMLExportWord.type_id">type_id</a></code></li>
+<li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.updated" href="#loglan_db.model_html.html_word.HTMLExportWord.updated">updated</a></code></li>
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.used_in_as_html" href="#loglan_db.model_html.html_word.HTMLExportWord.used_in_as_html">used_in_as_html</a></code></li>
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.year" href="#loglan_db.model_html.html_word.HTMLExportWord.year">year</a></code></li>
 </ul>
@@ -380,7 +388,7 @@ Returns:</p></div>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
 </footer>
 </body>
 </html>
