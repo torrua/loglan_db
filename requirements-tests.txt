@@ -1,11 +1,10 @@
-flask
-flask_sqlalchemy
-sqlalchemy
-psycopg2
-pytest
-pytest-cov
-coveragepy
-pylint-flask-sqlalchemy
-pylint-flask
-scrutinizer-ocular
-sqlalchemy-stubs
+-r requirements.txt
+
+coveragePy==1.6.0
+pylint-flask-sqlalchemy==0.2.0
+pylint-flask==0.6
+pylint==2.10.2
+pytest-cov==2.12.1
+pytest==6.2.5
+scrutinizer-ocular==1.0.3
+sqlalchemy-stubs==0.4

@@ -1,4 +1,4 @@
-pycrunch-engine==1.2.1
-pycrunch
-radon
-mypy
+mypy==0.910
+pycrunch-engine==1.2.2
+pycrunch==0.4.14
+radon==5.1.0
