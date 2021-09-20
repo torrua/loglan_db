@@ -92,8 +92,8 @@ class DefinitionFormatter:
             else usage.replace("%", d_source_word.name)
         return tag % w_name
 
-    @staticmethod
-    def tagged_definition_body(body: str, key_word: str, tag: str) -> str:
+    @classmethod
+    def tagged_definition_body(cls, body: str, key_word: str, tag: str) -> str:
         """
         Generate Definition.body as HTML tag with highlighted key word
         Args:
@@ -104,8 +104,8 @@ class DefinitionFormatter:
         Returns:
 
         """
-        definition_body = HTMLExportDefinition.format_body(body)
-        definition_body = HTMLExportDefinition.highlight_key(definition_body, key_word)
+        definition_body = cls.format_body(body)
+        definition_body = cls.highlight_key(definition_body, key_word)
         definition_body = tag % definition_body
         return definition_body
 
@@ -145,9 +145,9 @@ class HTMLExportDefinition(BaseDefinition, DefinitionFormatter):
         def_gram = t_d_gram % gram_form if gram_form else ''
         def_tags = t_d_tags % self.case_tags.replace("-", "&zwj;-&zwj;") if self.case_tags else ''
 
-        def_body = HTMLExportDefinition.tagged_definition_body(self.body, word, t_d_body)
-        word_name = HTMLExportDefinition.tagged_word_name(self.usage, self.source_word, t_word_name)
-        word_origin_x = HTMLExportDefinition.tagged_word_origin_x(self.source_word, t_word_origin)
+        def_body = self.tagged_definition_body(self.body, word, t_d_body)
+        word_name = self.tagged_word_name(self.usage, self.source_word, t_word_name)
+        word_origin_x = self.tagged_word_origin_x(self.source_word, t_word_origin)
 
         definition = t_def % f'{def_tags}{def_gram}{def_body}'
         return t_def_line % f'{word_name}{word_origin_x}{definition}'
@@ -171,6 +171,6 @@ class HTMLExportDefinition(BaseDefinition, DefinitionFormatter):
         def_usage = t_d_usage % self.usage.replace("%", "—") if self.usage else ''
         gram_form = f"{str(self.slots) if self.slots else ''}" + self.grammar_code
         def_gram = t_d_gram % gram_form if gram_form else ''
-        def_body = t_d_body % HTMLExportDefinition.format_body(self.body)
+        def_body = t_d_body % self.format_body(self.body)
         def_tags = t_d_tags % self.case_tags.replace("-", "&zwj;-&zwj;") if self.case_tags else ''
         return t_definition % f'{def_usage}{def_gram}{def_body}{def_tags}'

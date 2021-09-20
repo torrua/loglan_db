@@ -27,7 +27,7 @@ class AddonWordLinker:
         Returns: bool:
 
         """
-        return bool(self._derivatives.filter(t_connect_words.c.child_id == child.id).count() > 0)
+        return bool(self.derivatives.filter(t_connect_words.c.child_id == child.id).count() > 0)
 
     def add_child(self, child: BaseWord) -> str:
         """Add derivative for the source word
@@ -42,7 +42,7 @@ class AddonWordLinker:
         """
         # TODO add check if type of child is allowed to add to this word
         if not self._is_parented(child):
-            self._derivatives.append(child)
+            self.derivatives.append(child)
         return child.name
 
     def add_children(self, children: List[BaseWord]):
@@ -57,8 +57,8 @@ class AddonWordLinker:
 
         """
         # TODO add check if type of child is allowed to add to this word
-        new_children = list(set(children) - set(self._derivatives))
-        _ = self._derivatives.extend(new_children) if new_children else None
+        new_children = list(set(children) - set(self.derivatives))
+        _ = self.derivatives.extend(new_children) if new_children else None
 
     def add_author(self, author: BaseAuthor) -> str:
         """Connect Author object with BaseWord object

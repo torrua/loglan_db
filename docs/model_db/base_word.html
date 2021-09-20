@@ -62,7 +62,7 @@ for example, any mapped columns or relationships.</p></div>
 <h3>Static methods</h3>
 <dl>
 <dt id="loglan_db.model_db.base_word.BaseWord.add_query_filters"><code class="name flex">
-<span>def <span class="ident">add_query_filters</span></span>(<span>result: BaseQuery, word_type: str = '', word_type_x: str = '', word_group: str = '') ‑> flask_sqlalchemy.BaseQuery</span>
+<span>def <span class="ident">add_query_filters</span></span>(<span>result: BaseQuery, word_type: str = None, word_type_x: str = None, word_group: str = None) ‑> flask_sqlalchemy.BaseQuery</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="args">Args</h2>
@@ -96,10 +96,6 @@ Returns:</p></div>
 <p>Args:</p>
 <h2 id="returns">Returns</h2>
 <p>List[BaseWord]</p></div>
-</dd>
-<dt id="loglan_db.model_db.base_word.BaseWord.definitions"><code class="name">var <span class="ident">definitions</span> : flask_sqlalchemy.BaseQuery</code></dt>
-<dd>
-<div class="desc"></div>
 </dd>
 <dt id="loglan_db.model_db.base_word.BaseWord.event_end"><code class="name">var <span class="ident">event_end</span> : <a title="loglan_db.model_db.base_event.BaseEvent" href="base_event.html#loglan_db.model_db.base_event.BaseEvent">BaseEvent</a></code></dt>
 <dd>
@@ -180,6 +176,18 @@ will not be added to the final result</p>
 </dl>
 <h3>Methods</h3>
 <dl>
+<dt id="loglan_db.model_db.base_word.BaseWord.definitions"><code class="name flex">
+<span>def <span class="ident">definitions</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_db.base_word.BaseWord.derivatives"><code class="name flex">
+<span>def <span class="ident">derivatives</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="loglan_db.model_db.base_word.BaseWord.query_afx"><code class="name flex">
 <span>def <span class="ident">query_afx</span></span>(<span>self) ‑> flask_sqlalchemy.BaseQuery</span>
 </code></dt>
@@ -201,7 +209,7 @@ Only primitives have affixes</p>
 <p>BaseQuery</p></div>
 </dd>
 <dt id="loglan_db.model_db.base_word.BaseWord.query_derivatives"><code class="name flex">
-<span>def <span class="ident">query_derivatives</span></span>(<span>self, word_type: str = '', word_type_x: str = '', word_group: str = '') ‑> flask_sqlalchemy.BaseQuery</span>
+<span>def <span class="ident">query_derivatives</span></span>(<span>self, word_type: str = None, word_type_x: str = None, word_group: str = None) ‑> flask_sqlalchemy.BaseQuery</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Query to get all derivatives of the word, depending on its parameters</p>
@@ -209,13 +217,13 @@ Only primitives have affixes</p>
 <dl>
 <dt><strong><code>word_type</code></strong></dt>
 <dd>str:
-(Default value = str())</dd>
+(Default value = None)</dd>
 <dt><strong><code>word_type_x</code></strong></dt>
 <dd>str:
-(Default value = str())</dd>
+(Default value = None)</dd>
 <dt><strong><code>word_group</code></strong></dt>
 <dd>str:
-(Default value = str())</dd>
+(Default value = None)</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <p>BaseQuery</p></div>
@@ -282,6 +290,7 @@ Only primitives have affixes</p>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.authors" href="#loglan_db.model_db.base_word.BaseWord.authors">authors</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.complexes" href="#loglan_db.model_db.base_word.BaseWord.complexes">complexes</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.definitions" href="#loglan_db.model_db.base_word.BaseWord.definitions">definitions</a></code></li>
+<li><code><a title="loglan_db.model_db.base_word.BaseWord.derivatives" href="#loglan_db.model_db.base_word.BaseWord.derivatives">derivatives</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.event_end" href="#loglan_db.model_db.base_word.BaseWord.event_end">event_end</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.event_end_id" href="#loglan_db.model_db.base_word.BaseWord.event_end_id">event_end_id</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.event_start" href="#loglan_db.model_db.base_word.BaseWord.event_start">event_start</a></code></li>

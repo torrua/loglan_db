@@ -71,11 +71,11 @@ class TestDBBase:
     def test_attributes_all(self):
         result = Word.attributes_all()
         assert sorted(result) == [
-            'TID_old', 'authors', 'created', 'definitions',
+            'TID_old', 'authors', 'created',
             'event_end', 'event_end_id', 'event_start',
             'event_start_id', 'id', 'id_old', 'match', 'name',
             'notes', 'origin', 'origin_x', 'rank', 'type',
-            'type_id', 'updated', 'year']
+            'type_id', 'updated', 'year', ]
 
     def test_attributes_basic(self):
         result = Word.attributes_basic()
@@ -87,14 +87,14 @@ class TestDBBase:
     def test_attributes_extended(self):
         result = Word.attributes_extended()
         assert sorted(result) == [
-            'TID_old', 'authors', 'created', 'definitions', 'event_end',
-            'event_start', 'id', 'id_old', 'match', 'name', 'notes',
-            'origin', 'origin_x', 'rank', 'type', 'updated', 'year']
+            'TID_old', 'authors', 'created', 'event_end', 'event_start',
+            'id', 'id_old', 'match', 'name', 'notes', 'origin',
+            'origin_x', 'rank', 'type', 'updated', 'year']
 
     def test_relationships(self):
         result = Word.relationships()
         assert sorted(result) == [
-            'authors', 'definitions', 'event_end', 'event_start', 'type']
+            'authors', 'event_end', 'event_start', 'type']
 
     def test_foreign_keys(self):
         result = Word.foreign_keys()

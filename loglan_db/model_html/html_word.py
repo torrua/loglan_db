@@ -14,7 +14,9 @@ from loglan_db.model_db.base_word import BaseWord
 from loglan_db.model_html import DEFAULT_HTML_STYLE
 from loglan_db.model_html.html_definition import HTMLExportDefinition
 from loglan_db.model_export import AddonExportWordConverter
-
+from loglan_db import db
+from sqlalchemy.ext.hybrid import hybrid_property
+from loglan_db.model_db.base_connect_tables import t_connect_words
 
 @dataclass
 class Meaning:
@@ -102,6 +104,13 @@ class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExport
     HTMLExportWord Class
     """
 
+    _definitions = db.relationship(
+        HTMLExportDefinition.__name__, lazy='dynamic', viewonly=True)
+
+    @hybrid_property
+    def definitions(self):
+        return self._definitions
+
     @classmethod
     def html_all_by_name(
             cls, name: str, style: str = DEFAULT_HTML_STYLE,
@@ -181,14 +190,14 @@ class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExport
         if not (orig or orig_x):
             return str()
 
-        origin = self.__generate_origin(orig, orig_x)
+        origin = self._generate_origin(orig, orig_x)
 
         if style == "normal":
             return f'<span class="m_origin">&lt;{origin}&gt;</span> '
         return f'<o>&lt;{origin}&gt;</o> '
 
     @staticmethod
-    def __generate_origin(orig: str, orig_x: str) -> str:
+    def _generate_origin(orig: str, orig_x: str) -> str:
         """
         Generate basic 'origin' string
         Args:

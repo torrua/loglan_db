@@ -21,6 +21,7 @@ from loglan_db.model_db.base_key import BaseKey
 from loglan_db.model_db.base_type import BaseType
 from loglan_db.model_init import InitBase, DBBase
 from loglan_db.model_db.base_definition import BaseDefinition
+from sqlalchemy.ext.hybrid import hybrid_property
 
 __pdoc__ = {
     'BaseWord.created': False, 'BaseWord.updated': False,
@@ -46,26 +47,29 @@ class BaseWord(db.Model, InitBase, DBBase):
 
     type_id = db.Column("type", db.ForeignKey(f'{t_name_types}.id'), nullable=False)
     type: BaseType = db.relationship(
-        BaseType.__name__, backref="words", enable_typechecks=False)
+        BaseType.__name__, back_populates="words")
 
     event_start_id = db.Column(
         "event_start", db.ForeignKey(f'{t_name_events}.id'), nullable=False)
     event_start: BaseEvent = db.relationship(
         BaseEvent.__name__, foreign_keys=[event_start_id],
-        backref="appeared_words", enable_typechecks=False)
+        back_populates="appeared_words")
 
     event_end_id = db.Column("event_end", db.ForeignKey(f'{t_name_events}.id'))
     event_end: BaseEvent = db.relationship(
         BaseEvent.__name__, foreign_keys=[event_end_id],
-        backref="deprecated_words", enable_typechecks=False)
+        back_populates="deprecated_words")
 
     authors: BaseQuery = db.relationship(
         BaseAuthor.__name__, secondary=t_connect_authors,
-        backref="contribution", lazy='dynamic', enable_typechecks=False)
+        back_populates="contribution", lazy='dynamic')
 
-    definitions: BaseQuery = db.relationship(
-        BaseDefinition.__name__, backref="source_word",
-        lazy='dynamic', enable_typechecks=False)
+    _definitions: BaseQuery = db.relationship(
+        BaseDefinition.__name__, back_populates="_source_word", lazy='dynamic')
+
+    @hybrid_property
+    def definitions(self):
+        return self._definitions
 
     # word's derivatives
     _derivatives = db.relationship(
@@ -75,31 +79,35 @@ class BaseWord(db.Model, InitBase, DBBase):
         backref=db.backref('_parents', lazy='dynamic', enable_typechecks=False),
         lazy='dynamic', enable_typechecks=False)
 
-    def query_derivatives(self, word_type: str = str(),
-                          word_type_x: str = str(), word_group: str = str()) -> BaseQuery:
+    @hybrid_property
+    def derivatives(self):
+        return self._derivatives
+
+    def query_derivatives(self, word_type: str = None,
+                          word_type_x: str = None, word_group: str = None) -> BaseQuery:
         """Query to get all derivatives of the word, depending on its parameters
 
         Args:
-          word_type: str:  (Default value = str())
-          word_type_x: str:  (Default value = str())
-          word_group: str:  (Default value = str())
+          word_type: str:  (Default value = None)
+          word_type_x: str:  (Default value = None)
+          word_group: str:  (Default value = None)
 
         Returns:
             BaseQuery
         """
-        result = self._derivatives.filter(self.id == t_connect_words.c.parent_id)
+        result = self.derivatives.filter(self.id == t_connect_words.c.parent_id)
 
         if word_type or word_type_x or word_group:
             result = result.join(BaseType)
 
         result = self.add_query_filters(result, word_type, word_type_x, word_group)
 
-        return result.order_by(BaseWord.name.asc())
+        return result.order_by(type(self).name.asc())
 
     @staticmethod
     def add_query_filters(
-            result: BaseQuery, word_type: str = str(),
-            word_type_x: str = str(), word_group: str = str()) -> BaseQuery:
+            result: BaseQuery, word_type: str = None,
+            word_type_x: str = None, word_group: str = None) -> BaseQuery:
         """
         Args:
             result:
@@ -158,7 +166,7 @@ class BaseWord(db.Model, InitBase, DBBase):
         Returns:
             List[BaseWord]
         """
-        return self._parents.all()  # if self.type in self.__parentable else []
+        return self._parents.all()
 
     @property
     def complexes(self) -> List[BaseWord]:

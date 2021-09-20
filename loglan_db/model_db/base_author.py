@@ -6,6 +6,8 @@ This module contains a basic Author Model
 from loglan_db import db
 from loglan_db.model_db import t_name_authors
 from loglan_db.model_init import InitBase, DBBase
+from loglan_db.model_db.base_connect_tables import t_connect_authors
+
 
 __pdoc__ = {
 
@@ -61,3 +63,6 @@ class BaseAuthor(db.Model, InitBase, DBBase):
     """*Any additional information about author*  
         **str** : max_length=128, nullable=True, unique=False
     """
+
+    contribution = db.relationship(
+        "BaseWord", back_populates="authors", secondary=t_connect_authors)

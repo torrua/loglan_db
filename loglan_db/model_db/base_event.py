@@ -62,6 +62,14 @@ class BaseEvent(db.Model, InitBase, DBBase):
     """*Event's suffix (used to create filename when exporting HTML file)*  
         **str** : max_length=16, nullable=False, unique=False"""
 
+    deprecated_words = db.relationship(
+        "BaseWord", back_populates="event_end",
+        foreign_keys="BaseWord.event_end_id")
+
+    appeared_words = db.relationship(
+        "BaseWord", back_populates="event_start",
+        foreign_keys="BaseWord.event_start_id")
+
     @classmethod
     def latest(cls) -> BaseEvent:
         """
