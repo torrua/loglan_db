@@ -15,7 +15,7 @@ setup(
   packages=['loglan_db'],
   package_data={'loglan_db': ['*'], },
   include_package_data=True,
-  version='0.1.7',
+  version='0.1.8',
   license='MIT',
   description="Loglan Dictionary Database Model for SQLAlchemy",
   long_description=read("README.md"),
@@ -23,7 +23,7 @@ setup(
   author='torrua',
   author_email='torrua@gmail.com',
   url='https://github.com/torrua/loglan_db',
-  download_url='https://github.com/torrua/loglan_db/archive/v0.1.7.tar.gz',
+  download_url='https://github.com/torrua/loglan_db/archive/v0.1.8.tar.gz',
   keywords=['Loglan', 'Dictionary', 'Database', 'Model', 'LOD'],
   install_requires=[
           'flask', 'sqlalchemy', 'flask_sqlalchemy', 'psycopg2',
