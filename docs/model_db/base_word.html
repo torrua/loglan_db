@@ -59,45 +59,39 @@ for example, any mapped columns or relationships.</p></div>
 <li><a title="loglan_db.model_export.ExportWordSpell" href="../model_export.html#loglan_db.model_export.ExportWordSpell">ExportWordSpell</a></li>
 <li><a title="loglan_db.model_html.html_word.HTMLExportWord" href="../model_html/html_word.html#loglan_db.model_html.html_word.HTMLExportWord">HTMLExportWord</a></li>
 </ul>
-<h3>Static methods</h3>
-<dl>
-<dt id="loglan_db.model_db.base_word.BaseWord.add_query_filters"><code class="name flex">
-<span>def <span class="ident">add_query_filters</span></span>(<span>result: BaseQuery, word_type: str = None, word_type_x: str = None, word_group: str = None) ‑> flask_sqlalchemy.BaseQuery</span>
-</code></dt>
-<dd>
-<div class="desc"><h2 id="args">Args</h2>
-<p>result:
-word_type:
-word_type_x:
-word_group:
-Returns:</p></div>
-</dd>
-</dl>
 <h3>Instance variables</h3>
 <dl>
 <dt id="loglan_db.model_db.base_word.BaseWord.TID_old"><code class="name">var <span class="ident">TID_old</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_db.model_db.base_word.BaseWord.affixes"><code class="name">var <span class="ident">affixes</span> : List[<a title="loglan_db.model_db.base_word.BaseWord" href="#loglan_db.model_db.base_word.BaseWord">BaseWord</a>]</code></dt>
+<dt id="loglan_db.model_db.base_word.BaseWord.affixes"><code class="name">var <span class="ident">affixes</span> : flask_sqlalchemy.BaseQuery</code></dt>
 <dd>
-<div class="desc"><p>Get all word's affixes if exist</p>
-<p>Args:</p>
+<div class="desc"><p>Get all word's affixes if exist
+Only primitives have affixes.</p>
 <h2 id="returns">Returns</h2>
-<p>List[BaseWord]</p></div>
+<p>BaseQuery</p></div>
 </dd>
 <dt id="loglan_db.model_db.base_word.BaseWord.authors"><code class="name">var <span class="ident">authors</span> : flask_sqlalchemy.BaseQuery</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_db.model_db.base_word.BaseWord.complexes"><code class="name">var <span class="ident">complexes</span> : List[<a title="loglan_db.model_db.base_word.BaseWord" href="#loglan_db.model_db.base_word.BaseWord">BaseWord</a>]</code></dt>
+<dt id="loglan_db.model_db.base_word.BaseWord.complexes"><code class="name">var <span class="ident">complexes</span> : flask_sqlalchemy.BaseQuery</code></dt>
 <dd>
-<div class="desc"><p>Get all word's complexes if exist</p>
-<p>Args:</p>
+<div class="desc"><p>Get all word's complexes if exist
+Only primitives and Little Words have complexes.</p>
 <h2 id="returns">Returns</h2>
-<p>List[BaseWord]</p></div>
+<p>BaseQuery</p></div>
 </dd>
-<dt id="loglan_db.model_db.base_word.BaseWord.event_end"><code class="name">var <span class="ident">event_end</span> : <a title="loglan_db.model_db.base_event.BaseEvent" href="base_event.html#loglan_db.model_db.base_event.BaseEvent">BaseEvent</a></code></dt>
+<dt id="loglan_db.model_db.base_word.BaseWord.definitions"><code class="name">var <span class="ident">definitions</span> : flask_sqlalchemy.BaseQuery</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_db.base_word.BaseWord.derivatives"><code class="name">var <span class="ident">derivatives</span> : flask_sqlalchemy.BaseQuery</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_db.base_word.BaseWord.event_end"><code class="name">var <span class="ident">event_end</span> : flask_sqlalchemy.BaseQuery</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -105,7 +99,7 @@ Returns:</p></div>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_db.model_db.base_word.BaseWord.event_start"><code class="name">var <span class="ident">event_start</span> : <a title="loglan_db.model_db.base_event.BaseEvent" href="base_event.html#loglan_db.model_db.base_event.BaseEvent">BaseEvent</a></code></dt>
+<dt id="loglan_db.model_db.base_word.BaseWord.event_start"><code class="name">var <span class="ident">event_start</span> : flask_sqlalchemy.BaseQuery</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -121,14 +115,13 @@ Returns:</p></div>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_db.model_db.base_word.BaseWord.keys"><code class="name">var <span class="ident">keys</span> : List[<a title="loglan_db.model_db.base_key.BaseKey" href="base_key.html#loglan_db.model_db.base_key.BaseKey">BaseKey</a>]</code></dt>
+<dt id="loglan_db.model_db.base_word.BaseWord.keys"><code class="name">var <span class="ident">keys</span> : flask_sqlalchemy.BaseQuery</code></dt>
 <dd>
-<div class="desc"><p>Get all BaseKey object related to this BaseWord
-Keep in mind that duplicate keys for different definitions
-will not be added to the final result</p>
-<p>Args:</p>
+<div class="desc"><p>Get all BaseKey object related to this BaseWord.</p>
+<p>Keep in mind that duplicated keys from related definitions
+will be counted with <code>.count()</code> but excluded from <code>.all()</code> request</p>
 <h2 id="returns">Returns</h2>
-<p>List[BaseKey]</p></div>
+<p>BaseQuery</p></div>
 </dd>
 <dt id="loglan_db.model_db.base_word.BaseWord.match"><code class="name">var <span class="ident">match</span></code></dt>
 <dd>
@@ -150,18 +143,17 @@ will not be added to the final result</p>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_db.model_db.base_word.BaseWord.parents"><code class="name">var <span class="ident">parents</span> : List[<a title="loglan_db.model_db.base_word.BaseWord" href="#loglan_db.model_db.base_word.BaseWord">BaseWord</a>]</code></dt>
+<dt id="loglan_db.model_db.base_word.BaseWord.parents"><code class="name">var <span class="ident">parents</span> : flask_sqlalchemy.BaseQuery</code></dt>
 <dd>
-<div class="desc"><p>Get all parents of the Complexes, Little words or Affixes</p>
-<p>Args:</p>
+<div class="desc"><p>Query to get all parents for Complexes, Little words or Affixes</p>
 <h2 id="returns">Returns</h2>
-<p>List[BaseWord]</p></div>
+<p>BaseQuery</p></div>
 </dd>
 <dt id="loglan_db.model_db.base_word.BaseWord.rank"><code class="name">var <span class="ident">rank</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_db.model_db.base_word.BaseWord.type"><code class="name">var <span class="ident">type</span> : <a title="loglan_db.model_db.base_type.BaseType" href="base_type.html#loglan_db.model_db.base_type.BaseType">BaseType</a></code></dt>
+<dt id="loglan_db.model_db.base_word.BaseWord.type"><code class="name">var <span class="ident">type</span> : flask_sqlalchemy.BaseQuery</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -176,38 +168,6 @@ will not be added to the final result</p>
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="loglan_db.model_db.base_word.BaseWord.definitions"><code class="name flex">
-<span>def <span class="ident">definitions</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="loglan_db.model_db.base_word.BaseWord.derivatives"><code class="name flex">
-<span>def <span class="ident">derivatives</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="loglan_db.model_db.base_word.BaseWord.query_afx"><code class="name flex">
-<span>def <span class="ident">query_afx</span></span>(<span>self) ‑> flask_sqlalchemy.BaseQuery</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Query to qet all the affixes that exist for this word
-Only primitives have affixes</p>
-<p>Args:</p>
-<h2 id="returns">Returns</h2>
-<p>BaseQuery</p></div>
-</dd>
-<dt id="loglan_db.model_db.base_word.BaseWord.query_cpx"><code class="name flex">
-<span>def <span class="ident">query_cpx</span></span>(<span>self) ‑> flask_sqlalchemy.BaseQuery</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Query to qet all the complexes that exist for this word
-Only primitives have affixes</p>
-<p>Args:</p>
-<h2 id="returns">Returns</h2>
-<p>BaseQuery</p></div>
-</dd>
 <dt id="loglan_db.model_db.base_word.BaseWord.query_derivatives"><code class="name flex">
 <span>def <span class="ident">query_derivatives</span></span>(<span>self, word_type: str = None, word_type_x: str = None, word_group: str = None) ‑> flask_sqlalchemy.BaseQuery</span>
 </code></dt>
@@ -218,22 +178,20 @@ Only primitives have affixes</p>
 <dt><strong><code>word_type</code></strong></dt>
 <dd>str:
 (Default value = None)</dd>
+</dl>
+<p>E.g. "2-Cpx", "C-Prim", "LW"<hr></p>
+<dl>
 <dt><strong><code>word_type_x</code></strong></dt>
 <dd>str:
 (Default value = None)</dd>
+</dl>
+<p>E.g. "Predicate", "Name", "Affix"<hr></p>
+<dl>
 <dt><strong><code>word_group</code></strong></dt>
 <dd>str:
 (Default value = None)</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>BaseQuery</p></div>
-</dd>
-<dt id="loglan_db.model_db.base_word.BaseWord.query_keys"><code class="name flex">
-<span>def <span class="ident">query_keys</span></span>(<span>self) ‑> flask_sqlalchemy.BaseQuery</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Query for the BaseKeys linked with this BaseWord</p>
-<p>Args:</p>
+<p>E.g. "Cpx", "Prim", "Little"<hr></p>
 <h2 id="returns">Returns</h2>
 <p>BaseQuery</p></div>
 </dd>
@@ -285,7 +243,6 @@ Only primitives have affixes</p>
 <h4><code><a title="loglan_db.model_db.base_word.BaseWord" href="#loglan_db.model_db.base_word.BaseWord">BaseWord</a></code></h4>
 <ul class="two-column">
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.TID_old" href="#loglan_db.model_db.base_word.BaseWord.TID_old">TID_old</a></code></li>
-<li><code><a title="loglan_db.model_db.base_word.BaseWord.add_query_filters" href="#loglan_db.model_db.base_word.BaseWord.add_query_filters">add_query_filters</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.affixes" href="#loglan_db.model_db.base_word.BaseWord.affixes">affixes</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.authors" href="#loglan_db.model_db.base_word.BaseWord.authors">authors</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.complexes" href="#loglan_db.model_db.base_word.BaseWord.complexes">complexes</a></code></li>
@@ -304,10 +261,7 @@ Only primitives have affixes</p>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.origin" href="#loglan_db.model_db.base_word.BaseWord.origin">origin</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.origin_x" href="#loglan_db.model_db.base_word.BaseWord.origin_x">origin_x</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.parents" href="#loglan_db.model_db.base_word.BaseWord.parents">parents</a></code></li>
-<li><code><a title="loglan_db.model_db.base_word.BaseWord.query_afx" href="#loglan_db.model_db.base_word.BaseWord.query_afx">query_afx</a></code></li>
-<li><code><a title="loglan_db.model_db.base_word.BaseWord.query_cpx" href="#loglan_db.model_db.base_word.BaseWord.query_cpx">query_cpx</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.query_derivatives" href="#loglan_db.model_db.base_word.BaseWord.query_derivatives">query_derivatives</a></code></li>
-<li><code><a title="loglan_db.model_db.base_word.BaseWord.query_keys" href="#loglan_db.model_db.base_word.BaseWord.query_keys">query_keys</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.rank" href="#loglan_db.model_db.base_word.BaseWord.rank">rank</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.type" href="#loglan_db.model_db.base_word.BaseWord.type">type</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.type_id" href="#loglan_db.model_db.base_word.BaseWord.type_id">type_id</a></code></li>

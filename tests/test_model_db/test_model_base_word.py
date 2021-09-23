@@ -20,6 +20,7 @@ from tests.data import keys, definitions, words, types, authors
 from tests.data import word_1
 from tests.functions import db_connect_authors, db_connect_keys, db_connect_words, \
     db_add_objects, dar
+from flask_sqlalchemy import BaseQuery
 
 
 @pytest.mark.usefixtures("db")
@@ -92,8 +93,17 @@ class TestWord:
         definitions_to_add = [d for d in definitions if d["word_id"] == word.id]
         db_add_objects(Definition, definitions_to_add)
 
-        assert word.definitions.count() == len(definitions_to_add) == 5
-        assert isinstance(word.definitions[0], Definition)
+        assert word._definitions.count() == len(definitions_to_add) == 5
+        assert isinstance(word._definitions[0], Definition)
+
+    def test_derivatives(self):
+        db_add_objects(Word, words)
+        db_connect_words(connect_words)
+
+        p1 = Word.get_by_id(3813)
+
+        assert isinstance(p1.derivatives, BaseQuery)
+        assert p1.derivatives.count() == 3
 
     def test_query_derivatives(self):
         db_add_objects(Word, words)
@@ -116,46 +126,14 @@ class TestWord:
         assert p1.query_derivatives(word_group="Little").count() == 2
         assert p2.query_derivatives(word_group="Cpx").count() == 1
 
-    def test_query_cpx(self):
-        db_add_objects(Word, words)
-        db_add_objects(Type, types)
-        db_connect_words(connect_words)
-
-        p1 = Word.get_by_id(3813)
-        p2 = Word.get_by_id(7315)
-
-        assert p1.query_cpx().count() == 1
-        assert p2.query_cpx().count() == 1
-
-    def test_query_afx(self):
-        db_add_objects(Word, words)
-        db_add_objects(Type, types)
-        db_connect_words(connect_words)
-
-        p1 = Word.get_by_id(3813)
-        p2 = Word.get_by_id(7315)
-
-        assert p1.query_afx().count() == 2
-        assert p2.query_afx().count() == 1
-
-    def test_query_keys(self):
-        db_add_objects(Word, words)
-        db_add_objects(Key, keys)
-        db_add_objects(Definition, definitions)
-        db_connect_keys(connect_keys)
-
-        result = Word.get_by_id(7316).query_keys().count()
-
-        assert result == 7
-
     def test_parents(self):
         db_add_objects(Word, words)
         db_connect_words(connect_words)
 
         result = Word.get_by_id(7316).parents
 
-        assert len(result) == 2
-        assert isinstance(result, list)
+        assert len(result.all()) == 2
+        assert isinstance(result, BaseQuery)
         assert isinstance(result[0], Word)
 
     def test_complexes(self):
@@ -165,8 +143,8 @@ class TestWord:
 
         result = Word.get_by_id(3813).complexes
 
-        assert len(result) == 1
-        assert isinstance(result, list)
+        assert len(result.all()) == 1
+        assert isinstance(result, BaseQuery)
         assert isinstance(result[0], Word)
 
     def test_affixes(self):
@@ -176,8 +154,8 @@ class TestWord:
 
         result = Word.get_by_id(3813).affixes
 
-        assert len(result) == 2
-        assert isinstance(result, list)
+        assert len(result.all()) == 2
+        assert isinstance(result, BaseQuery)
         assert isinstance(result[0], Word)
 
     def test_keys(self):
@@ -188,6 +166,6 @@ class TestWord:
 
         result = Word.get_by_id(7316).keys
 
-        assert len(result) == 6
-        assert isinstance(result, list)
+        assert len(result.all()) == 6
+        assert isinstance(result, BaseQuery)
         assert isinstance(result[0], Key)

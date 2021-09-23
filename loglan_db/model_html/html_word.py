@@ -15,8 +15,7 @@ from loglan_db.model_html import DEFAULT_HTML_STYLE
 from loglan_db.model_html.html_definition import HTMLExportDefinition
 from loglan_db.model_export import AddonExportWordConverter
 from loglan_db import db
-from sqlalchemy.ext.hybrid import hybrid_property
-from loglan_db.model_db.base_connect_tables import t_connect_words
+
 
 @dataclass
 class Meaning:
@@ -106,10 +105,6 @@ class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExport
 
     _definitions = db.relationship(
         HTMLExportDefinition.__name__, lazy='dynamic', viewonly=True)
-
-    @hybrid_property
-    def definitions(self):
-        return self._definitions
 
     @classmethod
     def html_all_by_name(

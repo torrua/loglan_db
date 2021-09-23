@@ -118,10 +118,6 @@ for example, any mapped columns or relationships.</p></div>
 </ul>
 <h3>Instance variables</h3>
 <dl>
-<dt id="loglan_db.model_export.ExportAuthor.contribution"><code class="name">var <span class="ident">contribution</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
 <dt id="loglan_db.model_export.ExportAuthor.created"><code class="name">var <span class="ident">created</span></code></dt>
 <dd>
 <div class="desc"></div>
@@ -150,6 +146,7 @@ for example, any mapped columns or relationships.</p></div>
 <li><code><a title="loglan_db.model_db.base_author.BaseAuthor.attributes_all" href="model_init.html#loglan_db.model_init.DBBase.attributes_all">attributes_all</a></code></li>
 <li><code><a title="loglan_db.model_db.base_author.BaseAuthor.attributes_basic" href="model_init.html#loglan_db.model_init.DBBase.attributes_basic">attributes_basic</a></code></li>
 <li><code><a title="loglan_db.model_db.base_author.BaseAuthor.attributes_extended" href="model_init.html#loglan_db.model_init.DBBase.attributes_extended">attributes_extended</a></code></li>
+<li><code><a title="loglan_db.model_db.base_author.BaseAuthor.contribution" href="model_db/base_author.html#loglan_db.model_db.base_author.BaseAuthor.contribution">contribution</a></code></li>
 <li><code><a title="loglan_db.model_db.base_author.BaseAuthor.delete" href="model_init.html#loglan_db.model_init.DBBase.delete">delete</a></code></li>
 <li><code><a title="loglan_db.model_db.base_author.BaseAuthor.foreign_keys" href="model_init.html#loglan_db.model_init.DBBase.foreign_keys">foreign_keys</a></code></li>
 <li><code><a title="loglan_db.model_db.base_author.BaseAuthor.from_dict" href="model_init.html#loglan_db.model_init.InitBase.from_dict">from_dict</a></code></li>
@@ -212,10 +209,6 @@ for example, any mapped columns or relationships.</p></div>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_db.model_export.ExportDefinition.keys"><code class="name">var <span class="ident">keys</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
 <dt id="loglan_db.model_export.ExportDefinition.language"><code class="name">var <span class="ident">language</span></code></dt>
 <dd>
 <div class="desc"></div>
@@ -272,6 +265,7 @@ for example, any mapped columns or relationships.</p></div>
 <li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.grammar" href="model_db/base_definition.html#loglan_db.model_db.base_definition.BaseDefinition.grammar">grammar</a></code></li>
 <li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.id" href="model_db/base_definition.html#loglan_db.model_db.base_definition.BaseDefinition.id">id</a></code></li>
 <li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.import_" href="model_init.html#loglan_db.model_init.InitBase.import_">import_</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.keys" href="model_db/base_definition.html#loglan_db.model_db.base_definition.BaseDefinition.keys">keys</a></code></li>
 <li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.link_key_from_str" href="model_db/base_definition.html#loglan_db.model_db.base_definition.BaseDefinition.link_key_from_str">link_key_from_str</a></code></li>
 <li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.link_keys" href="model_db/base_definition.html#loglan_db.model_db.base_definition.BaseDefinition.link_keys">link_keys</a></code></li>
 <li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.link_keys_from_definition_body" href="model_db/base_definition.html#loglan_db.model_db.base_definition.BaseDefinition.link_keys_from_definition_body">link_keys_from_definition_body</a></code></li>
@@ -279,6 +273,7 @@ for example, any mapped columns or relationships.</p></div>
 <li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.non_foreign_keys" href="model_init.html#loglan_db.model_init.DBBase.non_foreign_keys">non_foreign_keys</a></code></li>
 <li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.relationships" href="model_init.html#loglan_db.model_init.DBBase.relationships">relationships</a></code></li>
 <li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.save" href="model_init.html#loglan_db.model_init.DBBase.save">save</a></code></li>
+<li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.source_word" href="model_db/base_definition.html#loglan_db.model_db.base_definition.BaseDefinition.source_word">source_word</a></code></li>
 <li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.stringer" href="model_init.html#loglan_db.model_init.InitBase.stringer">stringer</a></code></li>
 <li><code><a title="loglan_db.model_db.base_definition.BaseDefinition.update" href="model_init.html#loglan_db.model_init.DBBase.update">update</a></code></li>
 </ul>
@@ -307,15 +302,7 @@ for example, any mapped columns or relationships.</p></div>
 </ul>
 <h3>Instance variables</h3>
 <dl>
-<dt id="loglan_db.model_export.ExportEvent.appeared_words"><code class="name">var <span class="ident">appeared_words</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
 <dt id="loglan_db.model_export.ExportEvent.created"><code class="name">var <span class="ident">created</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="loglan_db.model_export.ExportEvent.deprecated_words"><code class="name">var <span class="ident">deprecated_words</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -340,12 +327,14 @@ for example, any mapped columns or relationships.</p></div>
 <li><code><b><a title="loglan_db.model_db.base_event.BaseEvent" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent">BaseEvent</a></b></code>:
 <ul class="hlist">
 <li><code><a title="loglan_db.model_db.base_event.BaseEvent.annotation" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent.annotation">annotation</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.appeared_words" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent.appeared_words">appeared_words</a></code></li>
 <li><code><a title="loglan_db.model_db.base_event.BaseEvent.attributes_all" href="model_init.html#loglan_db.model_init.DBBase.attributes_all">attributes_all</a></code></li>
 <li><code><a title="loglan_db.model_db.base_event.BaseEvent.attributes_basic" href="model_init.html#loglan_db.model_init.DBBase.attributes_basic">attributes_basic</a></code></li>
 <li><code><a title="loglan_db.model_db.base_event.BaseEvent.attributes_extended" href="model_init.html#loglan_db.model_init.DBBase.attributes_extended">attributes_extended</a></code></li>
 <li><code><a title="loglan_db.model_db.base_event.BaseEvent.date" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent.date">date</a></code></li>
 <li><code><a title="loglan_db.model_db.base_event.BaseEvent.definition" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent.definition">definition</a></code></li>
 <li><code><a title="loglan_db.model_db.base_event.BaseEvent.delete" href="model_init.html#loglan_db.model_init.DBBase.delete">delete</a></code></li>
+<li><code><a title="loglan_db.model_db.base_event.BaseEvent.deprecated_words" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent.deprecated_words">deprecated_words</a></code></li>
 <li><code><a title="loglan_db.model_db.base_event.BaseEvent.foreign_keys" href="model_init.html#loglan_db.model_init.DBBase.foreign_keys">foreign_keys</a></code></li>
 <li><code><a title="loglan_db.model_db.base_event.BaseEvent.from_dict" href="model_init.html#loglan_db.model_init.InitBase.from_dict">from_dict</a></code></li>
 <li><code><a title="loglan_db.model_db.base_event.BaseEvent.get_all" href="model_init.html#loglan_db.model_init.DBBase.get_all">get_all</a></code></li>
@@ -551,10 +540,6 @@ for example, any mapped columns or relationships.</p></div>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_db.model_export.ExportType.words"><code class="name">var <span class="ident">words</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
 </dl>
 <h3>Methods</h3>
 <dl>
@@ -618,23 +603,11 @@ for example, any mapped columns or relationships.</p></div>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_db.model_export.ExportWord.authors"><code class="name">var <span class="ident">authors</span> : flask_sqlalchemy.BaseQuery</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
 <dt id="loglan_db.model_export.ExportWord.created"><code class="name">var <span class="ident">created</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_db.model_export.ExportWord.event_end"><code class="name">var <span class="ident">event_end</span> : <a title="loglan_db.model_db.base_event.BaseEvent" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent">BaseEvent</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
 <dt id="loglan_db.model_export.ExportWord.event_end_id"><code class="name">var <span class="ident">event_end_id</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="loglan_db.model_export.ExportWord.event_start"><code class="name">var <span class="ident">event_start</span> : <a title="loglan_db.model_db.base_event.BaseEvent" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent">BaseEvent</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -670,10 +643,6 @@ for example, any mapped columns or relationships.</p></div>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_db.model_export.ExportWord.type"><code class="name">var <span class="ident">type</span> : <a title="loglan_db.model_db.base_type.BaseType" href="model_db/base_type.html#loglan_db.model_db.base_type.BaseType">BaseType</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
 <dt id="loglan_db.model_export.ExportWord.type_id"><code class="name">var <span class="ident">type_id</span></code></dt>
 <dd>
 <div class="desc"></div>
@@ -702,7 +671,6 @@ for example, any mapped columns or relationships.</p></div>
 <ul class="hlist">
 <li><code><b><a title="loglan_db.model_db.base_word.BaseWord" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord">BaseWord</a></b></code>:
 <ul class="hlist">
-<li><code><a title="loglan_db.model_db.base_word.BaseWord.add_query_filters" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.add_query_filters">add_query_filters</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.affixes" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.affixes">affixes</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.attributes_all" href="model_init.html#loglan_db.model_init.DBBase.attributes_all">attributes_all</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.attributes_basic" href="model_init.html#loglan_db.model_init.DBBase.attributes_basic">attributes_basic</a></code></li>
@@ -718,10 +686,7 @@ for example, any mapped columns or relationships.</p></div>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.keys" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.keys">keys</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.non_foreign_keys" href="model_init.html#loglan_db.model_init.DBBase.non_foreign_keys">non_foreign_keys</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.parents" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.parents">parents</a></code></li>
-<li><code><a title="loglan_db.model_db.base_word.BaseWord.query_afx" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.query_afx">query_afx</a></code></li>
-<li><code><a title="loglan_db.model_db.base_word.BaseWord.query_cpx" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.query_cpx">query_cpx</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.query_derivatives" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.query_derivatives">query_derivatives</a></code></li>
-<li><code><a title="loglan_db.model_db.base_word.BaseWord.query_keys" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.query_keys">query_keys</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.relationships" href="model_init.html#loglan_db.model_init.DBBase.relationships">relationships</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.save" href="model_init.html#loglan_db.model_init.DBBase.save">save</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.stringer" href="model_init.html#loglan_db.model_init.InitBase.stringer">stringer</a></code></li>
@@ -766,23 +731,11 @@ for example, any mapped columns or relationships.</p></div>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_db.model_export.ExportWordSpell.authors"><code class="name">var <span class="ident">authors</span> : flask_sqlalchemy.BaseQuery</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
 <dt id="loglan_db.model_export.ExportWordSpell.created"><code class="name">var <span class="ident">created</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_db.model_export.ExportWordSpell.event_end"><code class="name">var <span class="ident">event_end</span> : <a title="loglan_db.model_db.base_event.BaseEvent" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent">BaseEvent</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
 <dt id="loglan_db.model_export.ExportWordSpell.event_end_id"><code class="name">var <span class="ident">event_end_id</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="loglan_db.model_export.ExportWordSpell.event_start"><code class="name">var <span class="ident">event_start</span> : <a title="loglan_db.model_db.base_event.BaseEvent" href="model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent">BaseEvent</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -815,10 +768,6 @@ for example, any mapped columns or relationships.</p></div>
 <div class="desc"></div>
 </dd>
 <dt id="loglan_db.model_export.ExportWordSpell.rank"><code class="name">var <span class="ident">rank</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="loglan_db.model_export.ExportWordSpell.type"><code class="name">var <span class="ident">type</span> : <a title="loglan_db.model_db.base_type.BaseType" href="model_db/base_type.html#loglan_db.model_db.base_type.BaseType">BaseType</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -862,7 +811,6 @@ for example, any mapped columns or relationships.</p></div>
 </li>
 <li><code><b><a title="loglan_db.model_db.base_word.BaseWord" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord">BaseWord</a></b></code>:
 <ul class="hlist">
-<li><code><a title="loglan_db.model_db.base_word.BaseWord.add_query_filters" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.add_query_filters">add_query_filters</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.affixes" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.affixes">affixes</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.attributes_all" href="model_init.html#loglan_db.model_init.DBBase.attributes_all">attributes_all</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.attributes_basic" href="model_init.html#loglan_db.model_init.DBBase.attributes_basic">attributes_basic</a></code></li>
@@ -875,10 +823,7 @@ for example, any mapped columns or relationships.</p></div>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.keys" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.keys">keys</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.non_foreign_keys" href="model_init.html#loglan_db.model_init.DBBase.non_foreign_keys">non_foreign_keys</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.parents" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.parents">parents</a></code></li>
-<li><code><a title="loglan_db.model_db.base_word.BaseWord.query_afx" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.query_afx">query_afx</a></code></li>
-<li><code><a title="loglan_db.model_db.base_word.BaseWord.query_cpx" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.query_cpx">query_cpx</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.query_derivatives" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.query_derivatives">query_derivatives</a></code></li>
-<li><code><a title="loglan_db.model_db.base_word.BaseWord.query_keys" href="model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.query_keys">query_keys</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.relationships" href="model_init.html#loglan_db.model_init.DBBase.relationships">relationships</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.save" href="model_init.html#loglan_db.model_init.DBBase.save">save</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.update" href="model_init.html#loglan_db.model_init.DBBase.update">update</a></code></li>
@@ -921,7 +866,6 @@ for example, any mapped columns or relationships.</p></div>
 <li>
 <h4><code><a title="loglan_db.model_export.ExportAuthor" href="#loglan_db.model_export.ExportAuthor">ExportAuthor</a></code></h4>
 <ul class="">
-<li><code><a title="loglan_db.model_export.ExportAuthor.contribution" href="#loglan_db.model_export.ExportAuthor.contribution">contribution</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportAuthor.created" href="#loglan_db.model_export.ExportAuthor.created">created</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportAuthor.export" href="#loglan_db.model_export.ExportAuthor.export">export</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportAuthor.updated" href="#loglan_db.model_export.ExportAuthor.updated">updated</a></code></li>
@@ -936,7 +880,6 @@ for example, any mapped columns or relationships.</p></div>
 <li><code><a title="loglan_db.model_export.ExportDefinition.e_grammar" href="#loglan_db.model_export.ExportDefinition.e_grammar">e_grammar</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportDefinition.export" href="#loglan_db.model_export.ExportDefinition.export">export</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportDefinition.grammar_code" href="#loglan_db.model_export.ExportDefinition.grammar_code">grammar_code</a></code></li>
-<li><code><a title="loglan_db.model_export.ExportDefinition.keys" href="#loglan_db.model_export.ExportDefinition.keys">keys</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportDefinition.language" href="#loglan_db.model_export.ExportDefinition.language">language</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportDefinition.notes" href="#loglan_db.model_export.ExportDefinition.notes">notes</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportDefinition.position" href="#loglan_db.model_export.ExportDefinition.position">position</a></code></li>
@@ -949,9 +892,7 @@ for example, any mapped columns or relationships.</p></div>
 <li>
 <h4><code><a title="loglan_db.model_export.ExportEvent" href="#loglan_db.model_export.ExportEvent">ExportEvent</a></code></h4>
 <ul class="">
-<li><code><a title="loglan_db.model_export.ExportEvent.appeared_words" href="#loglan_db.model_export.ExportEvent.appeared_words">appeared_words</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportEvent.created" href="#loglan_db.model_export.ExportEvent.created">created</a></code></li>
-<li><code><a title="loglan_db.model_export.ExportEvent.deprecated_words" href="#loglan_db.model_export.ExportEvent.deprecated_words">deprecated_words</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportEvent.export" href="#loglan_db.model_export.ExportEvent.export">export</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportEvent.updated" href="#loglan_db.model_export.ExportEvent.updated">updated</a></code></li>
 </ul>
@@ -983,18 +924,14 @@ for example, any mapped columns or relationships.</p></div>
 <li><code><a title="loglan_db.model_export.ExportType.type" href="#loglan_db.model_export.ExportType.type">type</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportType.type_x" href="#loglan_db.model_export.ExportType.type_x">type_x</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportType.updated" href="#loglan_db.model_export.ExportType.updated">updated</a></code></li>
-<li><code><a title="loglan_db.model_export.ExportType.words" href="#loglan_db.model_export.ExportType.words">words</a></code></li>
 </ul>
 </li>
 <li>
 <h4><code><a title="loglan_db.model_export.ExportWord" href="#loglan_db.model_export.ExportWord">ExportWord</a></code></h4>
 <ul class="two-column">
 <li><code><a title="loglan_db.model_export.ExportWord.TID_old" href="#loglan_db.model_export.ExportWord.TID_old">TID_old</a></code></li>
-<li><code><a title="loglan_db.model_export.ExportWord.authors" href="#loglan_db.model_export.ExportWord.authors">authors</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportWord.created" href="#loglan_db.model_export.ExportWord.created">created</a></code></li>
-<li><code><a title="loglan_db.model_export.ExportWord.event_end" href="#loglan_db.model_export.ExportWord.event_end">event_end</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportWord.event_end_id" href="#loglan_db.model_export.ExportWord.event_end_id">event_end_id</a></code></li>
-<li><code><a title="loglan_db.model_export.ExportWord.event_start" href="#loglan_db.model_export.ExportWord.event_start">event_start</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportWord.event_start_id" href="#loglan_db.model_export.ExportWord.event_start_id">event_start_id</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportWord.export" href="#loglan_db.model_export.ExportWord.export">export</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportWord.id_old" href="#loglan_db.model_export.ExportWord.id_old">id_old</a></code></li>
@@ -1004,7 +941,6 @@ for example, any mapped columns or relationships.</p></div>
 <li><code><a title="loglan_db.model_export.ExportWord.origin" href="#loglan_db.model_export.ExportWord.origin">origin</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportWord.origin_x" href="#loglan_db.model_export.ExportWord.origin_x">origin_x</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportWord.rank" href="#loglan_db.model_export.ExportWord.rank">rank</a></code></li>
-<li><code><a title="loglan_db.model_export.ExportWord.type" href="#loglan_db.model_export.ExportWord.type">type</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportWord.type_id" href="#loglan_db.model_export.ExportWord.type_id">type_id</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportWord.updated" href="#loglan_db.model_export.ExportWord.updated">updated</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportWord.year" href="#loglan_db.model_export.ExportWord.year">year</a></code></li>
@@ -1014,11 +950,8 @@ for example, any mapped columns or relationships.</p></div>
 <h4><code><a title="loglan_db.model_export.ExportWordSpell" href="#loglan_db.model_export.ExportWordSpell">ExportWordSpell</a></code></h4>
 <ul class="two-column">
 <li><code><a title="loglan_db.model_export.ExportWordSpell.TID_old" href="#loglan_db.model_export.ExportWordSpell.TID_old">TID_old</a></code></li>
-<li><code><a title="loglan_db.model_export.ExportWordSpell.authors" href="#loglan_db.model_export.ExportWordSpell.authors">authors</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportWordSpell.created" href="#loglan_db.model_export.ExportWordSpell.created">created</a></code></li>
-<li><code><a title="loglan_db.model_export.ExportWordSpell.event_end" href="#loglan_db.model_export.ExportWordSpell.event_end">event_end</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportWordSpell.event_end_id" href="#loglan_db.model_export.ExportWordSpell.event_end_id">event_end_id</a></code></li>
-<li><code><a title="loglan_db.model_export.ExportWordSpell.event_start" href="#loglan_db.model_export.ExportWordSpell.event_start">event_start</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportWordSpell.event_start_id" href="#loglan_db.model_export.ExportWordSpell.event_start_id">event_start_id</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportWordSpell.export" href="#loglan_db.model_export.ExportWordSpell.export">export</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportWordSpell.id_old" href="#loglan_db.model_export.ExportWordSpell.id_old">id_old</a></code></li>
@@ -1028,7 +961,6 @@ for example, any mapped columns or relationships.</p></div>
 <li><code><a title="loglan_db.model_export.ExportWordSpell.origin" href="#loglan_db.model_export.ExportWordSpell.origin">origin</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportWordSpell.origin_x" href="#loglan_db.model_export.ExportWordSpell.origin_x">origin_x</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportWordSpell.rank" href="#loglan_db.model_export.ExportWordSpell.rank">rank</a></code></li>
-<li><code><a title="loglan_db.model_export.ExportWordSpell.type" href="#loglan_db.model_export.ExportWordSpell.type">type</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportWordSpell.type_id" href="#loglan_db.model_export.ExportWordSpell.type_id">type_id</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportWordSpell.updated" href="#loglan_db.model_export.ExportWordSpell.updated">updated</a></code></li>
 <li><code><a title="loglan_db.model_export.ExportWordSpell.year" href="#loglan_db.model_export.ExportWordSpell.year">year</a></code></li>

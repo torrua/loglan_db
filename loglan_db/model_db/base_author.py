@@ -10,11 +10,6 @@ from loglan_db.model_db.base_connect_tables import t_connect_authors
 
 
 __pdoc__ = {
-
-    'BaseAuthor.contribution':
-        """*Relationship query for getting a list of words coined by this author*
-
-    **query** : Optional[List[BaseWord]]""",
     'BaseAuthor.created': False, 'BaseAuthor.updated': False,
 }
 
@@ -61,8 +56,18 @@ class BaseAuthor(db.Model, InitBase, DBBase):
 
     notes = db.Column(db.String(128), nullable=True, unique=False)
     """*Any additional information about author*  
+        
         **str** : max_length=128, nullable=True, unique=False
     """
 
-    contribution = db.relationship(
-        "BaseWord", back_populates="authors", secondary=t_connect_authors)
+    _contribution = db.relationship(
+        "BaseWord", back_populates="_authors", secondary=t_connect_authors)
+
+    @property
+    def contribution(self):
+        """
+        *Relationship query for getting a list of words coined by this author*
+
+        **query** : Optional[List[BaseWord]]
+        """
+        return self._contribution

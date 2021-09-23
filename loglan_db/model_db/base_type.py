@@ -30,9 +30,13 @@ class BaseType(db.Model, InitBase, DBBase):
     parentable = db.Column(db.Boolean, nullable=False)  # E.g. True, False
     description = db.Column(db.String(255))  # E.g. Two-term Complex, ...
 
-    words = db.relationship(
-        "BaseWord", back_populates="type",
+    _words = db.relationship(
+        "BaseWord", back_populates="_type",
         foreign_keys="BaseWord.type_id")
+
+    @property
+    def words(self):
+        return self._words
 
     @classmethod
     def by(cls, type_filter: Union[str, List[str]]) -> BaseQuery:

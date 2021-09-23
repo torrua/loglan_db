@@ -122,7 +122,7 @@ class DBBase:
         """
         :return:
         """
-        return {key for key in cls.__mapper__.attrs.keys() if not key.startswith("_")}
+        return {key for key in cls.__mapper__.attrs.keys()}
 
     @classmethod
     def attributes_basic(cls) -> Set[str]:
@@ -143,7 +143,7 @@ class DBBase:
         """
         :return:
         """
-        return {key for key in cls.__mapper__.relationships.keys() if not key.startswith("_")}
+        return {key for key in cls.__mapper__.relationships.keys()}
 
     @classmethod
     def foreign_keys(cls) -> Set[str]:
@@ -157,5 +157,4 @@ class DBBase:
         """
         :return:
         """
-        return {column.name for column in cls.__table__.columns
-                if not (column.foreign_keys or column.name.startswith("_"))}
+        return {column.name for column in cls.__table__.columns if not column.foreign_keys}

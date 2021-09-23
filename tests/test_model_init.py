@@ -70,38 +70,40 @@ class TestDBBase:
 
     def test_attributes_all(self):
         result = Word.attributes_all()
-        assert sorted(result) == [
-            'TID_old', 'authors', 'created',
-            'event_end', 'event_end_id', 'event_start',
+        assert set(result) == {
+            'TID_old', '_authors', 'created', '_definitions',
+            '_derivatives', '_event_end', 'event_end_id', '_event_start',
             'event_start_id', 'id', 'id_old', 'match', 'name',
-            'notes', 'origin', 'origin_x', 'rank', 'type',
-            'type_id', 'updated', 'year', ]
+            'notes', 'origin', 'origin_x', 'rank', '_type',
+            'type_id', 'updated', 'year', '_parents'}
 
     def test_attributes_basic(self):
         result = Word.attributes_basic()
-        assert sorted(result) == [
+        assert set(result) == {
             'TID_old', 'created', 'event_end_id', 'event_start_id',
             'id', 'id_old', 'match', 'name', 'notes', 'origin',
-            'origin_x', 'rank', 'type_id', 'updated', 'year']
+            'origin_x', 'rank', 'type_id', 'updated', 'year'}
 
     def test_attributes_extended(self):
         result = Word.attributes_extended()
-        assert sorted(result) == [
-            'TID_old', 'authors', 'created', 'event_end', 'event_start',
+        assert set(result) == {
+            'TID_old', '_authors', 'created', '_definitions', '_derivatives',
+            '_event_end', '_event_start',
             'id', 'id_old', 'match', 'name', 'notes', 'origin',
-            'origin_x', 'rank', 'type', 'updated', 'year']
+            'origin_x', '_parents', 'rank', '_type', 'updated', 'year'}
 
     def test_relationships(self):
         result = Word.relationships()
-        assert sorted(result) == [
-            'authors', 'event_end', 'event_start', 'type']
+        assert set(result) == {
+            '_authors', '_definitions', '_derivatives',
+            '_parents',  '_event_end', '_event_start', '_type'}
 
     def test_foreign_keys(self):
         result = Word.foreign_keys()
-        assert sorted(result) == ['event_end_id', 'event_start_id', 'type_id']
+        assert set(result) == {'event_end_id', 'event_start_id', 'type_id'}
 
     def test_non_foreign_keys(self):
         result = Word.non_foreign_keys()
-        assert sorted(result) == [
+        assert set(result) == {
             'TID_old', 'created', 'id', 'id_old', 'match', 'name',
-            'notes', 'origin', 'origin_x', 'rank', 'updated', 'year']
+            'notes', 'origin', 'origin_x', 'rank', 'updated', 'year'}

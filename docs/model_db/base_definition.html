@@ -114,9 +114,9 @@ for example, any mapped columns or relationships.</p></div>
 <dd>
 <div class="desc"><p>Definition's internal ID number: Integer</p></div>
 </dd>
-<dt id="loglan_db.model_db.base_definition.BaseDefinition.keys"><code class="name">var <span class="ident">keys</span></code></dt>
+<dt id="loglan_db.model_db.base_definition.BaseDefinition.keys"><code class="name">var <span class="ident">keys</span> : flask_sqlalchemy.BaseQuery</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Returns:</p></div>
 </dd>
 <dt id="loglan_db.model_db.base_definition.BaseDefinition.language"><code class="name">var <span class="ident">language</span></code></dt>
 <dd>
@@ -133,6 +133,10 @@ for example, any mapped columns or relationships.</p></div>
 <dt id="loglan_db.model_db.base_definition.BaseDefinition.slots"><code class="name">var <span class="ident">slots</span></code></dt>
 <dd>
 <div class="desc"></div>
+</dd>
+<dt id="loglan_db.model_db.base_definition.BaseDefinition.source_word"><code class="name">var <span class="ident">source_word</span> : flask_sqlalchemy.BaseQuery</code></dt>
+<dd>
+<div class="desc"><p>Returns:</p></div>
 </dd>
 <dt id="loglan_db.model_db.base_definition.BaseDefinition.usage"><code class="name">var <span class="ident">usage</span></code></dt>
 <dd>
@@ -214,12 +218,6 @@ Only new words will be linked, skipping those that were previously linked</p>
 </dl>
 <h2 id="returns">Returns</h2>
 <p>List of linked BaseKey objects</p></div>
-</dd>
-<dt id="loglan_db.model_db.base_definition.BaseDefinition.source_word"><code class="name flex">
-<span>def <span class="ident">source_word</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>source_word</p></div>
 </dd>
 </dl>
 <h3>Inherited members</h3>

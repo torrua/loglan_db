@@ -10,16 +10,6 @@ from loglan_db.model_db import t_name_events
 from loglan_db.model_init import InitBase, DBBase
 
 __pdoc__ = {
-    'BaseEvent.appeared_words':
-        """*Relationship query for getting a list of words appeared during this event*
-
-    **query** : Optional[List[BaseWord]]""",
-
-    'BaseEvent.deprecated_words':
-        """*Relationship query for getting a list of words deprecated during this event*
-
-    **query** : Optional[List[BaseWord]]""",
-
     'BaseEvent.created': False, 'BaseEvent.updated': False,
 }
 
@@ -62,13 +52,31 @@ class BaseEvent(db.Model, InitBase, DBBase):
     """*Event's suffix (used to create filename when exporting HTML file)*  
         **str** : max_length=16, nullable=False, unique=False"""
 
-    deprecated_words = db.relationship(
-        "BaseWord", back_populates="event_end",
+    _deprecated_words = db.relationship(
+        "BaseWord", back_populates="_event_end",
         foreign_keys="BaseWord.event_end_id")
 
-    appeared_words = db.relationship(
-        "BaseWord", back_populates="event_start",
+    _appeared_words = db.relationship(
+        "BaseWord", back_populates="_event_start",
         foreign_keys="BaseWord.event_start_id")
+
+    @property
+    def deprecated_words(self):
+        """
+        *Relationship query for getting a list of words deprecated during this event*
+
+        **query** : Optional[List[BaseWord]]"""
+
+        return self._deprecated_words
+
+    @property
+    def appeared_words(self):
+        """
+        *Relationship query for getting a list of words appeared during this event*
+
+        **query** : Optional[List[BaseWord]]"""
+
+        return self._appeared_words
 
     @classmethod
     def latest(cls) -> BaseEvent:

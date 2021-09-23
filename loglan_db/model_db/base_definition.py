@@ -13,11 +13,9 @@ from loglan_db.model_db import t_name_definitions, t_name_words
 from loglan_db.model_db.base_connect_tables import t_connect_keys
 from loglan_db.model_db.base_key import BaseKey
 from loglan_db.model_init import InitBase, DBBase
-from sqlalchemy.ext.hybrid import hybrid_property
 
 
 __pdoc__ = {
-    'BaseDefinition.source_word': 'source_word',
     'BaseDefinition.created': False, 'BaseDefinition.updated': False,
 }
 
@@ -42,14 +40,29 @@ class BaseDefinition(db.Model, InitBase, DBBase):
     APPROVED_CASE_TAGS = ["B", "C", "D", "F", "G", "J", "K", "N", "P", "S", "V", ]
     KEY_PATTERN = r"(?<=\«)(.+?)(?=\»)"
 
-    keys = db.relationship(BaseKey.__name__, secondary=t_connect_keys,
-                           backref="definitions", lazy='dynamic')
+    _keys = db.relationship(
+        BaseKey.__name__, secondary=t_connect_keys,
+        back_populates="_definitions", lazy='dynamic')
 
     _source_word = db.relationship(
         "BaseWord", back_populates="_definitions")
 
-    @hybrid_property
-    def source_word(self):
+    @property
+    def keys(self) -> BaseQuery:
+        """
+
+        Returns:
+
+        """
+        return self._keys
+
+    @property
+    def source_word(self) -> BaseQuery:
+        """
+
+        Returns:
+
+        """
         return self._source_word
 
     @property

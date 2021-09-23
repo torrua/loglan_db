@@ -118,23 +118,11 @@ Returns:</p></div>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_db.model_html.html_word.HTMLExportWord.authors"><code class="name">var <span class="ident">authors</span> : flask_sqlalchemy.BaseQuery</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
 <dt id="loglan_db.model_html.html_word.HTMLExportWord.created"><code class="name">var <span class="ident">created</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_db.model_html.html_word.HTMLExportWord.event_end"><code class="name">var <span class="ident">event_end</span> : <a title="loglan_db.model_db.base_event.BaseEvent" href="../model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent">BaseEvent</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
 <dt id="loglan_db.model_html.html_word.HTMLExportWord.event_end_id"><code class="name">var <span class="ident">event_end_id</span> : sqlalchemy.sql.schema.Column</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="loglan_db.model_html.html_word.HTMLExportWord.event_start"><code class="name">var <span class="ident">event_start</span> : <a title="loglan_db.model_db.base_event.BaseEvent" href="../model_db/base_event.html#loglan_db.model_db.base_event.BaseEvent">BaseEvent</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -170,10 +158,6 @@ Returns:</p></div>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_db.model_html.html_word.HTMLExportWord.type"><code class="name">var <span class="ident">type</span> : <a title="loglan_db.model_db.base_type.BaseType" href="../model_db/base_type.html#loglan_db.model_db.base_type.BaseType">BaseType</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
 <dt id="loglan_db.model_html.html_word.HTMLExportWord.type_id"><code class="name">var <span class="ident">type_id</span></code></dt>
 <dd>
 <div class="desc"></div>
@@ -189,12 +173,6 @@ Returns:</p></div>
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="loglan_db.model_html.html_word.HTMLExportWord.definitions"><code class="name flex">
-<span>def <span class="ident">definitions</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
 <dt id="loglan_db.model_html.html_word.HTMLExportWord.get_styled_values"><code class="name flex">
 <span>def <span class="ident">get_styled_values</span></span>(<span>self, style: str = 'ultra') ‑> tuple</span>
 </code></dt>
@@ -244,7 +222,6 @@ Returns:</p></div>
 <ul class="hlist">
 <li><code><b><a title="loglan_db.model_db.base_word.BaseWord" href="../model_db/base_word.html#loglan_db.model_db.base_word.BaseWord">BaseWord</a></b></code>:
 <ul class="hlist">
-<li><code><a title="loglan_db.model_db.base_word.BaseWord.add_query_filters" href="../model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.add_query_filters">add_query_filters</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.affixes" href="../model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.affixes">affixes</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.attributes_all" href="../model_init.html#loglan_db.model_init.DBBase.attributes_all">attributes_all</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.attributes_basic" href="../model_init.html#loglan_db.model_init.DBBase.attributes_basic">attributes_basic</a></code></li>
@@ -261,10 +238,7 @@ Returns:</p></div>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.keys" href="../model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.keys">keys</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.non_foreign_keys" href="../model_init.html#loglan_db.model_init.DBBase.non_foreign_keys">non_foreign_keys</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.parents" href="../model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.parents">parents</a></code></li>
-<li><code><a title="loglan_db.model_db.base_word.BaseWord.query_afx" href="../model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.query_afx">query_afx</a></code></li>
-<li><code><a title="loglan_db.model_db.base_word.BaseWord.query_cpx" href="../model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.query_cpx">query_cpx</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.query_derivatives" href="../model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.query_derivatives">query_derivatives</a></code></li>
-<li><code><a title="loglan_db.model_db.base_word.BaseWord.query_keys" href="../model_db/base_word.html#loglan_db.model_db.base_word.BaseWord.query_keys">query_keys</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.relationships" href="../model_init.html#loglan_db.model_init.DBBase.relationships">relationships</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.save" href="../model_init.html#loglan_db.model_init.DBBase.save">save</a></code></li>
 <li><code><a title="loglan_db.model_db.base_word.BaseWord.stringer" href="../model_init.html#loglan_db.model_init.InitBase.stringer">stringer</a></code></li>
@@ -348,12 +322,8 @@ Returns:</p></div>
 <h4><code><a title="loglan_db.model_html.html_word.HTMLExportWord" href="#loglan_db.model_html.html_word.HTMLExportWord">HTMLExportWord</a></code></h4>
 <ul class="two-column">
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.TID_old" href="#loglan_db.model_html.html_word.HTMLExportWord.TID_old">TID_old</a></code></li>
-<li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.authors" href="#loglan_db.model_html.html_word.HTMLExportWord.authors">authors</a></code></li>
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.created" href="#loglan_db.model_html.html_word.HTMLExportWord.created">created</a></code></li>
-<li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.definitions" href="#loglan_db.model_html.html_word.HTMLExportWord.definitions">definitions</a></code></li>
-<li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.event_end" href="#loglan_db.model_html.html_word.HTMLExportWord.event_end">event_end</a></code></li>
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.event_end_id" href="#loglan_db.model_html.html_word.HTMLExportWord.event_end_id">event_end_id</a></code></li>
-<li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.event_start" href="#loglan_db.model_html.html_word.HTMLExportWord.event_start">event_start</a></code></li>
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.event_start_id" href="#loglan_db.model_html.html_word.HTMLExportWord.event_start_id">event_start_id</a></code></li>
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.get_styled_values" href="#loglan_db.model_html.html_word.HTMLExportWord.get_styled_values">get_styled_values</a></code></li>
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.html_all_by_name" href="#loglan_db.model_html.html_word.HTMLExportWord.html_all_by_name">html_all_by_name</a></code></li>
@@ -368,7 +338,6 @@ Returns:</p></div>
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.origin" href="#loglan_db.model_html.html_word.HTMLExportWord.origin">origin</a></code></li>
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.origin_x" href="#loglan_db.model_html.html_word.HTMLExportWord.origin_x">origin_x</a></code></li>
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.rank" href="#loglan_db.model_html.html_word.HTMLExportWord.rank">rank</a></code></li>
-<li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.type" href="#loglan_db.model_html.html_word.HTMLExportWord.type">type</a></code></li>
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.type_id" href="#loglan_db.model_html.html_word.HTMLExportWord.type_id">type_id</a></code></li>
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.updated" href="#loglan_db.model_html.html_word.HTMLExportWord.updated">updated</a></code></li>
 <li><code><a title="loglan_db.model_html.html_word.HTMLExportWord.used_in_as_html" href="#loglan_db.model_html.html_word.HTMLExportWord.used_in_as_html">used_in_as_html</a></code></li>

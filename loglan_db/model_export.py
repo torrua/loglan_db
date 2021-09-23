@@ -5,7 +5,7 @@ Add export() function to db object for returning its text string presentation.
 """
 
 from datetime import datetime
-from typing import Dict, List
+from typing import Dict
 from sqlalchemy.orm import Query
 from loglan_db.model_db.base_word import BaseWord
 from loglan_db.model_db.base_word_spell import BaseWordSpell
@@ -104,12 +104,9 @@ class AddonExportWordConverter:
         """
         Returns:
         """
+        source = '/'.join(sorted([author.abbreviation for author in self.authors.all()]))
         notes: Dict[str, str] = self.notes if self.notes else {}
 
-        w_source = self.authors.all()
-        # print(self) if not self.authors.all() else None
-        source = '/'.join(sorted([auth.abbreviation for auth in w_source])) \
-            if len(w_source) > 1 else w_source[0].abbreviation
         return f"{source} {notes.get('author', str())}".strip()
 
     @property
@@ -125,19 +122,14 @@ class AddonExportWordConverter:
         """
         Returns:
         """
-        if not self.complexes:
-            return str()
-        return ' | '.join(sorted({cpx.name for cpx in filter(None, self.complexes)}))
+        return ' | '.join(cpx.name for cpx in self.complexes)
 
     @property
     def e_affixes(self) -> str:
         """
         Returns:
         """
-        w_affixes: List[BaseWord] = list(self.affixes) if self.affixes else list()
-        return ' '.join(sorted(
-            {afx.name.replace("-", "") for afx in w_affixes}
-        )) if w_affixes else str()
+        return ' '.join(afx.name.replace("-", "") for afx in self.affixes).strip()
 
     @property
     def e_rank(self) -> str:
@@ -204,7 +196,7 @@ class ExportWordSpell(BaseWordSpell, BaseWord):
         Returns:
             Formatted basic string
         """
-        code_name = "".join(["0" if symbol.isupper() else "5" for symbol in str(self.name)])
+        code_name = "".join("0" if symbol.isupper() else "5" for symbol in str(self.name))
 
         return f"{self.id_old}@{self.name}@{self.name.lower()}@{code_name}" \
                f"@{self.event_start_id}@{self.event_end_id if self.event_end else 9999}@"

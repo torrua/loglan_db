@@ -43,9 +43,7 @@ class AddonWordSourcer:
 
     def _get_sources_c_prim(self) -> Optional[List[BaseWordSource]]:
         """
-
         Returns:
-
         """
         if self.type.type != "C-Prim":
             return None
@@ -94,9 +92,7 @@ class AddonWordSourcer:
 
     def _prepare_sources_cpx(self) -> List[str]:
         """
-        # TODO
         Returns:
-
         """
         sources = self.origin.replace("(", "").replace(")", "").replace("/", "")
         sources = sources.split("+")
@@ -114,7 +110,6 @@ class AddonWordSourcer:
 
         Returns:
           List of words from which the self.name was created
-
         """
 
         if not self.type.type == "Cpd":
@@ -125,9 +120,7 @@ class AddonWordSourcer:
 
     def _prepare_sources_cpd(self) -> List[str]:
         """
-
         Returns:
-
         """
         sources = self.origin.replace("(", "").replace(")", "").replace("/", "").replace("-", "")
         sources = [s.strip() for s in sources.split("+") if s]

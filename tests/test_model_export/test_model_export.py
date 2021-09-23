@@ -131,10 +131,15 @@ class TestWord:
         db_add_objects(Word, words)
         db_connect_words(connect_words)
         db_add_objects(Type, types)
-        word = Word.get_by_id(3813)
+        word1 = Word.get_by_id(3813)
 
-        result = word.e_usedin
+        result = word1.e_usedin
         assert result == "prukao"
+
+        word2 = Word.get_by_id(7316)
+
+        result = word2.e_usedin
+        assert result == ""
 
     def test_e_usedin_empty(self):
         """Test used_in conversion if no cpx"""

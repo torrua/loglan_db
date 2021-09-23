@@ -6,6 +6,7 @@ This module contains a basic Key Model
 from loglan_db import db
 from loglan_db.model_db import t_name_keys
 from loglan_db.model_init import InitBase, DBBase
+from loglan_db.model_db.base_connect_tables import t_connect_keys
 
 __pdoc__ = {
     'BaseKey.definitions':
@@ -49,3 +50,10 @@ class BaseKey(db.Model, InitBase, DBBase):
     language = db.Column(db.String(16), nullable=False, unique=False)
     """*Key's language*  
         **str** : max_length=16, nullable=False, unique=False"""
+
+    _definitions = db.relationship(
+        "BaseDefinition", secondary=t_connect_keys, lazy='dynamic', back_populates="_keys")
+
+    @property
+    def definitions(self):
+        return self._definitions

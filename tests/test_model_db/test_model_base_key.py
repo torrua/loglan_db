@@ -4,6 +4,7 @@
 
 import pytest
 import sqlalchemy.exc
+from flask_sqlalchemy import BaseQuery
 
 from loglan_db.model_db.base_definition import BaseDefinition as Definition
 from loglan_db.model_db.base_key import BaseKey as Key
@@ -36,8 +37,8 @@ class TestKey:
         db_connect_keys(connect_keys)
         key = Key.get_by_id(12474)
 
-        assert isinstance(key.definitions, list)
-        assert len(key.definitions) == 5
+        assert isinstance(key.definitions, BaseQuery)
+        assert len(key.definitions.all()) == 5
         assert [d.id for d in key.definitions] == [13521, 13523, 13524, 13527, 13531]
 
     def test_uniqueness(self):
