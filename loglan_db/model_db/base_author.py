@@ -48,7 +48,8 @@ class BaseAuthor(db.Model, InitBase, DBBase):
     """
 
     full_name = db.Column(db.String(64), nullable=True, unique=False)
-    """*Author's full name (if exists)*  
+    """
+    *Author's full name (if exists)*  
         **str** : max_length=64, nullable=True, unique=False
     Example:
         > James Cooke Brown, Loglan 4&5
@@ -56,7 +57,6 @@ class BaseAuthor(db.Model, InitBase, DBBase):
 
     notes = db.Column(db.String(128), nullable=True, unique=False)
     """*Any additional information about author*  
-        
         **str** : max_length=128, nullable=True, unique=False
     """
 
@@ -67,7 +67,6 @@ class BaseAuthor(db.Model, InitBase, DBBase):
     def contribution(self):
         """
         *Relationship query for getting a list of words coined by this author*
-
-        **query** : Optional[List[BaseWord]]
+         **query** : Optional[List[BaseWord]]
         """
         return self._contribution

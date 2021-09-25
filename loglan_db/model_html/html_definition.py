@@ -3,8 +3,11 @@
 This module contains a HTMLExportDefinition Model
 """
 import re
+
+from loglan_db import db
 from loglan_db.model_db.base_definition import BaseDefinition
 from loglan_db.model_html import DEFAULT_HTML_STYLE
+from loglan_db.model_html.html_word import HTMLExportWord
 
 
 class DefinitionFormatter:
@@ -114,6 +117,9 @@ class HTMLExportDefinition(BaseDefinition, DefinitionFormatter):
     """
     HTMLExportDefinition Class
     """
+
+    _source_word = db.relationship(
+        HTMLExportWord.__name__, back_populates="_definitions", viewonly=True)
 
     def export_for_english(self, word: str, style: str = DEFAULT_HTML_STYLE) -> str:
         """

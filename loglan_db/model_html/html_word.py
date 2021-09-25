@@ -4,17 +4,18 @@
 This module contains a HTMLExportWord Model
 """
 from __future__ import annotations
-from itertools import groupby
-from typing import Union, Optional, List, Dict
-from dataclasses import dataclass
 
+import fnmatch
+from dataclasses import dataclass
+from itertools import groupby
+from typing import Union, Optional, List
+
+from loglan_db import db
 from loglan_db.model_db.addons.addon_word_getter import AddonWordGetter
 from loglan_db.model_db.base_event import BaseEvent
 from loglan_db.model_db.base_word import BaseWord
-from loglan_db.model_html import DEFAULT_HTML_STYLE
-from loglan_db.model_html.html_definition import HTMLExportDefinition
 from loglan_db.model_export import AddonExportWordConverter
-from loglan_db import db
+from loglan_db.model_html import DEFAULT_HTML_STYLE
 
 
 @dataclass
@@ -30,45 +31,33 @@ class AddonWordTranslator:
     """
     Additional methods for HTMLExportWord class
     """
-    @staticmethod
-    def definitions_by_key(
-            key: str, words: List[BaseWord],
-            style: str = DEFAULT_HTML_STYLE,
-            case_sensitive: bool = False) -> dict:
-        """
 
+    def definitions_by_key(
+            self, key: str, style: str = DEFAULT_HTML_STYLE,
+            case_sensitive: bool = False) -> str:
+
+        """
         Args:
             key:
-            words:
             style:
             case_sensitive:
         Returns:
 
         """
 
-        def conditions(
-                x_key: str, x_keys: list,
-                x_case_sensitive: bool) -> bool:
-            current_keys = [k.word for k in x_keys] if \
-                x_case_sensitive else [k.word.lower() for k in x_keys]
-            current_key = x_key if x_case_sensitive else x_key.lower()
-
-            import fnmatch
-            return bool([n for n in current_keys if fnmatch.fnmatchcase(n, current_key)])
-
-        result: Dict[str, List[str]] = {}
-        for word in words:
-            result[word.name] = []
-            definitions = [
-                HTMLExportDefinition.export_for_english(d, word=key, style=style)
-                for d in word.definitions if conditions(
-                    key, d.keys, case_sensitive)]
-            result[word.name].extend(definitions)
-        return result
+        return '\n'.join([
+            d.export_for_english(key, style) for d in self.definitions
+            if self.conditions(key, d.keys, case_sensitive)])
 
     @staticmethod
-    def translation_by_key(key: str, language: str = None, style: str = DEFAULT_HTML_STYLE,
-                           event_id: Union[BaseEvent, int, str] = None, case_sensitive: bool = False) -> Optional[str]:
+    def conditions(x_key: str, x_keys: list, x_case_sensitive: bool) -> bool:
+        current_keys = [k.word if x_case_sensitive else k.word.lower() for k in x_keys]
+        return any(map(lambda x: fnmatch.fnmatchcase(x, x_key), current_keys))
+
+    @staticmethod
+    def translation_by_key(
+            key: str, language: str = None, style: str = DEFAULT_HTML_STYLE,
+            event_id: Union[BaseEvent, int, str] = None, case_sensitive: bool = False) -> Optional[str]:
         """
         Get information about loglan words by key in a foreign language
         Args:
@@ -84,18 +73,15 @@ class AddonWordTranslator:
         words = HTMLExportWord.by_key(
             key=key, language=language, event_id=event_id,
             case_sensitive=case_sensitive).all()
-        print([w.name for w in words])
+
         if not words:
             return None
 
-        result = HTMLExportWord.definitions_by_key(
-            key=key, words=words, style=style,
-            case_sensitive=case_sensitive)
+        current_key = key if case_sensitive else key.lower()
+        blocks = [word.definitions_by_key(
+            key=current_key, style=style, case_sensitive=case_sensitive) for word in words]
 
-        new = '\n'
-
-        return new.join([f"{new.join(definitions)}"
-                         for _, definitions in result.items()]).strip()
+        return '\n'.join(blocks).strip()
 
 
 class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExportWordConverter):
@@ -104,7 +90,7 @@ class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExport
     """
 
     _definitions = db.relationship(
-        HTMLExportDefinition.__name__, lazy='dynamic', viewonly=True)
+        "HTMLExportDefinition", lazy='dynamic', back_populates="_source_word", viewonly=True)
 
     @classmethod
     def html_all_by_name(
@@ -215,8 +201,7 @@ class HTMLExportWord(BaseWord, AddonWordGetter, AddonWordTranslator, AddonExport
         :param style:
         :return:
         """
-        return [HTMLExportDefinition.export_for_loglan(
-            d, style=style) for d in list(self.definitions)]
+        return [d.export_for_loglan(style=style) for d in self.definitions]
 
     def meaning(self, style: str = DEFAULT_HTML_STYLE) -> Meaning:
         """
