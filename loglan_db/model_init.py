@@ -122,7 +122,7 @@ class DBBase:
         """
         :return:
         """
-        return {key for key in cls.__mapper__.attrs.keys()}
+        return set(cls.__mapper__.attrs.keys())
 
     @classmethod
     def attributes_basic(cls) -> Set[str]:
@@ -143,7 +143,7 @@ class DBBase:
         """
         :return:
         """
-        return {key for key in cls.__mapper__.relationships.keys()}
+        return set(cls.__mapper__.relationships.keys())
 
     @classmethod
     def foreign_keys(cls) -> Set[str]:
