@@ -81,6 +81,10 @@ word_2_appeared_event_5 = {'updated': None, 'notes': {'year': "(to '15)"}, 'id':
 word_3_appeared_event_5 = {'updated': None, 'notes': {'year': "(to '15)"}, 'id': 4771, 'TID_old': None, 'id_old': 10099, 'name': 'lekveo', 'type_id': 5, 'origin': 'le(n)k(i)+ve(sl)o', 'event_start_id': 5, 'origin_x': 'electricity vessel', 'event_end_id': None, 'match': '', 'created': datetime.datetime(2020, 10, 25, 7, 53, 54, 873132), 'rank': '', 'year': datetime.date(2008, 1, 1)}
 words_appeared = [word_1_appeared_event_5, word_2_appeared_event_5, word_3_appeared_event_5]
 
+definition_1_appeared = {'body': 'B is a «battery» for appliance D.', 'case_tags': 'B-D', 'grammar_code': 'n', 'id': 18689, 'language': 'en', 'notes': None, 'position': 1, 'slots': 2, 'usage': '', 'word_id': 4771}
+definition_2_appeared = {'body': 'G is more «aerodynamic» than J in medium N.', 'case_tags': 'G-JN', 'grammar_code': 'n', 'id': 18688, 'language': 'en', 'notes': None, 'position': 1, 'slots': 3, 'usage': '', 'word_id': 2359}
+definitions_appeared = [definition_1_appeared, definition_2_appeared]
+
 # EVENT 5 === deprecated_words =================================================
 word_1_deprecated_event_5 = {'updated': None, 'notes': {'year': "(fixed bad joint '16)"}, 'id': 6669, 'TID_old': None, 'id_old': 6637, 'name': 'osmio', 'type_id': 8, 'origin': 'ISV', 'event_start_id': 1, 'origin_x': '', 'event_end_id': 5, 'match': '', 'created': datetime.datetime(2020, 10, 25, 7, 53, 54, 873132), 'rank': '7+', 'year': datetime.date(1988, 1, 1)}
 word_2_deprecated_event_5 = {'updated': None, 'notes': {'year': "(corrected CV to CVh '16)"}, 'id': 7802, 'TID_old': None, 'id_old': 7668, 'name': 'riyhasgru', 'type_id': 5, 'origin': 'rih+y+has(fa)+gru(pa)', 'event_start_id': 1, 'origin_x': 'few house group', 'event_end_id': 5, 'match': '', 'created': datetime.datetime(2020, 10, 25, 7, 53, 54, 873132), 'rank': '7+', 'year': datetime.date(1999, 1, 1)}
@@ -88,8 +92,21 @@ word_3_deprecated_event_5 = {'updated': None, 'notes': {'year': "(corrected CV t
 word_4_deprecated_event_5 = {'updated': None, 'notes': {'year': "(fixed '16)"}, 'id': 9282, 'TID_old': None, 'id_old': 9036, 'name': 'testuda', 'type_id': 8, 'origin': 'Lin. Testudines', 'event_start_id': 1, 'origin_x': '', 'event_end_id': 5, 'match': '', 'created': datetime.datetime(2020, 10, 25, 7, 53, 54, 873132), 'rank': '7+', 'year': datetime.date(1997, 1, 1)}
 words_deprecated = [word_1_deprecated_event_5, word_2_deprecated_event_5, word_3_deprecated_event_5, word_4_deprecated_event_5]
 
+definition_1_deprecated = {'body': 'B is some «osmium», element 76 (Os).', 'case_tags': 'B-', 'grammar_code': 'n', 'id': 12509, 'language': 'en', 'notes': None, 'position': 1, 'slots': 1, 'usage': '', 'word_id': 6669}
+definition_2_deprecated = {'body': 'B is a «hamlet».', 'case_tags': 'B-', 'grammar_code': 'n', 'id': 14416, 'language': 'en', 'notes': None, 'position': 1, 'slots': 1, 'usage': '', 'word_id': 7802}
+definitions_deprecated = [definition_1_deprecated, definition_2_deprecated]
+
 changed_words = words_appeared + words_deprecated
+changed_definitions = definitions_appeared + definitions_deprecated
 changed_events = ({'annotation': 'Randall Cleanup', 'name': 'Randall Dictionary Cleanup', 'id': 5, 'updated': None, 'suffix': 'RDC', 'definition': 'parsed all the words in the dictionary, identified ones that the parser did not recognize as words', 'date': datetime.date(2016, 1, 15), 'created': datetime.datetime(2020, 10, 25, 7, 53, 54, 873132)}, )
+
+changed_key_1 = {'id': 1421, 'language': 'en', 'word': 'battery'}
+changed_key_2 = {'id': 620, 'language': 'en', 'word': 'aerodynamic'}
+changed_key_3 = {'id': 8824, 'language': 'en', 'word': 'osmium'}
+changed_key_4 = {'id': 5926, 'language': 'en', 'word': 'hamlet'}
+
+changed_keys = [changed_key_1, changed_key_2, changed_key_3, changed_key_4, ]
+connect_changed_keys = [(1421, 18689), (620, 18688), (8824, 12509), (5926, 14416), ]  # (KID, DID)
 
 # ===== ALL EVENTS =================================================================
 event_1 = {'annotation': 'Initial', 'name': 'Start', 'id': 1, 'updated': None, 'suffix': 'INIT', 'definition': 'The initial vocabulary before updates.', 'date': datetime.date(1975, 1, 1), 'created': datetime.datetime(2020, 10, 25, 7, 53, 54, 873132)}
