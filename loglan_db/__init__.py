@@ -10,7 +10,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy  # type: ignore
 
 __author__ = "torrua"
-__copyright__ = "Copyright 2020, loglan_db project"
+__copyright__ = "Copyright 2022, loglan_db project"
 __email__ = "torrua@gmail.com"
 
 db = SQLAlchemy()
