@@ -9,8 +9,10 @@ Loglan Dictionary Database Model for SQLAlchemy
 [![codecov](https://codecov.io/gh/torrua/loglan_db/branch/main/graph/badge.svg?token=10O3OAC180)](https://codecov.io/gh/torrua/loglan_db)
 [![GitHub license](https://img.shields.io/github/license/torrua/loglan_db)](https://github.com/torrua/loglan_db/blob/master/LICENSE)
 
-> [!WARNING]
-> This project is archived — it is no longer being developed or updated. If you have used this module in your apps, consider switching to the new module — Loglan-Core.
+> [!CAUTION]
+> This project is archived — it is no longer being developed or updated. 
+> If you have used this module in your apps, consider switching to the new module — 
+> [Loglan-Core](https://github.com/torrua/loglan_core).
 
 This package is designed to generate SQL database for Loglan dictionary.
 
